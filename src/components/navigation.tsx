@@ -78,6 +78,7 @@ export default function Navigation() {
           {open ? <XIcon size={20} weight="bold" /> : <ListIcon size={20} weight="bold" />}
         </button>
 
+      </header>
         {open && (
           <>
             <div
@@ -117,7 +118,6 @@ export default function Navigation() {
             </nav>
           </>
         )}
-      </header>
     </div>
   );
 }
