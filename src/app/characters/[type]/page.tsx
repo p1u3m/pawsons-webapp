@@ -3,9 +3,11 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { characters, getCharacter } from "@/lib/data";
 import { CharacterImage, CharacterCard, BackLink } from "@/components/ui";
+
 export function generateStaticParams() {
   return characters.map((c) => ({ type: c.type.toLowerCase() }));
 }
+
 export default async function Page({
   params,
 }: {
@@ -14,6 +16,7 @@ export default async function Page({
   const { type } = await params;
   const c = getCharacter(type);
   if (!c) notFound();
+
   return (
     <div className="wrap page-space">
       <BackLink />
@@ -43,17 +46,20 @@ export default async function Page({
           </blockquote>
           <div className="action-row">
             <Link className="button" href="/quiz">
-              Find your Pawson ↗
+              <span>Find your Pawson</span>
+              <span className="icon-disc" aria-hidden="true">↗</span>
             </Link>
             <Link
               className="button secondary"
               href={`/contents?character=${c.type}`}
             >
-              เรื่องเล่าของ {c.name}
+              <span>เรื่องเล่าของ {c.name}</span>
+              <span className="icon-disc" aria-hidden="true">→</span>
             </Link>
           </div>
           <Link className="text-link" href={`/shop?character=${c.type}`}>
-            พา {c.name} กลับบ้าน ↗
+            <span>พา {c.name} กลับบ้าน</span>
+            <span aria-hidden="true">↗</span>
           </Link>
         </div>
       </section>

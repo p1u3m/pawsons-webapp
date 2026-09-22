@@ -2,7 +2,9 @@ import { houseBackground } from "@/lib/data";
 import Link from "next/link";
 import { PageIntro, CharacterImage } from "@/components/ui";
 import { characters, getCharacter, situations } from "@/lib/data";
+
 export const metadata = { title: "Little stories" };
+
 export default async function Page({
   searchParams,
 }: {
@@ -10,6 +12,7 @@ export default async function Page({
 }) {
   const { character } = await searchParams;
   const selected = character ? getCharacter(character) : undefined;
+
   return (
     <div className="wrap page-space">
       <PageIntro
@@ -22,6 +25,7 @@ export default async function Page({
       >
         บางเรื่องทำให้ยิ้ม บางเรื่องทำให้รู้ว่าเราไม่ได้รู้สึกแบบนี้คนเดียว
       </PageIntro>
+
       <div className="content-tabs">
         <span className="filter active">16 Situations</span>
         {["Dukdik", "Franchise Rosters", "Pair Conflicts"].map((t) => (
@@ -31,14 +35,17 @@ export default async function Page({
           </span>
         ))}
       </div>
+
       {selected && (
-        <Link className="text-link" href="/contents">
-          ดูเรื่องราวของเพื่อนทุกคน ↗
-        </Link>
+        <div style={{ marginTop: "20px" }}>
+          <Link className="text-link" href="/contents">
+            <span>ดูเรื่องราวของเพื่อนทุกคน</span>
+            <span aria-hidden="true">↗</span>
+          </Link>
+        </div>
       )}
-      <p className="prototype-note align-left">
-        เรื่องราวตัวอย่างสำหรับจัดวางโครงเว็บ
-      </p>
+
+
       <div className="situations-grid">
         {situations.map((title, i) => {
           const c = selected || characters[i];
@@ -58,7 +65,10 @@ export default async function Page({
                 {c.name} · {c.type}
               </span>
               <h2>{title}</h2>
-              <span className="text-link">อ่านเรื่องนี้ ↗</span>
+              <span className="text-link">
+                <span>อ่านเรื่องนี้</span>
+                <span aria-hidden="true">↗</span>
+              </span>
             </Link>
           );
         })}

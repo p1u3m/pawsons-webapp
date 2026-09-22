@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import Navigation from "@/components/navigation";
 import Reveal from "@/components/reveal";
 import "./globals.css";
+
 export const metadata: Metadata = {
   title: {
     default: "Pawsons | A little place to be you",
@@ -12,6 +14,7 @@ export const metadata: Metadata = {
     "พักสักนิด ทำความรู้จักตัวเอง และพบเพื่อนตัวน้อยในโลกของ Pawsons",
   icons: { icon: "/logos/Logo_main.svg" },
 };
+
 export default function RootLayout({
   children,
 }: {
@@ -40,13 +43,25 @@ export default function RootLayout({
           <main id="main">{children}</main>
         </Reveal>
         <footer className="site-footer">
-          <Link href="/" className="footer-wordmark">
-            pawsons
+          <Link href="/" className="footer-brand" aria-label="Pawsons หน้าแรก">
+            <Image
+              src="/logos/Logo_main.svg"
+              alt="pawsons"
+              width={125}
+              height={28}
+            />
           </Link>
-          <p>A little place to be you.</p>
-          <span>ค่อย ๆ รู้จักกัน ในจังหวะของคุณ</span>
-          <Link href="/letters">Personal letters ↗</Link>
-          <small>© {new Date().getFullYear()} Pawsons</small>
+          <div className="footer-info">
+            <p>A little place to be you.</p>
+            <span>ค่อย ๆ รู้จักกัน ในจังหวะของคุณ</span>
+          </div>
+          <div className="footer-actions">
+            <Link href="/letters" className="button secondary footer-pill">
+              <span>Personal letters</span>
+              <span className="icon-disc" aria-hidden="true">↗</span>
+            </Link>
+            <small>© {new Date().getFullYear()} Pawsons · Made with a little warmth</small>
+          </div>
         </footer>
       </body>
     </html>

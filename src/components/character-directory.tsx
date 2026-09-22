@@ -2,9 +2,11 @@
 import { useState } from "react";
 import { characters, houses } from "@/lib/data";
 import { CharacterCard } from "./ui";
+
 export default function CharacterDirectory() {
   const [house, setHouse] = useState("all");
   const [query, setQuery] = useState("");
+
   const filtered = characters.filter(
     (c) =>
       (house === "all" || c.house.id === house) &&
@@ -12,6 +14,7 @@ export default function CharacterDirectory() {
         .toLowerCase()
         .includes(query.trim().toLowerCase()),
   );
+
   return (
     <>
       <div className="directory-tools">
@@ -44,14 +47,17 @@ export default function CharacterDirectory() {
           />
         </label>
       </div>
+
       <p className="result-count" aria-live="polite">
         พบเพื่อน {filtered.length} ตัว
       </p>
+
       <div className="character-grid">
         {filtered.map((c) => (
           <CharacterCard key={c.type} character={c} />
         ))}
       </div>
+
       {!filtered.length && (
         <div className="empty-state">
           <h2>ยังไม่เจอเพื่อนที่ตามหา</h2>
@@ -63,7 +69,8 @@ export default function CharacterDirectory() {
               setQuery("");
             }}
           >
-            ดูเพื่อนทั้งหมด
+            <span>ดูเพื่อนทั้งหมด</span>
+            <span className="icon-disc" aria-hidden="true">↺</span>
           </button>
         </div>
       )}

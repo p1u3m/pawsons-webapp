@@ -3,9 +3,11 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import { houses, characters } from "@/lib/data";
 import { BackLink, CharacterCard } from "@/components/ui";
+
 export function generateStaticParams() {
   return houses.map((h) => ({ house: h.id }));
 }
+
 export default async function Page({
   params,
 }: {
@@ -14,6 +16,7 @@ export default async function Page({
   const { house } = await params;
   const h = houses.find((h) => h.id === house);
   if (!h) notFound();
+
   return (
     <div className="wrap page-space">
       <BackLink href="/houses">บ้านทั้งสี่</BackLink>
@@ -27,9 +30,14 @@ export default async function Page({
           width={180}
           height={180}
         />
-        <span>{h.thai}</span>
-        <h1>{h.name} House</h1>
-        <p>{h.motto}</p>
+        <span
+          className="house-group-badge"
+          style={{ background: h.badgeColor }}
+        >
+          {h.groupTitle}
+        </span>
+        <h1 style={{ color: h.ink }}>{h.name} House</h1>
+        <p style={{ fontStyle: "italic", opacity: 0.9 }}>“{h.motto}”</p>
         <p>{h.description}</p>
       </header>
       <h2 className="spaced-title">ทำความรู้จักสมาชิกในบ้าน</h2>

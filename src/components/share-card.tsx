@@ -1,19 +1,21 @@
 "use client";
 import { houseBackground } from "@/lib/data";
-
 import { useState } from "react";
 import Link from "next/link";
 import type { Character } from "@/lib/data";
 import { CharacterImage } from "./ui";
+
 async function loadImage(src: string) {
   const img = new window.Image();
   img.src = src;
   await img.decode();
   return img;
 }
+
 export default function ShareCard({ character: c }: { character: Character }) {
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
+
   async function makeCard() {
     await document.fonts.ready;
     const canvas = document.createElement("canvas");
@@ -21,13 +23,15 @@ export default function ShareCard({ character: c }: { character: Character }) {
     canvas.height = 1920;
     const ctx = canvas.getContext("2d");
     if (!ctx) throw new Error("Canvas unavailable");
+
     const wash = ctx.createLinearGradient(0, 0, 1080, 1920);
     wash.addColorStop(0, c.house.gradientStart);
     wash.addColorStop(0.55, c.house.color);
     wash.addColorStop(1, c.house.gradientEnd);
     ctx.fillStyle = wash;
     ctx.fillRect(0, 0, 1080, 1920);
-    ctx.fillStyle = "#111111";
+
+    ctx.fillStyle = "#181818";
     ctx.textAlign = "center";
     ctx.font = '32px "LINE Seed EN"';
     ctx.fillText("A LITTLE PIECE OF ME", 540, 270);
@@ -36,6 +40,7 @@ export default function ShareCard({ character: c }: { character: Character }) {
     if (ctx.measureText(title).width > 940)
       ctx.font = `600 ${Math.floor((90 * 940) / ctx.measureText(title).width)}px "LINE Seed EN"`;
     ctx.fillText(`I feel like ${c.name}.`, 540, 415);
+
     const img = await loadImage(c.image);
     const scale = Math.min(740 / img.width, 760 / img.height);
     ctx.drawImage(
@@ -45,16 +50,19 @@ export default function ShareCard({ character: c }: { character: Character }) {
       img.width * scale,
       img.height * scale,
     );
+
     ctx.fillStyle = c.house.ink;
     ctx.font = '600 66px "LINE Seed EN"';
     ctx.fillText(c.type, 540, 1450);
     ctx.font = '32px "LINE Seed EN"';
     ctx.fillText(`${c.house.name} House`, 540, 1510);
-    ctx.fillStyle = "#111111";
+    ctx.fillStyle = "#181818";
     ctx.font = '36px "LINE Seed EN"';
     ctx.fillText("A little place to be you.", 540, 1670);
+
     const logo = await loadImage("/logos/Logo_main.svg");
     ctx.drawImage(logo, 390, 1760, 300, (300 * 215.37) / 1036.38);
+
     return await new Promise<Blob>((resolve, reject) =>
       canvas.toBlob(
         (b) => (b ? resolve(b) : reject(new Error("Cannot export"))),
@@ -62,6 +70,7 @@ export default function ShareCard({ character: c }: { character: Character }) {
       ),
     );
   }
+
   async function save(share: boolean) {
     setBusy(true);
     setMessage("");
@@ -95,6 +104,7 @@ export default function ShareCard({ character: c }: { character: Character }) {
       setBusy(false);
     }
   }
+
   return (
     <div className="share-layout">
       <div
@@ -112,7 +122,7 @@ export default function ShareCard({ character: c }: { character: Character }) {
       </div>
       <div className="share-copy">
         <span className="eyebrow">KEEP A LITTLE FRIEND</span>
-        <h1>
+        <h1 style={{ marginTop: "16px" }}>
           ส่งต่อมุมเล็ก ๆ<br />
           ที่เป็นคุณ
         </h1>
@@ -128,14 +138,16 @@ export default function ShareCard({ character: c }: { character: Character }) {
             disabled={busy}
             onClick={() => save(false)}
           >
-            {busy ? "กำลังสร้างการ์ด…" : "ดาวน์โหลด Story Card ↓"}
+            <span>{busy ? "กำลังสร้างการ์ด…" : "ดาวน์โหลด Story Card"}</span>
+            <span className="icon-disc" aria-hidden="true">↓</span>
           </button>
           <button
             className="button secondary"
             disabled={busy}
             onClick={() => save(true)}
           >
-            แชร์การ์ด ↗
+            <span>แชร์การ์ด</span>
+            <span className="icon-disc" aria-hidden="true">↗</span>
           </button>
         </div>
         <p role="status" className="share-status">
@@ -145,7 +157,8 @@ export default function ShareCard({ character: c }: { character: Character }) {
           className="text-link"
           href={`/characters/${c.type.toLowerCase()}`}
         >
-          กลับไปหา {c.name} ↗
+          <span>กลับไปหา {c.name}</span>
+          <span aria-hidden="true">↗</span>
         </Link>
         <div className="coming-note">
           Stickers & GIFs <span>รอพบกันเร็ว ๆ นี้</span>

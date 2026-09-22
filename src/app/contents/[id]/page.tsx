@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { characters, getCharacter, situations } from "@/lib/data";
 import { BackLink, CharacterImage } from "@/components/ui";
+
 export default async function Page({
   params,
   searchParams,
@@ -15,6 +16,7 @@ export default async function Page({
   const index = Number(id) - 1;
   if (!Number.isInteger(index) || index < 0 || index >= 16) notFound();
   const c = (character && getCharacter(character)) || characters[index];
+
   return (
     <article className="wrap page-space story-article">
       <BackLink
@@ -23,7 +25,7 @@ export default async function Page({
         กลับไปอ่านเรื่องอื่น
       </BackLink>
       <span className="eyebrow">16 SITUATIONS · {c.name}</span>
-      <h1>{situations[index]}</h1>
+      <h1 style={{ marginTop: "14px" }}>{situations[index]}</h1>
       <div
         className="article-art"
         style={{ background: houseBackground(c.house) }}
@@ -39,16 +41,19 @@ export default async function Page({
         แล้วให้เวลากับสิ่งเล็ก ๆ ที่ทำให้สบายใจ
       </p>
       <blockquote>“ค่อย ๆ ไปก็ได้ เราอยู่ตรงนี้ด้วยกันนะ”</blockquote>
-      <p className="prototype-note">เรื่องเล่าตัวอย่างสำหรับโครงเว็บ</p>
-      <Link className="button" href={`/characters/${c.type.toLowerCase()}`}>
-        รู้จัก {c.name} ↗
-      </Link>
-      <Link
-        className="text-link next-story"
-        href={`/contents/${((index + 1) % 16) + 1}${character ? `?character=${c.type}` : ""}`}
-      >
-        อ่านเรื่องถัดไป →
-      </Link>
+      <div style={{ display: "flex", alignItems: "center", gap: "20px", flexWrap: "wrap", marginTop: "28px" }}>
+        <Link className="button" href={`/characters/${c.type.toLowerCase()}`}>
+          <span>รู้จัก {c.name}</span>
+          <span className="icon-disc" aria-hidden="true">↗</span>
+        </Link>
+        <Link
+          className="text-link next-story"
+          href={`/contents/${((index + 1) % 16) + 1}${character ? `?character=${c.type}` : ""}`}
+        >
+          <span>อ่านเรื่องถัดไป</span>
+          <span aria-hidden="true">→</span>
+        </Link>
+      </div>
     </article>
   );
 }

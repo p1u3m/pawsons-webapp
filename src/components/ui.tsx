@@ -25,6 +25,7 @@ export function CharacterImage({
     />
   );
 }
+
 export function CharacterCard({ character }: { character: Character }) {
   return (
     <Link
@@ -42,12 +43,13 @@ export function CharacterCard({ character }: { character: Character }) {
       </div>
       <div className="character-label">
         <h3>{character.name}</h3>
-        <span>{character.type}</span>
+        <span className="type-pill">{character.type}</span>
       </div>
       <p>{character.tagline}</p>
     </Link>
   );
 }
+
 export function PageIntro({
   label,
   title,
@@ -65,6 +67,7 @@ export function PageIntro({
     </header>
   );
 }
+
 export function BackLink({
   href = "/characters",
   children = "กลับไปหาเพื่อน ๆ",
@@ -74,7 +77,8 @@ export function BackLink({
 }) {
   return (
     <Link className="back-link" href={href}>
-      ← {children}
+      <span aria-hidden="true">←</span>
+      <span>{children}</span>
     </Link>
   );
 }

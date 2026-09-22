@@ -46,6 +46,7 @@ test("mobile navigation, filtering, quiz result, and story download", async ({
   await expect(page.getByRole("heading", { name: "Meet Kumo." })).toBeVisible();
   await page.goto("/quiz");
   await page.getByRole("button", { name: "เริ่มทำแบบทดสอบ" }).click();
+  await page.getByRole("button", { name: "เริ่มออกเดินทาง" }).click();
   await expect(page.getByRole("button", { name: "ข้อต่อไป" })).toBeDisabled();
   const answers = Array(12).fill(1);
   for (let i = 0; i < 12; i++) {
@@ -56,10 +57,19 @@ test("mobile navigation, filtering, quiz result, and story download", async ({
       await page.getByRole("button", { name: "ข้อต่อไป" }).click();
       await expect(page.getByRole("radio").nth(1)).toBeChecked();
     }
-    await page
-      .getByRole("button", { name: i === 11 ? "พบเพื่อนของคุณ" : "ข้อต่อไป" })
-      .click();
+    await page.getByRole("button", { name: "ข้อต่อไป" }).click();
+    if (i === 3) {
+      await page.getByRole("button", { name: "เดินต่อ" }).click();
+    } else if (i === 7) {
+      await page.getByRole("button", { name: "ตามรอยเท้าไป" }).click();
+    }
   }
+  // Special multi-choice vibe question (10 choices)
+  await page.getByRole("button", { name: "สบาย" }).click();
+  await page.getByRole("button", { name: "ข้อต่อไป" }).click();
+
+  // Final scene -> Results
+  await page.getByRole("button", { name: "พบเพื่อนของคุณ" }).click();
   await expect(page).toHaveURL(/results\/infp/);
   await expect(
     page.getByRole("heading", { name: "You feel like Kumo." }),
