@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState, useEffect } from "react";
+import { CaretLeftIcon, CaretRightIcon } from "@phosphor-icons/react";
 import type { Character } from "@/lib/data";
 import { CharacterCard } from "@/components/ui";
 
@@ -32,7 +33,7 @@ export function CharacterSlider({ characters }: { characters: Character[] }) {
     const el = scrollRef.current;
     if (!el) return;
     el.scrollTo({
-      left: index * el.clientWidth,
+      left: (el.children[index] as HTMLElement).offsetLeft - (el.children[0] as HTMLElement).offsetLeft,
       behavior: "smooth",
     });
     setCurrentPage(index);
@@ -40,30 +41,8 @@ export function CharacterSlider({ characters }: { characters: Character[] }) {
 
   return (
     <div className="character-slider-container">
-      <div className="slider-controls" aria-label="เลื่อนดูตัวละคร">
-        <div className="slider-nav-buttons">
-          <button
-            type="button"
-            className="slider-btn"
-            onClick={() => goToPage(0)}
-            disabled={currentPage === 0}
-            aria-label="ดูตัวละคร 1-8"
-          >
-            ←
-          </button>
-          <button
-            type="button"
-            className="slider-btn"
-            onClick={() => goToPage(1)}
-            disabled={currentPage === 1}
-            aria-label="ดูตัวละคร 9-16"
-          >
-            →
-          </button>
-        </div>
-      </div>
-
       <div
+        id="character-pages"
         ref={scrollRef}
         className="character-slider-track eight-view"
         tabIndex={0}
@@ -79,16 +58,18 @@ export function CharacterSlider({ characters }: { characters: Character[] }) {
         ))}
       </div>
 
-      <div className="slider-dots" aria-hidden="true">
-        {pages.map((_, idx) => (
-          <button
-            key={idx}
-            type="button"
-            className={`slider-dot ${currentPage === idx ? "active" : ""}`}
-            onClick={() => goToPage(idx)}
-            aria-label={`ไปที่กลุ่มที่ ${idx + 1}`}
-          />
-        ))}
+      <div className="slider-controls" aria-label="เลื่อนดูตัวละคร">
+        <button type="button" className="slider-btn" onClick={() => goToPage(0)} disabled={currentPage === 0} aria-controls="character-pages" aria-label="ก่อนหน้า">
+          <CaretLeftIcon size={18} weight="bold" aria-hidden="true" />
+        </button>
+        <div className="slider-dots">
+          {pages.map((_, index) => (
+            <button key={index} type="button" className={`slider-dot ${currentPage === index ? "active" : ""}`} onClick={() => goToPage(index)} aria-label={`ไปหน้าที่ ${index + 1}`} aria-current={currentPage === index ? "page" : undefined} aria-controls="character-pages" />
+          ))}
+        </div>
+        <button type="button" className="slider-btn" onClick={() => goToPage(1)} disabled={currentPage === 1} aria-controls="character-pages" aria-label="ถัดไป">
+          <CaretRightIcon size={18} weight="bold" aria-hidden="true" />
+        </button>
       </div>
     </div>
   );

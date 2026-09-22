@@ -62,7 +62,7 @@ export default function Navigation() {
             </Link>
           ))}
         </nav>
-        <Link href="/quiz" className="button nav-quiz">
+        <Link href="/quiz" className="button nav-quiz pawson-gradient">
           <span>Find your Pawson</span>
           <span className="icon-disc" aria-hidden="true">
             <ArrowUpRightIcon size={14} weight="bold" />
@@ -109,7 +109,7 @@ export default function Navigation() {
                   <ArrowUpRightIcon size={16} />
                 </Link>
               ))}
-              <Link href="/quiz" className="button" onClick={() => setOpen(false)}>
+              <Link href="/quiz" className="button pawson-gradient" onClick={() => setOpen(false)}>
                 <span>Find your Pawson</span>
                 <span className="icon-disc" aria-hidden="true">
                   <ArrowUpRightIcon size={14} weight="bold" />

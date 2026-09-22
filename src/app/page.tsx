@@ -20,7 +20,7 @@ export default function Home() {
             <br />
             กับเพื่อนตัวน้อยที่เข้าใจคุณ
           </p>
-          <Link href="/quiz" className="button">
+          <Link href="/quiz" className="button pawson-gradient">
             <span>Find your Pawson</span>
             <span className="icon-disc" aria-hidden="true">
               ↗

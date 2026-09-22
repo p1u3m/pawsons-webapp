@@ -45,7 +45,7 @@ export default async function Page({
             คุณก็เป็นตัวเองได้เสมอนะ”
           </blockquote>
           <div className="action-row">
-            <Link className="button" href="/quiz">
+            <Link className="button pawson-gradient" href="/quiz">
               <span>Find your Pawson</span>
               <span className="icon-disc" aria-hidden="true">↗</span>
             </Link>
