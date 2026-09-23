@@ -98,6 +98,8 @@ body {
   overflow-x: hidden;
   background: var(--paper);
   color: var(--ink);
+  cursor: default;
+  caret-color: transparent;
   font-family:
     "LINE Seed EN",
     "LINE Seed TH",
@@ -110,6 +112,18 @@ body {
   line-height: 1.65;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+*,
+*::before,
+*::after {
+  caret-color: transparent;
+}
+
+input,
+textarea,
+[contenteditable="true"] {
+  caret-color: auto;
 }
 
 button,
