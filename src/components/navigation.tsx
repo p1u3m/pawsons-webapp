@@ -52,7 +52,7 @@ export default function Navigation() {
         <Link
           href="/"
           className="brand"
-          aria-label="Pawsons หน้าแรก"
+          aria-label="Pawsons Home"
           onClick={() => setOpen(false)}
         >
           <Image
@@ -63,7 +63,7 @@ export default function Navigation() {
             priority
           />
         </Link>
-        <nav className="desktop-nav" aria-label="เมนูหลัก">
+        <nav className="desktop-nav" aria-label="Main Navigation">
           {links.map(([href, label]) => (
             <Link
               key={href}
@@ -88,7 +88,7 @@ export default function Navigation() {
           onClick={() => setOpen(!open)}
           aria-expanded={open}
           aria-controls="mobile-menu"
-          aria-label={open ? "ปิดเมนู" : "เปิดเมนู"}
+          aria-label={open ? "Close menu" : "Open menu"}
         >
           {open ? <XIcon size={20} weight="bold" /> : <ListIcon size={20} weight="bold" />}
         </button>
@@ -104,14 +104,14 @@ export default function Navigation() {
             <nav
               id="mobile-menu"
               className="mobile-nav"
-              aria-label="เมนูมือถือ"
+              aria-label="Mobile Navigation"
               onKeyDown={(e) => {
                 if (e.key === "Escape") setOpen(false);
               }}
             >
               <Link href="/" onClick={() => setOpen(false)}>
-                <span>หน้าแรก</span>
-                <span className="eyebrow">Home</span>
+                <span>Home</span>
+                <ArrowUpRightIcon size={16} />
               </Link>
               {links.map(([href, label]) => (
                 <Link

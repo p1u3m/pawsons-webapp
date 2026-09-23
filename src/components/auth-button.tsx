@@ -13,10 +13,12 @@ interface AuthButtonProps {
 
 // Global in-memory cache to prevent flickering when opening mobile drawer
 let globalCachedUser: User | null = null;
+let globalCachedIsAdmin = false;
 let globalHasCheckedAuth = false;
 
 export default function AuthButton({ mobile = false, onNavigate }: AuthButtonProps) {
   const [user, setUser] = useState<User | null>(globalCachedUser);
+  const [isAdmin, setIsAdmin] = useState<boolean>(globalCachedIsAdmin);
   const [loading, setLoading] = useState(!globalHasCheckedAuth);
   const [signingIn, setSigningIn] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -33,12 +35,39 @@ export default function AuthButton({ mobile = false, onNavigate }: AuthButtonPro
       return;
     }
 
+    async function evaluateAdmin(u: User | null) {
+      if (!u) {
+        globalCachedIsAdmin = false;
+        setIsAdmin(false);
+        return;
+      }
+      if (u.email === "pitipong544@gmail.com") {
+        globalCachedIsAdmin = true;
+        setIsAdmin(true);
+        return;
+      }
+      try {
+        const { data } = await supabase!
+          .from("profiles")
+          .select("role")
+          .eq("id", u.id)
+          .maybeSingle();
+        const admin = data?.role === "admin";
+        globalCachedIsAdmin = admin;
+        setIsAdmin(admin);
+      } catch {
+        globalCachedIsAdmin = false;
+        setIsAdmin(false);
+      }
+    }
+
     // If not checked yet, get initial session
     if (!globalHasCheckedAuth) {
       supabase.auth.getUser().then(({ data: { user: u } }) => {
         globalCachedUser = u ?? null;
         globalHasCheckedAuth = true;
         setUser(u ?? null);
+        evaluateAdmin(u ?? null);
         setLoading(false);
       });
     }
@@ -47,9 +76,11 @@ export default function AuthButton({ mobile = false, onNavigate }: AuthButtonPro
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
-      globalCachedUser = session?.user ?? null;
+      const u = session?.user ?? null;
+      globalCachedUser = u;
       globalHasCheckedAuth = true;
-      setUser(session?.user ?? null);
+      setUser(u);
+      evaluateAdmin(u);
       setLoading(false);
     });
 
@@ -170,10 +201,10 @@ export default function AuthButton({ mobile = false, onNavigate }: AuthButtonPro
         className={`mobile-auth-login-btn ${signingIn ? "is-loading" : ""}`}
         onClick={handleSignIn}
         disabled={signingIn}
-        aria-label="ลงชื่อเข้าใช้ด้วย Google"
+        aria-label="Sign in with Google"
       >
         {signingIn ? spinnerIcon : googleIcon}
-        <span>{signingIn ? "กำลังเชื่อมต่อ Google..." : "เข้าสู่ระบบด้วย Google"}</span>
+        <span>{signingIn ? "Connecting..." : "Sign in with Google"}</span>
       </button>
     );
   }
@@ -185,7 +216,7 @@ export default function AuthButton({ mobile = false, onNavigate }: AuthButtonPro
         className={`auth-login-btn ${signingIn ? "is-loading" : ""}`}
         onClick={handleSignIn}
         disabled={signingIn}
-        aria-label="ลงชื่อเข้าใช้ด้วย Google"
+        aria-label="Sign in with Google"
       >
         {signingIn ? spinnerIcon : googleIcon}
         <span>{signingIn ? "Connecting..." : "Sign in"}</span>
@@ -218,7 +249,7 @@ export default function AuthButton({ mobile = false, onNavigate }: AuthButtonPro
             </span>
           )}
           <div className="mobile-auth-info">
-            <span className="mobile-auth-label">บัญชีของฉัน · My Account</span>
+            <span className="mobile-auth-label">My Account</span>
             <span className="mobile-auth-name">{displayName}</span>
             <span className="mobile-auth-email">{user.email}</span>
           </div>
@@ -230,11 +261,35 @@ export default function AuthButton({ mobile = false, onNavigate }: AuthButtonPro
             className="mobile-auth-room-btn"
             onClick={() => onNavigate?.()}
           >
-            <span>🏡 ห้องของฉัน (My Room)</span>
+            <span className="auth-btn-label">
+              <span className="material-symbols-rounded">cottage</span>
+              <span>My Room</span>
+            </span>
             <span className="icon-disc" aria-hidden="true">
               →
             </span>
           </Link>
+          {isAdmin && (
+            <Link
+              href="/admin/contents"
+              className="mobile-auth-room-btn"
+              onClick={() => onNavigate?.()}
+              style={{
+                background: "rgba(61, 127, 88, 0.08)",
+                borderColor: "rgba(61, 127, 88, 0.25)",
+                color: "#255338",
+                fontWeight: 600,
+              }}
+            >
+              <span className="auth-btn-label">
+                <span className="material-symbols-rounded">dashboard_customize</span>
+                <span>Manage Content (Admin)</span>
+              </span>
+              <span className="icon-disc" aria-hidden="true">
+                →
+              </span>
+            </Link>
+          )}
           <button
             type="button"
             className="mobile-auth-signout-btn"
@@ -243,7 +298,8 @@ export default function AuthButton({ mobile = false, onNavigate }: AuthButtonPro
               handleSignOut();
             }}
           >
-            ออกจากระบบ
+            <span className="material-symbols-rounded" style={{ fontSize: "16px" }}>logout</span>
+            <span>Sign out</span>
           </button>
         </div>
       </div>
@@ -258,7 +314,7 @@ export default function AuthButton({ mobile = false, onNavigate }: AuthButtonPro
         onClick={() => setMenuOpen(!menuOpen)}
         aria-expanded={menuOpen}
         aria-haspopup="true"
-        aria-label={`เมนูผู้ใช้ · ${displayName}`}
+        aria-label={`User menu · ${displayName}`}
       >
         {avatarUrl ? (
           <Image
@@ -289,14 +345,28 @@ export default function AuthButton({ mobile = false, onNavigate }: AuthButtonPro
             role="menuitem"
             onClick={() => setMenuOpen(false)}
           >
-            🏡 ห้องของฉัน (My Room)
+            <span className="material-symbols-rounded">cottage</span>
+            <span>My Room</span>
           </Link>
+          {isAdmin && (
+            <Link
+              href="/admin/contents"
+              className="auth-dropdown-item"
+              role="menuitem"
+              onClick={() => setMenuOpen(false)}
+              style={{ color: "#3d7f58", fontWeight: 600 }}
+            >
+              <span className="material-symbols-rounded">dashboard_customize</span>
+              <span>Manage Content (Admin)</span>
+            </Link>
+          )}
           <button
-            className="auth-dropdown-item"
+            className="auth-dropdown-item auth-dropdown-signout"
             onClick={handleSignOut}
             role="menuitem"
           >
-            ออกจากระบบ
+            <span className="material-symbols-rounded">logout</span>
+            <span>Sign out</span>
           </button>
         </div>
       )}

@@ -63,3 +63,96 @@ select
   raw_user_meta_data ->> 'avatar_url'
 from auth.users
 on conflict (id) do nothing;
+
+-- =========================================================
+-- Pawsons Phase 3: Contents Table, Role & Admin CMS Security
+-- =========================================================
+
+-- 6. Add role column to profiles table
+alter table public.profiles add column if not exists role text not null default 'user';
+
+-- 7. Trigger to protect role column from unauthorized privilege escalation
+create or replace function public.protect_profile_role()
+returns trigger as $$
+begin
+  if new.role is distinct from old.role then
+    if current_user in ('postgres', 'supabase_admin', 'service_role') then
+      return new;
+    end if;
+
+    if not exists (
+      select 1 from public.profiles
+      where id = (select auth.uid()) and role = 'admin'
+    ) then
+      raise exception 'Permission denied: Only administrators can modify user roles.'
+        using errcode = '42501';
+    end if;
+  end if;
+
+  return new;
+end;
+$$ language plpgsql security definer set search_path = '';
+
+drop trigger if exists tr_protect_profile_role on public.profiles;
+
+create trigger tr_protect_profile_role
+before update on public.profiles
+for each row
+execute function public.protect_profile_role();
+
+-- Revoke direct RPC execution from anon and authenticated (triggers only)
+revoke execute on function public.handle_new_user() from public, anon, authenticated;
+revoke execute on function public.protect_profile_role() from public, anon, authenticated;
+
+
+-- 8. Create contents table (for 16 situations and future articles)
+create table if not exists public.contents (
+  id integer primary key,
+  situation_title text not null,
+  body_1 text,
+  body_2 text,
+  quote text,
+  character_type text,
+  cover_image_url text,
+  category text not null default '16 Situations',
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+alter table public.contents enable row level security;
+grant select on public.contents to anon, authenticated;
+
+-- Contents policies
+create policy "contents_select_public"
+  on public.contents for select
+  using (true);
+
+create policy "contents_update_admin"
+  on public.contents for update
+  to authenticated
+  using (
+    exists (
+      select 1 from public.profiles
+      where profiles.id = (select auth.uid())
+        and profiles.role = 'admin'
+    )
+  )
+  with check (
+    exists (
+      select 1 from public.profiles
+      where profiles.id = (select auth.uid())
+        and profiles.role = 'admin'
+    )
+  );
+
+create policy "contents_insert_admin"
+  on public.contents for insert
+  to authenticated
+  with check (
+    exists (
+      select 1 from public.profiles
+      where profiles.id = (select auth.uid())
+        and profiles.role = 'admin'
+    )
+  );
+

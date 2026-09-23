@@ -1,9 +1,13 @@
-import { houseBackground } from "@/lib/data";
 import Link from "next/link";
-import { PageIntro, CharacterImage } from "@/components/ui";
-import { characters, getCharacter, situations } from "@/lib/data";
+import Image from "next/image";
+import { ArrowUpRightIcon } from "@phosphor-icons/react/dist/ssr";
+import { characters, getCharacter, houseBackground } from "@/lib/data";
+import { getAllContents } from "@/lib/supabase/contents";
+import ContentsGrid from "@/components/contents-grid";
 
-export const metadata = { title: "Little stories" };
+export const metadata = { title: "Little Stories · Pawsons" };
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export default async function Page({
   searchParams,
@@ -12,20 +16,34 @@ export default async function Page({
 }) {
   const { character } = await searchParams;
   const selected = character ? getCharacter(character) : undefined;
+  const contentRows = await getAllContents();
 
   return (
     <div className="wrap page-space">
-      <PageIntro
-        label="LITTLE STORIES"
-        title={
-          selected
-            ? `วันเล็ก ๆ ของ ${selected.name}`
-            : "เรื่องธรรมดา ที่ไม่ธรรมดาสำหรับเรา"
-        }
-      >
-        บางเรื่องทำให้ยิ้ม บางเรื่องทำให้รู้ว่าเราไม่ได้รู้สึกแบบนี้คนเดียว
-      </PageIntro>
+      {/* ── INTRO ── */}
+      <div className="contents-intro">
+        <div className="contents-intro-left">
+          {selected && (
+            <Link className="back-link" href="/contents">
+              <span aria-hidden="true">←</span>
+              <span>ดูเรื่องราวของทุกคน</span>
+            </Link>
+          )}
+          <h1 className="contents-headline">
+            {selected ? `วันเล็ก ๆ ของ ${selected.name}` : "เรื่องธรรมดา"}
+          </h1>
+          {!selected && (
+            <p className="contents-sub">
+              ที่ไม่ธรรมดาสำหรับเรา — บางเรื่องทำให้ยิ้ม บางเรื่องทำให้รู้ว่าเราไม่ได้รู้สึกแบบนี้คนเดียว
+            </p>
+          )}
+        </div>
+        <div className="contents-intro-right">
+          <span className="contents-count-pill">16 เรื่อง</span>
+        </div>
+      </div>
 
+      {/* ── TABS ── */}
       <div className="content-tabs">
         <span className="filter active">16 Situations</span>
         {["Dukdik", "Franchise Rosters", "Pair Conflicts"].map((t) => (
@@ -36,43 +54,12 @@ export default async function Page({
         ))}
       </div>
 
-      {selected && (
-        <div style={{ marginTop: "20px" }}>
-          <Link className="text-link" href="/contents">
-            <span>ดูเรื่องราวของเพื่อนทุกคน</span>
-            <span aria-hidden="true">↗</span>
-          </Link>
-        </div>
-      )}
-
-
-      <div className="situations-grid">
-        {situations.map((title, i) => {
-          const c = selected || characters[i];
-          return (
-            <Link
-              className="situation-card"
-              key={title}
-              href={`/contents/${i + 1}${selected ? `?character=${selected.type}` : ""}`}
-            >
-              <div
-                className="situation-art"
-                style={{ background: houseBackground(c.house) }}
-              >
-                <CharacterImage character={c} />
-              </div>
-              <span>
-                {c.name} · {c.type}
-              </span>
-              <h2>{title}</h2>
-              <span className="text-link">
-                <span>อ่านเรื่องนี้</span>
-                <span aria-hidden="true">↗</span>
-              </span>
-            </Link>
-          );
-        })}
-      </div>
+      {/* ── GRID (client for GSAP scroll reveal) ── */}
+      <ContentsGrid
+        characters={characters}
+        contentRows={contentRows}
+        selected={selected ?? null}
+      />
     </div>
   );
 }
