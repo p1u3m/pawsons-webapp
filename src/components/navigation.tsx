@@ -63,7 +63,9 @@ export default function Navigation() {
             </Link>
           ))}
         </nav>
-        <AuthButton />
+        <div className="desktop-auth">
+          <AuthButton />
+        </div>
         <Link href="/quiz" className="button nav-quiz pawson-gradient">
           <span>Find your Pawson</span>
           <span className="icon-disc" aria-hidden="true">
@@ -112,7 +114,7 @@ export default function Navigation() {
                 </Link>
               ))}
               <div className="mobile-nav-auth">
-                <AuthButton />
+                <AuthButton mobile onNavigate={() => setOpen(false)} />
               </div>
               <Link href="/quiz" className="button pawson-gradient" onClick={() => setOpen(false)}>
                 <span>Find your Pawson</span>

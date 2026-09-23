@@ -652,42 +652,165 @@ input:focus-visible {
 
 /* Auth in mobile nav drawer */
 .mobile-nav-auth {
-  padding: 8px 0;
+  padding: 10px 0 4px;
   border-top: 1px solid var(--line);
-  margin-top: 4px;
+  margin-top: 6px;
+  width: 100%;
+}
+
+.mobile-auth-skeleton {
+  width: 100%;
+  height: 68px;
+  border-radius: 18px;
+  background: var(--line);
+  opacity: 0.5;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+/* Mobile account card (signed-in) */
+.mobile-auth-card {
+  background: #FAF8F5;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 14px 16px;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
 }
 
-.mobile-nav-auth .auth-login-btn {
-  width: 100%;
+.mobile-auth-user {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.mobile-auth-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--line);
+  flex-shrink: 0;
+}
+
+.mobile-auth-fallback {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: var(--paper-soft);
+  border: 2px solid var(--line);
+  display: flex;
+  align-items: center;
   justify-content: center;
-  padding: 12px 18px;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--muted);
+  flex-shrink: 0;
+}
+
+.mobile-auth-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
+}
+
+.mobile-auth-label {
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #3B7E58;
+  margin-bottom: 2px;
+}
+
+.mobile-auth-name {
   font-size: 15px;
-  border-radius: 14px;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.3;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.mobile-nav-auth .auth-user-wrap {
+.mobile-auth-email {
+  font-size: 12px;
+  color: var(--muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mobile-auth-links {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  border-top: 1px solid rgba(24, 24, 24, 0.06);
+  padding-top: 10px;
+}
+
+.mobile-auth-room-btn {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding: 10px 14px !important;
+  background: #FFFFFF !important;
+  border: 1px solid var(--line) !important;
+  border-radius: 12px !important;
+  color: var(--ink) !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  text-decoration: none !important;
+  transition: var(--spring) !important;
+}
+
+.mobile-auth-room-btn:hover {
+  background: #FAF8F5 !important;
+  border-color: var(--line-strong) !important;
+}
+
+.mobile-auth-signout-btn {
+  display: block;
   width: 100%;
-}
-
-.mobile-nav-auth .auth-avatar-btn {
-  width: 100%;
-  height: auto;
-  padding: 10px 18px;
-  border-radius: 14px;
-  gap: 10px;
-  flex-direction: row;
-  justify-content: flex-start;
-}
-
-.mobile-nav-auth .auth-dropdown {
-  position: static;
+  padding: 8px 12px;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 500;
+  color: #9E5B5B;
+  background: transparent;
   border: none;
-  box-shadow: none;
-  padding: 4px 0 0;
-  min-width: auto;
-  animation: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: var(--spring);
+}
+
+.mobile-auth-signout-btn:hover {
+  background: rgba(158, 91, 91, 0.08);
+}
+
+/* Mobile sign-in button (signed-out) */
+.mobile-auth-login-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 12px 18px;
+  background: #FAF8F5;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+  cursor: pointer;
+  transition: var(--spring);
+}
+
+.mobile-auth-login-btn:hover {
+  background: #F2EDE4;
+  border-color: var(--line-strong);
 }
 
 @keyframes GradientFlow {
@@ -2874,6 +2997,9 @@ input::placeholder {
   }
   .desktop-nav {
     display: none;
+  }
+  .desktop-auth {
+    display: none !important;
   }
   .nav-quiz {
     display: none;
