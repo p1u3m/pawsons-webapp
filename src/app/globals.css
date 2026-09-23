@@ -487,6 +487,13 @@ input:focus-visible {
   animation: scaleUp 0.25s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
+@media (min-width: 768px) {
+  .mobile-nav,
+  .mobile-nav-backdrop {
+    display: none !important;
+  }
+}
+
 .mobile-nav a {
   padding: 12px 18px;
   border-radius: 14px;

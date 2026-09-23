@@ -23,6 +23,17 @@ export default function Navigation() {
     setOpen(false);
   }, [pathname]);
 
+  // Auto-close mobile menu when resizing to desktop
+  useEffect(() => {
+    function handleResize() {
+      if (window.innerWidth >= 768) {
+        setOpen(false);
+      }
+    }
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   // Lock scroll when mobile menu is open
   useEffect(() => {
     if (open) {
