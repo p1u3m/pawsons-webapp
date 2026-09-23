@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { characters, getCharacter } from "@/lib/data";
 import { CharacterImage } from "@/components/ui";
+import SaveResultCard from "@/components/save-result-card";
 
 export function generateStaticParams() {
   return characters.map((c) => ({ type: c.type.toLowerCase() }));
@@ -47,6 +48,8 @@ export default async function Page({
         <Link href={`/houses/${c.house.id}`} className="house-tag">
           {c.house.name} House ↗
         </Link>
+
+        <SaveResultCard character={c} vibe={vibe} />
 
         <div className="action-row">
           <Link className="button" href={`/share/${c.type.toLowerCase()}`}>

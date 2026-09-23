@@ -508,6 +508,188 @@ input:focus-visible {
   animation: GradientFlow 5s linear infinite;
 }
 
+/* ----------------------------------------------------
+   AUTH COMPONENTS (Paper/Sanctuary style)
+   ---------------------------------------------------- */
+
+/* Loading skeleton while checking auth state */
+.auth-skeleton {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--line);
+  flex-shrink: 0;
+}
+
+/* Sign-in button — compact pill matching the header aesthetic */
+.auth-login-btn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 16px 7px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  background: rgba(24, 24, 24, 0.04);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  transition: var(--spring);
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.auth-login-btn:hover {
+  background: rgba(24, 24, 24, 0.08);
+  border-color: var(--line-strong);
+}
+
+.auth-google-icon {
+  flex-shrink: 0;
+}
+
+/* User avatar button (signed-in state) */
+.auth-user-wrap {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.auth-avatar-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 2px solid var(--line);
+  border-radius: 50%;
+  background: var(--paper-soft);
+  cursor: pointer;
+  transition: var(--spring);
+  overflow: hidden;
+}
+
+.auth-avatar-btn:hover {
+  border-color: var(--line-strong);
+  box-shadow: var(--shadow-sm);
+}
+
+.auth-avatar-img {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.auth-avatar-fallback {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--muted);
+  line-height: 1;
+}
+
+/* Dropdown menu — floats below avatar */
+.auth-dropdown {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  min-width: 210px;
+  padding: 10px;
+  background: var(--paper-surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-inner);
+  box-shadow: var(--shadow-float);
+  z-index: 60;
+  animation: scaleUp 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.auth-dropdown-header {
+  padding: 6px 10px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.auth-dropdown-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.auth-dropdown-email {
+  font-size: 12px;
+  color: var(--muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.auth-dropdown-divider {
+  border: none;
+  border-top: 1px solid var(--line);
+  margin: 4px 0;
+}
+
+.auth-dropdown-item {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  text-align: left;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--muted);
+  background: none;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: var(--spring);
+}
+
+.auth-dropdown-item:hover {
+  background: rgba(24, 24, 24, 0.05);
+  color: var(--ink);
+}
+
+/* Auth in mobile nav drawer */
+.mobile-nav-auth {
+  padding: 8px 0;
+  border-top: 1px solid var(--line);
+  margin-top: 4px;
+  display: flex;
+  justify-content: center;
+}
+
+.mobile-nav-auth .auth-login-btn {
+  width: 100%;
+  justify-content: center;
+  padding: 12px 18px;
+  font-size: 15px;
+  border-radius: 14px;
+}
+
+.mobile-nav-auth .auth-user-wrap {
+  width: 100%;
+}
+
+.mobile-nav-auth .auth-avatar-btn {
+  width: 100%;
+  height: auto;
+  padding: 10px 18px;
+  border-radius: 14px;
+  gap: 10px;
+  flex-direction: row;
+  justify-content: flex-start;
+}
+
+.mobile-nav-auth .auth-dropdown {
+  position: static;
+  border: none;
+  box-shadow: none;
+  padding: 4px 0 0;
+  min-width: auto;
+  animation: none;
+}
+
 @keyframes GradientFlow {
   from { background-position: 0% 50%; }
   to { background-position: 200% 50%; }
@@ -2870,4 +3052,206 @@ input::placeholder {
     font-size: 13.5px;
     white-space: normal;
   }
+}
+
+/* ----------------------------------------------------
+   SAVE RESULT CARD (QUIZ TO PROFILE)
+   ---------------------------------------------------- */
+.save-result-box {
+  margin: 20px auto 28px;
+  max-width: 440px;
+  padding: 16px 20px;
+  background: var(--paper-soft);
+  border: 1px dashed var(--line-strong);
+  border-radius: var(--radius-inner);
+  text-align: center;
+}
+
+.save-result-box p {
+  margin: 0 0 12px;
+  font-size: 14.5px;
+  color: var(--ink);
+}
+
+.save-result-saved {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.save-result-saved p {
+  color: #2f5d3e;
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+
+.save-result-action .button {
+  margin-inline: auto;
+  font-size: 14px;
+  padding: 8px 18px;
+}
+
+.save-result-guest p {
+  color: var(--muted);
+  font-size: 13.5px;
+  margin: 0;
+}
+
+/* ----------------------------------------------------
+   CHARACTER ROOM (/room)
+   ---------------------------------------------------- */
+.room-page {
+  padding-block: 24px 60px;
+  max-width: 600px;
+  margin-inline: auto;
+}
+
+.room-card {
+  position: relative;
+  background: var(--paper-surface);
+  border: 1px solid var(--line);
+  border-radius: 36px;
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+  text-align: center;
+}
+
+/* Cozy window showing the sky */
+.room-window {
+  width: 120px;
+  height: 70px;
+  margin: 24px auto 0;
+  border-radius: 60px 60px 0 0;
+  border: 3px solid #e8e3d5;
+  border-bottom: 4px solid #d5cebc;
+  overflow: hidden;
+  position: relative;
+  box-shadow: inset 0 3px 8px rgba(0, 0, 0, 0.08);
+}
+
+.window-sky {
+  width: 100%;
+  height: 100%;
+  transition: background 1s ease;
+}
+
+.window-sky.sky-dawn {
+  background: linear-gradient(180deg, #ffc3a0 0%, #ffafbd 50%, #e0c3fc 100%);
+}
+
+.window-sky.sky-day {
+  background: linear-gradient(180deg, #a1c4fd 0%, #c2e9fb 100%);
+}
+
+.window-sky.sky-sunset {
+  background: linear-gradient(180deg, #f093fb 0%, #f5576c 60%, #4facfe 100%);
+}
+
+.window-sky.sky-night {
+  background: linear-gradient(180deg, #0f2027 0%, #203a43 60%, #2c5364 100%);
+}
+
+.room-interior {
+  padding: 16px 28px 40px;
+}
+
+.room-interior h1 {
+  font-size: 26px;
+  margin: 8px 0 4px;
+}
+
+.room-subtitle {
+  color: var(--muted);
+  font-size: 14.5px;
+  margin-bottom: 24px;
+}
+
+/* Mascot spotlight in the room */
+.room-mascot {
+  width: 240px;
+  max-width: 85%;
+  aspect-ratio: 1;
+  margin: 0 auto 20px;
+  border-radius: 50%;
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow:
+    0 12px 30px -8px rgba(24, 24, 24, 0.08),
+    inset 0 1px 3px rgba(255, 255, 255, 0.8);
+  will-change: transform;
+}
+
+.room-mascot .character-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.room-character-info {
+  margin-bottom: 20px;
+}
+
+.room-type-badge {
+  display: inline-block;
+  padding: 4px 14px;
+  border-radius: var(--radius-pill);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin-bottom: 6px;
+}
+
+.room-character-info h2 {
+  font-size: 22px;
+  margin: 4px 0 6px;
+}
+
+.room-character-info p {
+  color: var(--muted);
+  font-size: 15px;
+  max-width: 380px;
+  margin: 0 auto;
+}
+
+.room-vibe {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 16px;
+  border-radius: var(--radius-pill);
+  background: var(--clover-bg);
+  border: 1px solid rgba(61, 127, 88, 0.2);
+  color: #2f5d3e;
+  font-size: 13.5px;
+  margin-bottom: 28px;
+}
+
+.room-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.room-empty {
+  padding: 40px 24px 48px;
+}
+
+.room-empty h1 {
+  margin: 16px 0 10px;
+  font-size: 24px;
+}
+
+.room-empty p {
+  color: var(--muted);
+  max-width: 360px;
+  margin: 0 auto 24px;
+  line-height: 1.7;
+}
+
+.room-empty .button {
+  margin-inline: auto;
 }

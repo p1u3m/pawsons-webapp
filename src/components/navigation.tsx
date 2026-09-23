@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { ListIcon, XIcon, ArrowUpRightIcon } from "@phosphor-icons/react";
+import AuthButton from "./auth-button";
 
 const links = [
   ["/characters", "Characters"],
@@ -62,6 +63,7 @@ export default function Navigation() {
             </Link>
           ))}
         </nav>
+        <AuthButton />
         <Link href="/quiz" className="button nav-quiz pawson-gradient">
           <span>Find your Pawson</span>
           <span className="icon-disc" aria-hidden="true">
@@ -109,6 +111,9 @@ export default function Navigation() {
                   <ArrowUpRightIcon size={16} />
                 </Link>
               ))}
+              <div className="mobile-nav-auth">
+                <AuthButton />
+              </div>
               <Link href="/quiz" className="button pawson-gradient" onClick={() => setOpen(false)}>
                 <span>Find your Pawson</span>
                 <span className="icon-disc" aria-hidden="true">
