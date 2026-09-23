@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { characters, getCharacter } from "@/lib/data";
 import { CharacterImage, CharacterCard, BackLink } from "@/components/ui";
+import SaveResultCard from "@/components/save-result-card";
 
 export function generateStaticParams() {
   return characters.map((c) => ({ type: c.type.toLowerCase() }));
@@ -44,6 +45,9 @@ export default async function Page({
             <br />
             คุณก็เป็นตัวเองได้เสมอนะ”
           </blockquote>
+
+          <SaveResultCard character={c} />
+
           <div className="action-row">
             <Link className="button pawson-gradient" href="/quiz">
               <span>Find your Pawson</span>

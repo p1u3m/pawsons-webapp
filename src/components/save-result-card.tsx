@@ -3,8 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { createClient } from "@/lib/supabase/client";
-import { saveQuizResult } from "@/lib/supabase/profile";
+import { getProfile, saveQuizResult } from "@/lib/supabase/profile";
 import type { Character } from "@/lib/data";
 
 export default function SaveResultCard({
@@ -15,28 +14,27 @@ export default function SaveResultCard({
   vibe?: string;
 }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [isSaved, setIsSaved] = useState(false);
+  const [isCurrentCompanion, setIsCurrentCompanion] = useState(false);
   const [loading, setLoading] = useState(false);
   const [checking, setChecking] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
-    const supabase = createClient();
-    if (!supabase) {
-      setChecking(false);
-      return;
-    }
-
-    supabase.auth.getUser().then(({ data: { user } }) => {
-      if (user) {
-        setIsLoggedIn(true);
-        const metaChar = user.user_metadata?.assigned_character;
-        if (metaChar?.toUpperCase() === character.type.toUpperCase()) {
-          setIsSaved(true);
+    setIsCurrentCompanion(false);
+    setChecking(true);
+    getProfile()
+      .then((profile) => {
+        if (profile) {
+          setIsLoggedIn(true);
+          const isMatch =
+            profile.assigned_character?.trim().toUpperCase() ===
+            character.type.trim().toUpperCase();
+          setIsCurrentCompanion(isMatch);
         }
-      }
-      setChecking(false);
-    });
+      })
+      .finally(() => {
+        setChecking(false);
+      });
   }, [character.type]);
 
   async function handleSave() {
@@ -47,8 +45,10 @@ export default function SaveResultCard({
       vibe ?? null,
     );
     if (res.success) {
-      setIsSaved(true);
+      setIsCurrentCompanion(true);
       router.refresh();
+    } else {
+      console.error("Save error:", res.error);
     }
     setLoading(false);
   }
@@ -57,7 +57,7 @@ export default function SaveResultCard({
 
   return (
     <div className="save-result-box">
-      {isSaved ? (
+      {isCurrentCompanion ? (
         <div className="save-result-saved">
           <p>
             🌿 <strong>{character.name}</strong> กำลังรอคุณอยู่ในห้องส่วนตัวแล้ว
@@ -71,13 +71,20 @@ export default function SaveResultCard({
         </div>
       ) : isLoggedIn ? (
         <div className="save-result-action">
-          <p>พาน้อง <strong>{character.name}</strong> ไปเป็นเพื่อนร่วมห้องพักใจของคุณไหม?</p>
+          <p>
+            พาน้อง <strong>{character.name}</strong> ไปเป็นเพื่อนร่วมห้องพักใจของคุณไหม?
+          </p>
           <button
+            type="button"
             className="button"
             onClick={handleSave}
             disabled={loading}
           >
-            <span>{loading ? "กำลังบันทึก..." : `🏡 บันทึก ${character.name} เข้าห้องของคุณ`}</span>
+            <span>
+              {loading
+                ? "กำลังบันทึก..."
+                : `🏡 เลือก ${character.name} เป็นเพื่อนในห้อง`}
+            </span>
             <span className="icon-disc" aria-hidden="true">
               ✓
             </span>
@@ -85,7 +92,9 @@ export default function SaveResultCard({
         </div>
       ) : (
         <div className="save-result-guest">
-          <p>เข้าสู่ระบบเพื่อบันทึก <strong>{character.name}</strong> เข้าห้องส่วนตัวของคุณ</p>
+          <p>
+            เข้าสู่ระบบเพื่อเลือก <strong>{character.name}</strong> เป็นเพื่อนร่วมห้องของคุณ
+          </p>
         </div>
       )}
     </div>

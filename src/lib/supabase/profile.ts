@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { revalidatePath } from "next/cache";
 
 export type Profile = {
   id: string;
@@ -68,21 +69,22 @@ export async function saveQuizResult(
   if (!user) return { success: false, error: "Not logged in" };
 
   const normalizedChar = characterType.toUpperCase();
+  const currentVibe = vibe !== undefined ? vibe : (user.user_metadata?.vibe ?? null);
 
-  // 1. Update user_metadata in Auth (works IMMEDIATELY, zero DB setup required!)
+  // 1. Update user_metadata in Auth (works IMMEDIATELY)
   try {
     await supabase.auth.updateUser({
       data: {
         assigned_character: normalizedChar,
         house: houseId,
-        vibe: vibe ?? null,
+        vibe: currentVibe,
       },
     });
   } catch (err) {
     console.error("Auth updateUser error:", err);
   }
 
-  // 2. Also upsert to profiles table if table exists
+  // 2. Also upsert to profiles table in Supabase
   const displayName =
     user.user_metadata?.full_name ??
     user.user_metadata?.name ??
@@ -91,18 +93,26 @@ export async function saveQuizResult(
   const avatarUrl = user.user_metadata?.avatar_url ?? null;
 
   try {
-    await supabase.from("profiles").upsert({
+    const { error } = await supabase.from("profiles").upsert({
       id: user.id,
       display_name: displayName,
       avatar_url: avatarUrl,
       assigned_character: normalizedChar,
       house: houseId,
-      vibe: vibe ?? null,
+      vibe: currentVibe,
       updated_at: new Date().toISOString(),
     });
-  } catch {
-    // If profiles table isn't created yet, auth metadata still holds the data
+    if (error) {
+      console.error("Profiles table upsert error:", error);
+    }
+  } catch (err) {
+    console.error("Profiles table unexpected error:", err);
   }
+
+  // Purge server cache so /room and character pages immediately show the new character
+  revalidatePath("/room");
+  revalidatePath("/characters/[type]", "page");
+  revalidatePath("/results/[type]", "page");
 
   return { success: true };
 }
