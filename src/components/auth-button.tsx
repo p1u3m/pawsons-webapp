@@ -11,9 +11,13 @@ interface AuthButtonProps {
   onNavigate?: () => void;
 }
 
+// Global in-memory cache to prevent flickering when opening mobile drawer
+let globalCachedUser: User | null = null;
+let globalHasCheckedAuth = false;
+
 export default function AuthButton({ mobile = false, onNavigate }: AuthButtonProps) {
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState<User | null>(globalCachedUser);
+  const [loading, setLoading] = useState(!globalHasCheckedAuth);
   const [signingIn, setSigningIn] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -25,20 +29,28 @@ export default function AuthButton({ mobile = false, onNavigate }: AuthButtonPro
   useEffect(() => {
     if (!supabase) {
       setLoading(false);
+      globalHasCheckedAuth = true;
       return;
     }
 
-    // Get initial session
-    supabase.auth.getUser().then(({ data: { user: u } }) => {
-      setUser(u ?? null);
-      setLoading(false);
-    });
+    // If not checked yet, get initial session
+    if (!globalHasCheckedAuth) {
+      supabase.auth.getUser().then(({ data: { user: u } }) => {
+        globalCachedUser = u ?? null;
+        globalHasCheckedAuth = true;
+        setUser(u ?? null);
+        setLoading(false);
+      });
+    }
 
     // Listen for auth state changes
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
+      globalCachedUser = session?.user ?? null;
+      globalHasCheckedAuth = true;
       setUser(session?.user ?? null);
+      setLoading(false);
     });
 
     return () => subscription.unsubscribe();
@@ -88,6 +100,8 @@ export default function AuthButton({ mobile = false, onNavigate }: AuthButtonPro
   async function handleSignOut() {
     if (!supabase) return;
     setMenuOpen(false);
+    globalCachedUser = null;
+    setUser(null);
     await supabase.auth.signOut();
     router.refresh();
   }
