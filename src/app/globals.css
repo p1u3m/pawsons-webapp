@@ -514,11 +514,13 @@ input:focus-visible {
 
 /* Loading skeleton while checking auth state */
 .auth-skeleton {
-  width: 32px;
-  height: 32px;
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
-  background: var(--line);
+  background: rgba(24, 24, 24, 0.03);
+  border: 1px solid var(--line);
   flex-shrink: 0;
+  opacity: 0.6;
 }
 
 /* Sign-in button — compact pill matching the header aesthetic */
@@ -546,6 +548,29 @@ input:focus-visible {
 
 .auth-google-icon {
   flex-shrink: 0;
+}
+
+/* Spinner for active connecting state */
+.auth-spinner-icon {
+  flex-shrink: 0;
+  animation: authSpin 0.8s linear infinite;
+  color: var(--muted);
+}
+
+@keyframes authSpin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.auth-login-btn.is-loading,
+.mobile-auth-login-btn.is-loading {
+  opacity: 0.85;
+  cursor: wait;
+  pointer-events: none;
 }
 
 /* User avatar button (signed-in state) */

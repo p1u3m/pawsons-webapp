@@ -14,6 +14,7 @@ interface AuthButtonProps {
 export default function AuthButton({ mobile = false, onNavigate }: AuthButtonProps) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [signingIn, setSigningIn] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
@@ -66,18 +67,22 @@ export default function AuthButton({ mobile = false, onNavigate }: AuthButtonPro
   }, [menuOpen]);
 
   async function handleSignIn() {
-    if (!supabase) return;
-    setLoading(true);
+    if (!supabase || signingIn) return;
+    setSigningIn(true);
     const origin = window.location.origin.includes("0.0.0.0")
       ? window.location.origin.replace("0.0.0.0", "localhost")
       : window.location.origin;
 
-    await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: {
-        redirectTo: `${origin}/auth/callback`,
-      },
-    });
+    try {
+      await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: `${origin}/auth/callback`,
+        },
+      });
+    } catch {
+      setSigningIn(false);
+    }
   }
 
   async function handleSignOut() {
@@ -126,16 +131,35 @@ export default function AuthButton({ mobile = false, onNavigate }: AuthButtonPro
     </svg>
   );
 
+  // Spinner SVG for active connecting state
+  const spinnerIcon = (
+    <svg
+      className="auth-spinner-icon"
+      viewBox="0 0 24 24"
+      width="16"
+      height="16"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.5"
+      strokeLinecap="round"
+      aria-hidden="true"
+    >
+      <circle cx="12" cy="12" r="9" stroke="currentColor" strokeOpacity="0.25" />
+      <path d="M12 3a9 9 0 0 1 9 9" stroke="currentColor" />
+    </svg>
+  );
+
   // Signed out — Mobile view
   if (!user && mobile) {
     return (
       <button
-        className="mobile-auth-login-btn"
+        className={`mobile-auth-login-btn ${signingIn ? "is-loading" : ""}`}
         onClick={handleSignIn}
+        disabled={signingIn}
         aria-label="ลงชื่อเข้าใช้ด้วย Google"
       >
-        {googleIcon}
-        <span>เข้าสู่ระบบด้วย Google</span>
+        {signingIn ? spinnerIcon : googleIcon}
+        <span>{signingIn ? "กำลังเชื่อมต่อ Google..." : "เข้าสู่ระบบด้วย Google"}</span>
       </button>
     );
   }
@@ -144,12 +168,13 @@ export default function AuthButton({ mobile = false, onNavigate }: AuthButtonPro
   if (!user) {
     return (
       <button
-        className="auth-login-btn"
+        className={`auth-login-btn ${signingIn ? "is-loading" : ""}`}
         onClick={handleSignIn}
+        disabled={signingIn}
         aria-label="ลงชื่อเข้าใช้ด้วย Google"
       >
-        {googleIcon}
-        <span>Sign in</span>
+        {signingIn ? spinnerIcon : googleIcon}
+        <span>{signingIn ? "Connecting..." : "Sign in"}</span>
       </button>
     );
   }
