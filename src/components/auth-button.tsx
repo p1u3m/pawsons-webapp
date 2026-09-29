@@ -4,6 +4,10 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { createClient } from "@/lib/supabase/client";
+import {
+  openGoogleSignInWindow,
+  subscribeToAuthTab,
+} from "@/lib/supabase/oauth-tab";
 import type { User } from "@supabase/supabase-js";
 
 interface AuthButtonProps {
@@ -16,11 +20,13 @@ let globalCachedUser: User | null = null;
 let globalCachedIsAdmin = false;
 let globalHasCheckedAuth = false;
 
-export default function AuthButton({ mobile = false, onNavigate }: AuthButtonProps) {
+export default function AuthButton({
+  mobile = false,
+  onNavigate,
+}: AuthButtonProps) {
   const [user, setUser] = useState<User | null>(globalCachedUser);
   const [isAdmin, setIsAdmin] = useState<boolean>(globalCachedIsAdmin);
   const [loading, setLoading] = useState(!globalHasCheckedAuth);
-  const [signingIn, setSigningIn] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
@@ -84,8 +90,23 @@ export default function AuthButton({ mobile = false, onNavigate }: AuthButtonPro
       setLoading(false);
     });
 
-    return () => subscription.unsubscribe();
-  }, [supabase]);
+    const unsubscribeTab = subscribeToAuthTab(async () => {
+      const {
+        data: { user: u },
+      } = await supabase.auth.getUser();
+      globalCachedUser = u ?? null;
+      globalHasCheckedAuth = true;
+      setUser(u ?? null);
+      await evaluateAdmin(u ?? null);
+      setLoading(false);
+      router.refresh();
+    });
+
+    return () => {
+      subscription.unsubscribe();
+      unsubscribeTab();
+    };
+  }, [supabase, router]);
 
   // Close menu when clicking outside
   useEffect(() => {
@@ -109,23 +130,9 @@ export default function AuthButton({ mobile = false, onNavigate }: AuthButtonPro
     return () => document.removeEventListener("keydown", handleKey);
   }, [menuOpen]);
 
-  async function handleSignIn() {
-    if (!supabase || signingIn) return;
-    setSigningIn(true);
-    const origin = window.location.origin.includes("0.0.0.0")
-      ? window.location.origin.replace("0.0.0.0", "localhost")
-      : window.location.origin;
-
-    try {
-      await supabase.auth.signInWithOAuth({
-        provider: "google",
-        options: {
-          redirectTo: `${origin}/auth/callback`,
-        },
-      });
-    } catch {
-      setSigningIn(false);
-    }
+  function handleSignIn() {
+    if (!supabase) return;
+    void openGoogleSignInWindow(supabase);
   }
 
   async function handleSignOut() {
@@ -176,35 +183,16 @@ export default function AuthButton({ mobile = false, onNavigate }: AuthButtonPro
     </svg>
   );
 
-  // Spinner SVG for active connecting state
-  const spinnerIcon = (
-    <svg
-      className="auth-spinner-icon"
-      viewBox="0 0 24 24"
-      width="16"
-      height="16"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2.5"
-      strokeLinecap="round"
-      aria-hidden="true"
-    >
-      <circle cx="12" cy="12" r="9" stroke="currentColor" strokeOpacity="0.25" />
-      <path d="M12 3a9 9 0 0 1 9 9" stroke="currentColor" />
-    </svg>
-  );
-
   // Signed out — Mobile view
   if (!user && mobile) {
     return (
       <button
-        className={`mobile-auth-login-btn ${signingIn ? "is-loading" : ""}`}
+        className="mobile-auth-login-btn"
         onClick={handleSignIn}
-        disabled={signingIn}
         aria-label="Sign in with Google"
       >
-        {signingIn ? spinnerIcon : googleIcon}
-        <span>{signingIn ? "Connecting..." : "Sign in with Google"}</span>
+        {googleIcon}
+        <span>Sign in with Google</span>
       </button>
     );
   }
@@ -213,13 +201,12 @@ export default function AuthButton({ mobile = false, onNavigate }: AuthButtonPro
   if (!user) {
     return (
       <button
-        className={`auth-login-btn ${signingIn ? "is-loading" : ""}`}
+        className="auth-login-btn"
         onClick={handleSignIn}
-        disabled={signingIn}
         aria-label="Sign in with Google"
       >
-        {signingIn ? spinnerIcon : googleIcon}
-        <span>{signingIn ? "Connecting..." : "Sign in"}</span>
+        {googleIcon}
+        <span>Sign in</span>
       </button>
     );
   }
@@ -282,7 +269,9 @@ export default function AuthButton({ mobile = false, onNavigate }: AuthButtonPro
               }}
             >
               <span className="auth-btn-label">
-                <span className="material-symbols-rounded">dashboard_customize</span>
+                <span className="material-symbols-rounded">
+                  dashboard_customize
+                </span>
                 <span>Manage Content (Admin)</span>
               </span>
               <span className="icon-disc" aria-hidden="true">
@@ -298,7 +287,12 @@ export default function AuthButton({ mobile = false, onNavigate }: AuthButtonPro
               handleSignOut();
             }}
           >
-            <span className="material-symbols-rounded" style={{ fontSize: "16px" }}>logout</span>
+            <span
+              className="material-symbols-rounded"
+              style={{ fontSize: "16px" }}
+            >
+              logout
+            </span>
             <span>Sign out</span>
           </button>
         </div>
@@ -356,7 +350,9 @@ export default function AuthButton({ mobile = false, onNavigate }: AuthButtonPro
               onClick={() => setMenuOpen(false)}
               style={{ color: "#3d7f58", fontWeight: 600 }}
             >
-              <span className="material-symbols-rounded">dashboard_customize</span>
+              <span className="material-symbols-rounded">
+                dashboard_customize
+              </span>
               <span>Manage Content (Admin)</span>
             </Link>
           )}

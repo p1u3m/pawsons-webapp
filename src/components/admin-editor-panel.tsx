@@ -2,7 +2,11 @@
 
 import { useState, useRef, useTransition } from "react";
 import Image from "next/image";
-import { updateContent, uploadContentImage, deleteContentImage } from "@/lib/supabase/contents";
+import {
+  updateContent,
+  uploadContentImage,
+  deleteContentImage,
+} from "@/lib/supabase/contents";
 import type { ContentRow } from "@/lib/supabase/contents";
 import {
   PencilSimpleIcon,
@@ -10,6 +14,8 @@ import {
   CheckIcon,
   XIcon,
   ArrowSquareOutIcon,
+  MagnifyingGlassIcon,
+  FilesIcon,
 } from "@phosphor-icons/react";
 
 type Props = {
@@ -26,6 +32,8 @@ type EditState = {
 
 export default function AdminEditorPanel({ contents }: Props) {
   const [selected, setSelected] = useState<ContentRow | null>(null);
+  const [query, setQuery] = useState("");
+  const [filter, setFilter] = useState("all");
   const [edit, setEdit] = useState<EditState>({
     situation_title: "",
     body_1: "",
@@ -42,6 +50,16 @@ export default function AdminEditorPanel({ contents }: Props) {
 
   // Local copy of contents for optimistic title update in list
   const [localContents, setLocalContents] = useState<ContentRow[]>(contents);
+  const coveredCount = localContents.filter(
+    (row) => row.cover_image_url,
+  ).length;
+  const visibleContents = localContents.filter(
+    (row) =>
+      (filter === "all" || !row.cover_image_url) &&
+      `${row.id} ${row.situation_title} ${row.character_type ?? ""}`
+        .toLowerCase()
+        .includes(query.toLowerCase().trim()),
+  );
 
   function openEditor(row: ContentRow) {
     setSelected(row);
@@ -106,6 +124,10 @@ export default function AdminEditorPanel({ contents }: Props) {
 
   function handleSave() {
     if (!selected) return;
+    if (!edit.situation_title.trim()) {
+      setSaveError("กรุณาระบุชื่อสถานการณ์ก่อนบันทึก");
+      return;
+    }
     setSaveError(null);
     setSaving(true);
     startTransition(async () => {
@@ -135,203 +157,342 @@ export default function AdminEditorPanel({ contents }: Props) {
   }
 
   return (
-    <div className="aep-layout">
-      {/* ── LEFT: Story list ── */}
-      <div className="aep-list">
-        {localContents.map((row) => (
-          <button
-            key={row.id}
-            className={`aep-row ${selected?.id === row.id ? "aep-row-active" : ""}`}
-            onClick={() => openEditor(row)}
-          >
-            <span className="aep-row-num">{String(row.id).padStart(2, "0")}</span>
-            <span className="aep-row-title">{row.situation_title}</span>
-            <span className="aep-row-right">
-              {savedId === row.id ? (
-                <CheckIcon size={14} weight="bold" className="aep-saved-icon" />
-              ) : (
-                <PencilSimpleIcon size={14} weight="regular" className="aep-edit-icon" />
-              )}
-            </span>
-          </button>
-        ))}
-      </div>
-
-      {/* ── RIGHT: Edit panel ── */}
-      <div className={`aep-panel ${selected ? "aep-panel-open" : ""}`}>
-        {!selected ? (
-          <div className="aep-empty">
-            <PencilSimpleIcon size={32} weight="thin" />
-            <p>เลือกเรื่องที่ต้องการแก้ไข</p>
-          </div>
-        ) : (
-          <>
-            <div className="aep-panel-header">
-              <div className="aep-panel-meta">
-                <span className="aep-panel-num">
-                  {String(selected.id).padStart(2, "0")}
-                </span>
-                <span className="aep-panel-badge">กำลังแก้ไข</span>
-              </div>
-              <div className="aep-panel-actions-top">
-                <a
-                  href={`/contents/${selected.id}`}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="aep-preview-link"
-                >
-                  <ArrowSquareOutIcon size={14} weight="bold" />
-                  Preview
-                </a>
-                <button className="aep-close-btn" onClick={closeEditor}>
-                  <XIcon size={16} weight="bold" />
-                </button>
-              </div>
+    <>
+      <section className="admin-overview" aria-label="ภาพรวมเนื้อหา">
+        <div>
+          <span>เรื่องราวทั้งหมด</span>
+          <strong>
+            {localContents.length.toString().padStart(2, "0")}
+            <small>สถานการณ์</small>
+          </strong>
+        </div>
+        <div>
+          <span>มีภาพปกแล้ว</span>
+          <strong>
+            {coveredCount.toString().padStart(2, "0")}
+            <small>เรื่อง</small>
+          </strong>
+        </div>
+        <div>
+          <span>ยังไม่มีภาพปก</span>
+          <strong>
+            {(localContents.length - coveredCount).toString().padStart(2, "0")}
+            <small>เรื่อง</small>
+          </strong>
+        </div>
+        <p>
+          ทุกเรื่องราวมีความหมาย
+          <span>เลือกเรื่องที่ต้องการ แล้วเริ่มปรับแต่งเนื้อหาได้เลย</span>
+        </p>
+      </section>
+      <div className="aep-layout">
+        {/* ── LEFT: Story list ── */}
+        <div className="aep-list">
+          <div className="aep-list-tools">
+            <div className="aep-list-heading">
+              <h2>สถานการณ์ทั้งหมด</h2>
+              <span>{visibleContents.length}</span>
             </div>
+            <label className="aep-search">
+              <MagnifyingGlassIcon size={18} />
+              <input
+                aria-label="ค้นหาสถานการณ์"
+                placeholder="ค้นหาชื่อเรื่อง หรือบุคลิกภาพ..."
+                value={query}
+                onChange={(event) => setQuery(event.target.value)}
+              />
+            </label>
+            <div className="aep-filters" aria-label="กรองเนื้อหา">
+              <button
+                aria-pressed={filter === "all"}
+                onClick={() => setFilter("all")}
+              >
+                ทั้งหมด
+              </button>
+              <button
+                aria-pressed={filter === "missing"}
+                onClick={() => setFilter("missing")}
+              >
+                ยังไม่มีภาพปก
+              </button>
+            </div>
+          </div>
+          <div className="aep-list-rows">
+            {visibleContents.map((row) => (
+              <button
+                key={row.id}
+                className={`aep-row ${selected?.id === row.id ? "aep-row-active" : ""}`}
+                onClick={() => openEditor(row)}
+                aria-pressed={selected?.id === row.id}
+              >
+                <span className="aep-row-num">
+                  {String(row.id).padStart(2, "0")}
+                </span>
+                <span className="aep-row-copy">
+                  <span className="aep-row-title">{row.situation_title}</span>
+                  <span className="aep-row-caption">
+                    {row.character_type || "Pawsons story"}
+                    <span>·</span>
+                    {row.cover_image_url ? "มีภาพปกแล้ว" : "ยังไม่มีภาพปก"}
+                  </span>
+                </span>
+                <span className="aep-row-right">
+                  {savedId === row.id ? (
+                    <CheckIcon
+                      size={14}
+                      weight="bold"
+                      className="aep-saved-icon"
+                    />
+                  ) : (
+                    <PencilSimpleIcon
+                      size={14}
+                      weight="regular"
+                      className="aep-edit-icon"
+                    />
+                  )}
+                </span>
+              </button>
+            ))}
+            {visibleContents.length === 0 && (
+              <div className="aep-no-results">
+                <FilesIcon size={28} />
+                <p>
+                  {localContents.length
+                    ? "ไม่พบเรื่องที่ตรงกับการค้นหา"
+                    : "ยังไม่มีเนื้อหาในคลัง"}
+                </p>
+                {localContents.length > 0 && (
+                  <button
+                    onClick={() => {
+                      setQuery("");
+                      setFilter("all");
+                    }}
+                  >
+                    ล้างตัวกรอง
+                  </button>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
 
-            <div className="aep-fields">
-              {/* Title */}
-              <div className="aep-field">
-                <label className="aep-label" htmlFor="aep-title">
-                  ชื่อสถานการณ์
-                </label>
-                <input
-                  id="aep-title"
-                  className="aep-input"
-                  value={edit.situation_title}
-                  onChange={(e) =>
-                    setEdit((p) => ({ ...p, situation_title: e.target.value }))
-                  }
-                  placeholder="ชื่อสถานการณ์..."
-                />
+        {/* ── RIGHT: Edit panel ── */}
+        <div className={`aep-panel ${selected ? "aep-panel-open" : ""}`}>
+          {!selected ? (
+            <div className="aep-empty">
+              <span className="aep-empty-icon">
+                <FilesIcon size={36} weight="duotone" />
+              </span>
+              <span className="admin-eyebrow">Your next story starts here</span>
+              <h2>พื้นที่สำหรับเรื่องราวดี ๆ</h2>
+              <p>
+                เลือกสถานการณ์จากรายการเพื่อแก้ไขข้อความ
+                <br />
+                เพิ่มภาพปก และเตรียมเรื่องราวสำหรับผู้อ่าน
+              </p>
+              {localContents[0] && (
+                <button
+                  className="aep-start-btn"
+                  onClick={() => openEditor(localContents[0])}
+                >
+                  เริ่มแก้ไขเรื่องแรก <PencilSimpleIcon size={16} />
+                </button>
+              )}
+            </div>
+          ) : (
+            <>
+              <div className="aep-panel-header">
+                <div className="aep-panel-meta">
+                  <span className="aep-panel-num">
+                    {String(selected.id).padStart(2, "0")}
+                  </span>
+                  <span className="aep-panel-badge">กำลังแก้ไข</span>
+                </div>
+                <div className="aep-panel-actions-top">
+                  <a
+                    href={`/contents/${selected.id}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="aep-preview-link"
+                  >
+                    <ArrowSquareOutIcon size={14} weight="bold" />
+                    ดูหน้าเว็บ
+                  </a>
+                  <button
+                    className="aep-close-btn"
+                    onClick={closeEditor}
+                    aria-label="ปิดตัวแก้ไข"
+                  >
+                    <XIcon size={16} weight="bold" />
+                  </button>
+                </div>
               </div>
 
-              {/* Body 1 */}
-              <div className="aep-field">
-                <label className="aep-label" htmlFor="aep-body1">
-                  ย่อหน้าที่ 1
-                </label>
-                <textarea
-                  id="aep-body1"
-                  className="aep-textarea"
-                  rows={4}
-                  value={edit.body_1}
-                  onChange={(e) =>
-                    setEdit((p) => ({ ...p, body_1: e.target.value }))
-                  }
-                  placeholder="เนื้อหาย่อหน้าแรก..."
-                />
-              </div>
+              <div className="aep-fields">
+                <div className="aep-section-heading">
+                  <h2>รายละเอียดเรื่องราว</h2>
+                  <p>ปรับข้อความและภาพประกอบที่แสดงบนเว็บไซต์</p>
+                </div>
+                {/* Title */}
+                <div className="aep-field">
+                  <label className="aep-label" htmlFor="aep-title">
+                    ชื่อสถานการณ์
+                  </label>
+                  <input
+                    id="aep-title"
+                    className="aep-input"
+                    value={edit.situation_title}
+                    onChange={(e) =>
+                      setEdit((p) => ({
+                        ...p,
+                        situation_title: e.target.value,
+                      }))
+                    }
+                    placeholder="ชื่อสถานการณ์..."
+                  />
+                </div>
 
-              {/* Body 2 */}
-              <div className="aep-field">
-                <label className="aep-label" htmlFor="aep-body2">
-                  ย่อหน้าที่ 2
-                </label>
-                <textarea
-                  id="aep-body2"
-                  className="aep-textarea"
-                  rows={4}
-                  value={edit.body_2}
-                  onChange={(e) =>
-                    setEdit((p) => ({ ...p, body_2: e.target.value }))
-                  }
-                  placeholder="เนื้อหาย่อหน้าสอง..."
-                />
-              </div>
+                {/* Body 1 */}
+                <div className="aep-field">
+                  <label className="aep-label" htmlFor="aep-body1">
+                    ย่อหน้าที่ 1
+                  </label>
+                  <textarea
+                    id="aep-body1"
+                    className="aep-textarea"
+                    rows={4}
+                    value={edit.body_1}
+                    onChange={(e) =>
+                      setEdit((p) => ({ ...p, body_1: e.target.value }))
+                    }
+                    placeholder="เนื้อหาย่อหน้าแรก..."
+                  />
+                </div>
 
-              {/* Quote */}
-              <div className="aep-field">
-                <label className="aep-label" htmlFor="aep-quote">
-                  Quote
-                </label>
-                <textarea
-                  id="aep-quote"
-                  className="aep-textarea aep-textarea-sm"
-                  rows={2}
-                  value={edit.quote}
-                  onChange={(e) =>
-                    setEdit((p) => ({ ...p, quote: e.target.value }))
-                  }
-                  placeholder='"คำพูดที่อยากฝากไว้..."'
-                />
-              </div>
+                {/* Body 2 */}
+                <div className="aep-field">
+                  <label className="aep-label" htmlFor="aep-body2">
+                    ย่อหน้าที่ 2
+                  </label>
+                  <textarea
+                    id="aep-body2"
+                    className="aep-textarea"
+                    rows={4}
+                    value={edit.body_2}
+                    onChange={(e) =>
+                      setEdit((p) => ({ ...p, body_2: e.target.value }))
+                    }
+                    placeholder="เนื้อหาย่อหน้าสอง..."
+                  />
+                </div>
 
-              {/* Cover image */}
-              <div className="aep-field">
-                <label className="aep-label">รูปภาพปก</label>
-                <div className="aep-image-row">
-                  {edit.cover_image_url ? (
-                    <div className="aep-image-thumb">
-                      <Image
-                        src={edit.cover_image_url}
-                        alt="cover"
-                        width={64}
-                        height={64}
-                        style={{ objectFit: "cover", borderRadius: 8 }}
-                        unoptimized
+                {/* Quote */}
+                <div className="aep-field">
+                  <label className="aep-label" htmlFor="aep-quote">
+                    Quote
+                  </label>
+                  <textarea
+                    id="aep-quote"
+                    className="aep-textarea aep-textarea-sm"
+                    rows={2}
+                    value={edit.quote}
+                    onChange={(e) =>
+                      setEdit((p) => ({ ...p, quote: e.target.value }))
+                    }
+                    placeholder='"คำพูดที่อยากฝากไว้..."'
+                  />
+                </div>
+
+                {/* Cover image */}
+                <div className="aep-field">
+                  <label className="aep-label">รูปภาพปก</label>
+                  <div className="aep-image-row">
+                    {edit.cover_image_url ? (
+                      <div className="aep-image-thumb">
+                        <Image
+                          src={edit.cover_image_url}
+                          alt={`ภาพปก ${edit.situation_title}`}
+                          width={64}
+                          height={64}
+                          style={{ objectFit: "cover", borderRadius: 8 }}
+                          unoptimized
+                        />
+                        <button
+                          className="aep-image-remove"
+                          onClick={handleRemoveImage}
+                          title="ลบรูปภาพและนำออกจาก Storage"
+                          type="button"
+                        >
+                          <XIcon size={10} weight="bold" />
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="aep-image-placeholder">
+                        <ImageIcon size={20} weight="thin" />
+                      </div>
+                    )}
+                    <div className="aep-image-btns">
+                      <input
+                        ref={fileRef}
+                        type="file"
+                        accept="image/jpeg,image/png,image/webp,image/gif"
+                        style={{ display: "none" }}
+                        onChange={handleImageUpload}
                       />
                       <button
-                        className="aep-image-remove"
-                        onClick={handleRemoveImage}
-                        title="ลบรูปภาพและนำออกจาก Storage"
-                        type="button"
+                        className="aep-upload-btn"
+                        onClick={() => fileRef.current?.click()}
                       >
-                        <XIcon size={10} weight="bold" />
+                        <ImageIcon size={13} weight="regular" />
+                        อัปโหลดรูป
                       </button>
+                      <span className="aep-upload-status">
+                        JPG, PNG, WebP หรือ GIF · เปลี่ยนภาพมีผลทันที
+                      </span>
+                      {uploadStatus && (
+                        <span className="aep-upload-status">
+                          {uploadStatus}
+                        </span>
+                      )}
                     </div>
-                  ) : (
-                    <div className="aep-image-placeholder">
-                      <ImageIcon size={20} weight="thin" />
-                    </div>
-                  )}
-                  <div className="aep-image-btns">
-                    <input
-                      ref={fileRef}
-                      type="file"
-                      accept="image/jpeg,image/png,image/webp,image/gif"
-                      style={{ display: "none" }}
-                      onChange={handleImageUpload}
-                    />
-                    <button
-                      className="aep-upload-btn"
-                      onClick={() => fileRef.current?.click()}
-                    >
-                      <ImageIcon size={13} weight="regular" />
-                      อัปโหลดรูป
-                    </button>
-                    {uploadStatus && (
-                      <span className="aep-upload-status">{uploadStatus}</span>
-                    )}
                   </div>
                 </div>
               </div>
-            </div>
 
-            {saveError && <p className="aep-error">{saveError}</p>}
+              {saveError && (
+                <p className="aep-error" role="alert">
+                  {saveError}
+                </p>
+              )}
 
-            <div className="aep-footer">
-              <button
-                className="aep-save-btn"
-                onClick={handleSave}
-                disabled={saving || isPending}
-              >
-                {saving || isPending ? (
-                  "กำลังบันทึก..."
-                ) : (
-                  <>
-                    <CheckIcon size={14} weight="bold" />
-                    บันทึก
-                  </>
-                )}
-              </button>
-              <button className="aep-discard-btn" onClick={closeEditor}>
-                ยกเลิก
-              </button>
-            </div>
-          </>
-        )}
+              <div className="aep-footer">
+                <span className="aep-save-note" role="status">
+                  {savedId === selected.id
+                    ? "บันทึกการเปลี่ยนแปลงแล้ว"
+                    : "ข้อความจะเผยแพร่เมื่อกดบันทึก"}
+                </span>
+                <button
+                  className="aep-save-btn"
+                  onClick={handleSave}
+                  disabled={saving || isPending}
+                >
+                  {saving || isPending ? (
+                    "กำลังบันทึก..."
+                  ) : (
+                    <>
+                      <CheckIcon size={14} weight="bold" />
+                      บันทึกการเปลี่ยนแปลง
+                    </>
+                  )}
+                </button>
+                <button className="aep-discard-btn" onClick={closeEditor}>
+                  ยกเลิก
+                </button>
+              </div>
+            </>
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 }

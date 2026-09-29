@@ -91,18 +91,19 @@ create table public.letters (
   created_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
 
--- 5. ตารางคำสั่งซื้อร้านค้า (Orders & Stripe)
+-- 5. ภาพร่างคำสั่งซื้อ; schema จริงและ migrations อยู่ในแผน Phase 4
 create table public.orders (
   id uuid default gen_random_uuid() primary key,
   user_id uuid references public.profiles(id) on delete set null,
-  stripe_session_id text unique not null,
-  stripe_payment_intent_id text,
-  amount_total integer not null, -- จำนวนเงิน (เช่น หน่วย cents / satang)
-  currency text not null,        -- 'usd', 'thb', ฯลฯ
-  payment_status text not null,  -- 'pending', 'paid', 'failed'
-  fulfillment_status text default 'unfulfilled', -- 'unfulfilled', 'fulfilled'
+  stripe_session_id text unique, -- ยังไม่มีค่าขณะสร้าง order ก่อน Checkout Session
+  stripe_payment_intent_id text unique,
+  amount_total bigint not null, -- หน่วยย่อยของ currency เช่น satang/cents
+  currency text not null,
+  order_status text not null default 'checkout_pending',
+  payment_status text not null default 'unpaid',
+  fulfillment_status text not null default 'unfulfilled',
   shipping_details jsonb,
-  items jsonb not null,
+  items jsonb not null, -- snapshot; implementation จริงแยก order_items
   created_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
 ```
@@ -163,23 +164,10 @@ create table public.orders (
 ---
 
 ### 🛍️ Phase 4: E-commerce Shop & International Stripe Checkout
-**เป้าหมาย:** เปิดร้านค้า Pawsons Store อย่างเต็มรูปแบบ รองรับการสั่งซื้อสินค้าน่ารักๆ ทั้งสินค้าจริง (Physical Merch) และสินค้าดิจิทัล (Digital Items) รับเงินได้ทั่วโลก
 
-1. **เตรียมการ Stripe**:
-   - สมัครบัญชี **Stripe** (เปิดรับบัตรเครดิตสากล, Apple Pay, Google Pay)
-   - ติดตั้ง `stripe` และ `@stripe/stripe-js`
-2. **อัปเกรดหน้า `/shop`**:
-   - เปลี่ยนจาก Mock Data ใน `data.ts` ให้ดึงรายการสินค้าจาก Database
-   - ตะกร้าสินค้าแบบ Drawer (Slide-over Cart) ที่ใช้งานง่ายบนมือถือ
-   - รองรับการกรองสินค้าตาม Character และ House
-3. **ระบบชำระเงิน (Stripe Hosted Checkout)**:
-   - ผู้ใช้กด "Checkout" -> ระบบเรียก Next.js Route Handler สร้าง Stripe Checkout Session
-   - ส่งผู้ต่อไปยังหน้าจ่ายเงินที่ปลอดภัยของ Stripe (รองรับภาษาอังกฤษ/ไทย, สกุลเงิน USD/THB อัตโนมัติ)
-4. **Stripe Webhook (`/api/webhooks/stripe`)**:
-   - ดักฟัง Event `checkout.session.completed`
-   - บันทึกสถานะคำสั่งซื้อลงตาราง `orders` ใน Supabase
-   - หากเป็นไอเทมดิจิทัล (เช่น สติกเกอร์, ตั๋วสแตมป์, ของแต่งห้อง) ระบบจะเพิ่มเข้า `user_inventory` ทันทีอัตโนมัติ
-   - หน้า `/shop/success` แสดงใบเสร็จน่ารักๆ ธีม Pawsons พร้อมอนิเมชันของขวัญ
+**เป้าหมาย:** เปลี่ยน `/shop` จากหน้าตัวอย่างเป็นร้านขาย Physical Merch และ Digital Items ที่จัดการ catalog, cart, stock, order, การชำระเงินผ่าน Stripe Hosted Checkout และ fulfillment ได้ครบ พร้อมทดสอบก่อนเปิดรับเงินจริง
+
+อ่านรายละเอียดงาน ระบบข้อมูล การไหลของเงินและออเดอร์ ความเสี่ยง และเกณฑ์เปิดขายใน [แผน Shop Phase 4](./PHASE-4-SHOP.md)
 
 ---
 

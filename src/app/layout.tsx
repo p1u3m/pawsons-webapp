@@ -1,9 +1,15 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import Navigation from "@/components/navigation";
 import Reveal from "@/components/reveal";
 import "./globals.css";
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+};
 
 export const metadata: Metadata = {
   title: {
@@ -33,12 +39,19 @@ export default function RootLayout({
             crossOrigin="anonymous"
           />
         ))}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Itim&family=Varela+Round&display=swap"
+          rel="stylesheet"
+        />
         <link
           rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
         />
       </head>
       <body>
+        <div className="noise-overlay" aria-hidden="true" />
         <a className="skip-link" href="#main">
           ข้ามไปเนื้อหา
         </a>

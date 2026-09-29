@@ -1,5 +1,5 @@
 import { getAllContents } from "@/lib/supabase/contents";
-import type { ContentRow } from "@/lib/supabase/contents";
+import Link from "next/link";
 import AdminEditorPanel from "@/components/admin-editor-panel";
 
 export const dynamic = "force-dynamic";
@@ -15,9 +15,12 @@ export default async function AdminContentsPage() {
         <div>
           <h1 className="admin-page-title">16 Situations</h1>
           <p className="admin-page-sub">
-            แก้ไขเนื้อหาของทั้ง 16 สถานการณ์ — การเปลี่ยนแปลงจะมีผลทันที
+            ดูแลทุกเรื่องราวของ Pawsons ให้พร้อมสำหรับผู้อ่าน
           </p>
         </div>
+        <Link className="admin-site-link" href="/contents" target="_blank">
+          ดูหน้าเว็บไซต์ ↗
+        </Link>
       </header>
 
       <AdminEditorPanel contents={contents} />

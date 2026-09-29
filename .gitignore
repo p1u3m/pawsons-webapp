@@ -5,6 +5,9 @@ out/
 test-results/
 playwright-report/
 .env*
+!.env.local.example
 .DS_Store
 __MACOSX/
 ._*
+**/client_secret_*.json
+supabase/.temp/
