@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { BackLink } from "@/components/ui";
+import { BackLink } from "@/components/character-ui";
 import { ShopPaymentStatus } from "@/components/shop/payment-status";
 import { getStripeClient } from "@/lib/stripe/server";
 import { syncShopOrder, type ShopOrderState } from "@/lib/shop/confirm-order";

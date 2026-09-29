@@ -2,7 +2,7 @@ import { houseBackground } from "@/lib/data";
 import Image from "next/image";
 import Link from "next/link";
 import { houses } from "@/lib/data";
-import { PageIntro } from "@/components/ui";
+import { PageIntro } from "@/components/character-ui";
 
 export const metadata = { title: "Four houses" };
 

@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { characters, houses } from "@/lib/data";
-import { CharacterCard } from "./ui";
+import { CharacterCard } from "./character-ui";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 

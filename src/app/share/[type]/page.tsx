@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { characters, getCharacter } from "@/lib/data";
 import ShareCard from "@/components/share-card";
-import { BackLink } from "@/components/ui";
+import { BackLink } from "@/components/character-ui";
 export function generateStaticParams() {
   return characters.map((c) => ({ type: c.type.toLowerCase() }));
 }

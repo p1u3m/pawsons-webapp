@@ -1,4 +1,4 @@
-import { PageIntro } from "@/components/ui";
+import { PageIntro } from "@/components/character-ui";
 import CharacterDirectory from "@/components/character-directory";
 export const metadata = { title: "Characters" };
 export default function Page() {

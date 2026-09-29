@@ -3,7 +3,7 @@ import { houseBackground } from "@/lib/data";
 import { useState } from "react";
 import Link from "next/link";
 import type { Character } from "@/lib/data";
-import { CharacterImage } from "./ui";
+import { CharacterImage } from "./character-ui";
 
 async function loadImage(src: string) {
   const img = new window.Image();

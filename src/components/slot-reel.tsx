@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import type { Character } from "@/lib/data";
-import { CharacterImage } from "./ui";
+import { CharacterImage } from "./character-ui";
 
 export function SlotReel({ characters }: { characters: Character[] }) {
   const [index, setIndex] = useState(0);

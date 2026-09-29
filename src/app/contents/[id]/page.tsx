@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { characters, getCharacter } from "@/lib/data";
-import { BackLink } from "@/components/ui";
+import { BackLink } from "@/components/character-ui";
 import { getContent } from "@/lib/supabase/contents";
 import { ArrowRightIcon, ArrowUpRightIcon } from "@phosphor-icons/react/dist/ssr";
 

@@ -1,5 +1,7 @@
 # Design System Inspired by Lovable
 
+> **Historical reference — mood and principles only.** The live source of truth is the token block at the top of `src/app/globals.css` (`--paper`, `--ink`, `--*-bg` house colors, radii). Where this file disagrees, the code wins. Outdated here: fonts are LINE Seed EN/TH + Varela Round/Itim (not Camera Plain), and components use shadcn on Base UI (not Radix).
+
 ## 1. Visual Theme & Atmosphere
 
 Pawson's visual system uses a warm paper-like base. The entire page sits on a creamy, parchment-toned background (`#F6F3EB`) that immediately separates it from the cold-white conventions of most developer tool sites. This isn't minimalism for minimalism's sake — it's a deliberate choice to feel approachable, almost analog, like a well-crafted notebook. The near-black text (`#111111`) against this warm cream creates a contrast ratio that's easy on the eyes while maintaining sharp readability.

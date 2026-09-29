@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { gsap } from "gsap";
-import { CharacterImage } from "./ui";
+import { CharacterImage } from "./character-ui";
 import type { Profile } from "@/lib/supabase/profile";
 import type { Character } from "@/lib/data";
 

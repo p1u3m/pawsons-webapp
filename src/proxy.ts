@@ -6,7 +6,7 @@ const supabaseAnonKey =
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
   process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   // When Supabase is not configured, pass through without session refresh
   if (!supabaseUrl || !supabaseAnonKey) {
     return NextResponse.next();

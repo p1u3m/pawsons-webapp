@@ -25,10 +25,6 @@
   text-decoration: none;
 }
 
-.store-muted {
-  color: var(--muted);
-}
-
 .store-dot {
   display: inline-block;
   flex-shrink: 0;
@@ -548,15 +544,6 @@
   font-size: 36px;
 }
 
-.store-art--hero .store-no-image {
-  gap: 10px;
-  font-size: 15px;
-}
-
-.store-art--hero .store-no-image .material-symbols-rounded {
-  font-size: 56px;
-}
-
 .store-line-thumb .store-no-image .material-symbols-rounded {
   font-size: 24px;
 }
@@ -776,13 +763,6 @@
   gap: 56px;
 }
 
-.store-art--hero {
-  position: sticky;
-  top: 110px;
-  border-radius: 34px;
-  box-shadow: var(--pw-ledge);
-}
-
 .store-buy h1 {
   margin: 12px 0 8px;
   font-size: clamp(28px, 3.2vw, 40px);
@@ -876,16 +856,6 @@
   text-align: center;
   font-weight: 600;
   font-variant-numeric: tabular-nums;
-}
-
-.store-stepper--sm button {
-  width: 32px;
-  height: 32px;
-}
-
-.store-stepper--sm output {
-  min-width: 20px;
-  font-size: 14px;
 }
 
 .store-facts {
@@ -1339,12 +1309,6 @@
   .store-detail-grid {
     grid-template-columns: 1fr;
     gap: 32px;
-  }
-
-  .store-art--hero {
-    position: relative;
-    top: 0;
-    max-width: 520px;
   }
 }
 

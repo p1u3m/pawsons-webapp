@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { CharacterImage } from "@/components/ui";
+import { CharacterImage } from "@/components/character-ui";
 import { characters } from "@/lib/data";
 
 export const metadata = { title: "Personal letters" };

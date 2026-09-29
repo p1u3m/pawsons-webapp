@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { gsap } from "gsap";
 import { questions, calculateType, characters } from "@/lib/data";
-import { CharacterImage } from "./ui";
+import { CharacterImage } from "./character-ui";
 
 type SceneStep = {
   kind: "scene";

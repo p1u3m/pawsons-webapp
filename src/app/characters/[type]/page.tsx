@@ -2,7 +2,7 @@ import { houseBackground } from "@/lib/data";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { characters, getCharacter } from "@/lib/data";
-import { CharacterImage, CharacterCard, BackLink } from "@/components/ui";
+import { CharacterImage, CharacterCard, BackLink } from "@/components/character-ui";
 import SaveResultCard from "@/components/save-result-card";
 
 export function generateStaticParams() {

@@ -2,7 +2,7 @@ import { houseBackground } from "@/lib/data";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import { houses, characters } from "@/lib/data";
-import { BackLink, CharacterCard } from "@/components/ui";
+import { BackLink, CharacterCard } from "@/components/character-ui";
 
 export function generateStaticParams() {
   return houses.map((h) => ({ house: h.id }));
