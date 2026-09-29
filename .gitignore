@@ -11,3 +11,8 @@ __MACOSX/
 ._*
 **/client_secret_*.json
 supabase/.temp/
+
+# Personal Claude Code settings
+.claude/settings.local.json
+# Local symlinks into .agents/skills (absolute, machine-specific)
+.claude/skills/
