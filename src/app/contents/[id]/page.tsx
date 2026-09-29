@@ -50,7 +50,7 @@ export default async function Page({
     content?.quote ?? `"ค่อย ๆ ไปก็ได้ เราอยู่ตรงนี้ด้วยกันนะ"`;
 
   return (
-    <article className="wrap page-space story-open">
+    <article className="wrap min-h-[70vh] pt-10 pb-[90px] story-open">
       {/* Back nav */}
       <BackLink
         href={character ? `/contents?character=${c.type}` : "/contents"}

@@ -1,7 +1,7 @@
 export default function Loading() {
   return (
     <div
-      className="wrap page-space skeleton-page"
+      className="wrap min-h-[70vh] pt-10 pb-[90px] skeleton-page"
       role="status"
       aria-label="กำลังโหลด"
     >

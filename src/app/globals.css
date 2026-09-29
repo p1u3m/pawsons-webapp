@@ -1,4 +1,43 @@
 @import url("https://fonts.googleapis.com/css2?family=Itim&family=Varela+Round&display=swap");
+/* Tailwind utilities without Preflight preserve the existing Pawsons base styles. */
+@layer theme, base, components, utilities;
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities);
+
+@theme inline {
+  --color-background: var(--paper);
+  --color-foreground: var(--ink);
+  --color-card: var(--paper-surface);
+  --color-card-foreground: var(--ink);
+  --color-popover: var(--paper-surface);
+  --color-popover-foreground: var(--ink);
+  --color-primary: var(--ink);
+  --color-primary-foreground: var(--paper-surface);
+  --color-secondary: var(--paper-soft);
+  --color-secondary-foreground: var(--ink);
+  --color-muted: var(--paper-soft);
+  --color-muted-foreground: var(--muted);
+  --color-accent: var(--clover-bg);
+  --color-accent-foreground: var(--ink);
+  --color-border: var(--line-strong);
+  --color-input: var(--line-strong);
+  --color-ring: var(--green);
+  --color-destructive: #b54744;
+  --color-destructive-foreground: #fffdf9;
+  --color-paper: var(--paper);
+  --color-paper-surface: var(--paper-surface);
+  --color-ink: var(--ink);
+  --color-green: var(--green);
+  --color-clover: var(--clover-bg);
+  --color-lavender: var(--lavender-bg);
+  --color-forget: var(--forget-bg);
+  --color-dandelion: var(--dandelion-bg);
+  --radius-pawson-outer: var(--radius-outer);
+  --radius-pawson-inner: var(--radius-inner);
+  --shadow-pawson-card: var(--shadow-card);
+  --shadow-pawson-float: var(--shadow-float);
+  --font-pawson: "Varela Round", "Itim", "LINE Seed EN", "LINE Seed TH", cursive, sans-serif;
+}
 
 @font-face {
   font-family: "LINE Seed EN";
@@ -2429,16 +2468,6 @@ input:focus-visible {
 /* ----------------------------------------------------
    SUB-PAGES: PAGE SPACES & DIRECTORIES
    ---------------------------------------------------- */
-.page-space {
-  padding-block: 40px 90px;
-  min-height: 70vh;
-}
-
-.page-intro {
-  max-width: 780px;
-  margin-bottom: 44px;
-}
-
 .page-intro .eyebrow {
   margin-bottom: 16px;
 }
@@ -2456,21 +2485,6 @@ input:focus-visible {
 }
 
 /* Filter Pill Bar */
-.directory-tools {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  flex-wrap: wrap;
-  margin-bottom: 28px;
-}
-
-.filter-row {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
 .filter {
   border: 1px solid var(--line);
   background: var(--paper-surface);
@@ -3466,124 +3480,6 @@ input::placeholder {
 }
 
 /* ----------------------------------------------------
-   SHOP (BRING A FRIEND HOME)
-   ---------------------------------------------------- */
-.shop-notice {
-  padding: 20px 28px;
-  background: var(--paper-surface);
-  border: 1px solid var(--line);
-  border-radius: 20px;
-  margin-bottom: 32px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 20px;
-  box-shadow: var(--shadow-sm);
-}
-
-.shop-grid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 20px 16px;
-}
-
-.product {
-  background: var(--paper-surface);
-  border: 1px solid var(--line);
-  border-radius: 22px;
-  padding: 12px 12px 18px;
-  box-shadow: var(--shadow-card);
-  transition: var(--spring);
-  display: flex;
-  flex-direction: column;
-}
-
-.product:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-float);
-}
-
-.product-art {
-  height: 200px;
-  border-radius: 16px;
-  display: grid;
-  place-items: center;
-}
-
-.product-paper {
-  background: #fffdf9;
-  width: 140px;
-  height: 160px;
-  padding: 14px;
-  transform: rotate(-3deg);
-  border-radius: 14px;
-  box-shadow: 0 8px 20px -4px rgba(24, 24, 24, 0.08);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  transition: transform 0.4s ease;
-}
-
-.product:hover .product-paper {
-  transform: rotate(0deg) scale(1.04);
-}
-
-.product-paper.sticker {
-  border-radius: 28px;
-  width: 135px;
-  height: 135px;
-  transform: rotate(4deg);
-}
-
-.product:hover .product-paper.sticker {
-  transform: rotate(0deg) scale(1.04);
-}
-
-.product-paper img {
-  width: 100%;
-  height: 85%;
-  object-fit: contain;
-}
-
-.product-state {
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.8px;
-  display: inline-block;
-  margin: 12px 4px 4px;
-  padding: 2px 8px;
-  border-radius: var(--radius-pill);
-  background: rgba(24, 24, 24, 0.05);
-  color: var(--muted);
-  align-self: flex-start;
-}
-
-.product h2 {
-  font-size: 16.5px;
-  line-height: 1.35;
-  margin: 4px 0 2px;
-  padding-inline: 4px;
-}
-
-.product p {
-  font-size: 13px;
-  margin: 4px 0 12px;
-  padding-inline: 4px;
-  flex-grow: 1;
-}
-
-.product .text-link {
-  font-size: 13px;
-  padding-inline: 4px;
-  margin-top: auto;
-}
-
-.product .text-link {
-  margin-left: 4px;
-}
-
-/* ----------------------------------------------------
    LETTERS (PERSONAL SANCTUARY LETTERS)
    ---------------------------------------------------- */
 .letters-page {
@@ -3740,8 +3636,7 @@ input::placeholder {
   .character-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-  .situations-grid,
-  .shop-grid {
+  .situations-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 16px 14px;
   }
@@ -3806,8 +3701,7 @@ input::placeholder {
     grid-template-columns: 1fr;
   }
 
-  .situations-grid,
-  .shop-grid {
+  .situations-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 12px 10px;
   }
@@ -3828,45 +3722,6 @@ input::placeholder {
   }
 
   .situation-card .text-link {
-    font-size: 11.5px;
-  }
-
-  .product {
-    padding: 8px 8px 14px;
-    border-radius: 18px;
-  }
-
-  .product-art {
-    height: 140px;
-  }
-
-  .product-paper {
-    width: 100px;
-    height: 115px;
-    padding: 8px;
-  }
-
-  .product-paper.sticker {
-    width: 95px;
-    height: 95px;
-  }
-
-  .product-paper .character-image {
-    height: 65px;
-    width: 65px;
-  }
-
-  .product h2 {
-    font-size: 14px;
-    margin: 2px 0 2px;
-  }
-
-  .product p {
-    font-size: 11.5px;
-    margin-bottom: 6px;
-  }
-
-  .product .text-link {
     font-size: 11.5px;
   }
   .quiz-panel,
@@ -4786,21 +4641,6 @@ input::placeholder {
 }
 
 /* Fields */
-.aep-fields {
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-  padding: 20px;
-  overflow-y: auto;
-  flex: 1;
-}
-
-.aep-field {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
 .aep-label {
   font-size: 10.5px;
   font-weight: 700;
@@ -5492,237 +5332,5 @@ input::placeholder {
   .auth-login-btn.is-loading,
   .mobile-auth-login-btn.is-loading {
     cursor: wait !important;
-  }
-}
-
-/* Shop previews: no purchasable product data is shown until the catalog is ready. */
-.shop-notice > span {
-  font-weight: 700;
-  flex: 0 0 auto;
-}
-
-.shop-notice p {
-  margin: 0;
-}
-
-.shop-selected-heading {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  margin-bottom: 20px;
-}
-
-.shop-selected-heading p {
-  margin: 0;
-  font-weight: 700;
-}
-
-.shop-filters {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 24px;
-}
-
-.shop-filter {
-  display: inline-flex;
-  align-items: center;
-  min-height: 40px;
-  padding: 8px 17px;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-pill);
-  background: var(--paper-surface);
-  color: var(--ink);
-  font-size: 14px;
-  font-weight: 600;
-  text-decoration: none;
-  transition: background 0.2s ease, transform 0.2s ease;
-}
-
-.shop-filter:hover {
-  transform: translateY(-2px);
-}
-
-.shop-filter.is-active {
-  background: var(--ink);
-  border-color: var(--ink);
-  color: #fff;
-}
-
-.shop-filter:focus-visible,
-.product .text-link:focus-visible {
-  outline: 3px solid #f5c64b;
-  outline-offset: 3px;
-}
-
-.shop-detail {
-  max-width: 1180px;
-}
-
-.shop-detail-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
-  align-items: center;
-  gap: clamp(24px, 6vw, 88px);
-  margin-top: 30px;
-}
-
-.shop-detail .product-art-large {
-  min-height: 460px;
-  height: auto;
-  padding: 50px;
-  border-radius: 32px;
-}
-
-.shop-detail .product-paper {
-  width: 240px;
-  height: 280px;
-  padding: 26px;
-}
-
-.shop-detail .product-paper.sticker {
-  width: 240px;
-  height: 240px;
-}
-
-.shop-detail .product-paper img {
-  max-height: 85%;
-}
-
-.shop-detail-copy h1 {
-  margin: 12px 0;
-  font-size: clamp(32px, 4vw, 54px);
-  line-height: 1.1;
-}
-
-.shop-detail-copy > p {
-  font-size: 18px;
-}
-
-.shop-detail-notice {
-  margin: 28px 0;
-  padding: 22px 24px;
-  border-radius: 20px;
-  background: var(--paper-surface);
-  border: 1px solid var(--line);
-  box-shadow: var(--shadow-sm);
-}
-
-.shop-detail-notice p {
-  margin: 8px 0 0;
-  line-height: 1.7;
-}
-
-@media (max-width: 767px) {
-  .shop-notice {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .shop-detail-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .shop-detail .product-art-large {
-    min-height: 320px;
-    padding: 26px;
-  }
-
-  .shop-detail .product-paper {
-    width: 170px;
-    height: 200px;
-    padding: 16px;
-  }
-
-  .shop-detail .product-paper.sticker {
-    width: 170px;
-    height: 170px;
-  }
-}
-
-@media (max-width: 420px) {
-  .shop-selected-heading {
-    align-items: flex-start;
-    flex-direction: column;
-  }
-
-  .shop-filter {
-    font-size: 12px;
-    min-height: 38px;
-    padding-inline: 12px;
-  }
-}
-
-/* Local Stripe sandbox test lives outside the preview product cards. */
-.shop-sandbox-panel {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 28px;
-  margin: 0 0 32px;
-  padding: 24px 28px;
-  border: 1px solid rgba(153, 112, 19, 0.15);
-  border-radius: 24px;
-  background: #fff2cb;
-  box-shadow: var(--shadow-card);
-}
-
-.shop-sandbox-panel h2 {
-  margin: 6px 0;
-  font-size: clamp(20px, 2vw, 25px);
-  line-height: 1.25;
-}
-
-.shop-sandbox-panel p {
-  margin: 0;
-  max-width: 630px;
-  font-size: 14px;
-  line-height: 1.65;
-}
-
-.shop-sandbox-panel form {
-  flex: 0 0 auto;
-}
-
-.shop-sandbox-button.button {
-  color: #182b35;
-  background: #ffca3b;
-  border-color: #e7ad20;
-  font-weight: 700;
-  box-shadow: 0 4px 0 #d9a12b, 0 8px 0 #e9d9ae;
-}
-
-.shop-sandbox-button.button:hover {
-  color: #182b35;
-  background: #ffd153;
-  transform: translateY(2px);
-  box-shadow: 0 2px 0 #d9a12b, 0 5px 0 #e9d9ae;
-}
-
-.shop-sandbox-button.button:focus-visible {
-  outline: 3px solid #15364a;
-  outline-offset: 5px;
-}
-
-.shop-demo-error {
-  margin: 0 0 24px;
-  padding: 14px 18px;
-  border-radius: 14px;
-  background: #fff0e9;
-  color: #723522;
-}
-
-@media (max-width: 767px) {
-  .shop-sandbox-panel {
-    align-items: stretch;
-    flex-direction: column;
-    gap: 18px;
-    padding: 22px 20px;
-  }
-
-  .shop-sandbox-button.button {
-    width: 100%;
   }
 }

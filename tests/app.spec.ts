@@ -32,9 +32,8 @@ test("mobile navigation, filtering, quiz result, and story download", async ({
   await expect(
     page.getByRole("heading", { name: "A little place to be you." }),
   ).toBeVisible();
-  await page.getByRole("button", { name: "เปิดเมนู" }).click();
   await page
-    .locator("#mobile-menu")
+    .getByRole("navigation", { name: "Mobile Bottom Navigation" })
     .getByRole("link", { name: "Characters", exact: true })
     .click();
   await expect(page.locator(".character-card")).toHaveCount(16);
@@ -145,7 +144,7 @@ test("capture desktop and mobile layouts", async ({ page }) => {
     await page.setViewportSize({ width, height });
     await page.goto("/");
     await page.evaluate(() => document.fonts.ready);
-    await expect(page.locator(".friend-three img")).toBeVisible();
+    await expect(page.locator(".slot-container img")).toBeVisible();
     await page.screenshot({
       path: `test-results/home-${name}.png`,
       fullPage: true,

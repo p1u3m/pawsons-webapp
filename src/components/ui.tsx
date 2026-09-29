@@ -60,7 +60,7 @@ export function PageIntro({
   children?: ReactNode;
 }) {
   return (
-    <header className="page-intro">
+    <header className="page-intro mb-11 max-w-[780px]">
       <span className="eyebrow">{label}</span>
       <h1>{title}</h1>
       {children && <p>{children}</p>}

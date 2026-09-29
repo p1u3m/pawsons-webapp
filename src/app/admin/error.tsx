@@ -1,4 +1,5 @@
 "use client";
+import { Button } from "@/components/ui/button";
 
 export default function AdminError({ reset }: { reset: () => void }) {
   return (
@@ -7,9 +8,14 @@ export default function AdminError({ reset }: { reset: () => void }) {
       <p className="admin-page-sub">
         ไม่สามารถเชื่อมต่อข้อมูลได้ในขณะนี้ กรุณาลองอีกครั้ง
       </p>
-      <button className="admin-site-link" onClick={reset}>
+      <Button
+        variant="unstyled"
+        size="auto"
+        className="admin-site-link"
+        onClick={reset}
+      >
         ลองอีกครั้ง
-      </button>
+      </Button>
     </div>
   );
 }

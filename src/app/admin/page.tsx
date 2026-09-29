@@ -3,6 +3,10 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { isAdmin } from "@/lib/supabase/contents";
 import { characters } from "@/lib/data";
+import { getProducts } from "@/lib/shop/catalog";
+import { getRecentOrders, getShopStats, orderStatusLabel } from "@/lib/shop/admin-stats";
+import { formatPrice } from "@/lib/shop/price";
+import { ArrowRightIcon } from "@phosphor-icons/react/dist/ssr";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Dashboard · Pawsons" };
@@ -45,6 +49,15 @@ export default async function AdminDashboard() {
     0,
   );
   const number = new Intl.NumberFormat("th-TH");
+  const [products, shopStats, { orders: recentOrders }] = await Promise.all([
+    getProducts(true),
+    getShopStats(supabase),
+    getRecentOrders(supabase, { limit: 4 }),
+  ]);
+  const activeProducts = products.filter((product) => product.active);
+  const lowStockProducts = activeProducts.filter(
+    (product) => product.stock_qty <= 5,
+  );
 
   return (
     <div className="admin-contents-page">
@@ -80,6 +93,49 @@ export default async function AdminDashboard() {
           <strong aria-label="ยังไม่มีข้อมูล">—</strong>
           <p>ยังไม่ได้เชื่อมต่อระบบเก็บยอดเข้าชม</p>
         </article>
+      </section>
+      <section className="admin-store-overview" aria-labelledby="store-heading">
+        <div className="admin-store-overview-copy">
+          <span>STORE · SANDBOX</span>
+          <h2 id="store-heading">ภาพรวมร้านค้า</h2>
+          <strong className="admin-store-revenue">
+            {shopStats.failed ? "—" : formatPrice(shopStats.revenue30d)}
+          </strong>
+          <p>ยอดชำระทดสอบ 30 วันล่าสุด</p>
+          <Link href="/admin/shop" className="admin-store-overview-link">
+            จัดการสินค้าและออเดอร์{" "}
+            <ArrowRightIcon size={16} aria-hidden="true" />
+          </Link>
+        </div>
+        <div className="admin-store-overview-numbers">
+          <Link href="/admin/shop">
+            <strong>{number.format(activeProducts.length)}</strong>
+            <span>สินค้าแสดงอยู่</span>
+          </Link>
+          <Link href="/admin/shop?show=low">
+            <strong>{number.format(lowStockProducts.length)}</strong>
+            <span>สต็อกใกล้หมด</span>
+          </Link>
+          <Link href="/admin/shop?tab=orders&status=pending">
+            <strong>
+              {shopStats.failed ? "—" : number.format(shopStats.counts.pending)}
+            </strong>
+            <span>ออเดอร์รอชำระ</span>
+          </Link>
+        </div>
+        {recentOrders.length > 0 && (
+          <ul className="admin-store-recent" aria-label="ออเดอร์ล่าสุด">
+            {recentOrders.map((order) => (
+              <li key={order.id}>
+                <span>{order.email || `#${order.id.slice(0, 8).toUpperCase()}`}</span>
+                <strong>{formatPrice(order.total_satang)}</strong>
+                <span className={`admin-store-status is-${order.status}`}>
+                  {orderStatusLabel[order.status]}
+                </span>
+              </li>
+            ))}
+          </ul>
+        )}
       </section>
       <section className="dashboard-panel" aria-labelledby="type-heading">
         <div className="dashboard-panel-heading">

@@ -18,7 +18,7 @@ export default async function Page({
   if (!h) notFound();
 
   return (
-    <div className="wrap page-space">
+    <div className="wrap min-h-[70vh] pt-10 pb-[90px]">
       <BackLink href="/houses">บ้านทั้งสี่</BackLink>
       <header
         className="house-banner"

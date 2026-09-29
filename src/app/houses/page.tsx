@@ -8,7 +8,7 @@ export const metadata = { title: "Four houses" };
 
 export default function Page() {
   return (
-    <div className="wrap page-space">
+    <div className="wrap min-h-[70vh] pt-10 pb-[90px]">
       <PageIntro label="FOUR HOUSES, ONE LITTLE WORLD" title="มีที่ให้คุณเสมอ">
         บ้านทั้งสี่มีเสน่ห์ต่างกัน แต่ทุกบ้านอบอุ่นในแบบของตัวเอง
       </PageIntro>

@@ -14,7 +14,7 @@ export default async function Page({
   const c = getCharacter(type);
   if (!c) notFound();
   return (
-    <div className="wrap page-space">
+    <div className="wrap min-h-[70vh] pt-10 pb-[90px]">
       <BackLink href={`/results/${type}`}>กลับไปดูผล</BackLink>
       <ShareCard character={c} />
     </div>

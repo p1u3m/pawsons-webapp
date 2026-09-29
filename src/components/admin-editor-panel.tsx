@@ -2,6 +2,9 @@
 
 import { useState, useRef, useTransition } from "react";
 import Image from "next/image";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
 import {
   updateContent,
   uploadContentImage,
@@ -328,19 +331,19 @@ export default function AdminEditorPanel({ contents }: Props) {
                 </div>
               </div>
 
-              <div className="aep-fields">
+              <div className="flex flex-1 flex-col gap-[18px] overflow-y-auto p-5">
                 <div className="aep-section-heading">
                   <h2>รายละเอียดเรื่องราว</h2>
                   <p>ปรับข้อความและภาพประกอบที่แสดงบนเว็บไซต์</p>
                 </div>
                 {/* Title */}
-                <div className="aep-field">
+                <div className="flex flex-col gap-1.5">
                   <label className="aep-label" htmlFor="aep-title">
                     ชื่อสถานการณ์
                   </label>
-                  <input
+                  <Input
                     id="aep-title"
-                    className="aep-input"
+                    className="aep-input h-auto"
                     value={edit.situation_title}
                     onChange={(e) =>
                       setEdit((p) => ({
@@ -353,11 +356,11 @@ export default function AdminEditorPanel({ contents }: Props) {
                 </div>
 
                 {/* Body 1 */}
-                <div className="aep-field">
+                <div className="flex flex-col gap-1.5">
                   <label className="aep-label" htmlFor="aep-body1">
                     ย่อหน้าที่ 1
                   </label>
-                  <textarea
+                  <Textarea
                     id="aep-body1"
                     className="aep-textarea"
                     rows={4}
@@ -370,11 +373,11 @@ export default function AdminEditorPanel({ contents }: Props) {
                 </div>
 
                 {/* Body 2 */}
-                <div className="aep-field">
+                <div className="flex flex-col gap-1.5">
                   <label className="aep-label" htmlFor="aep-body2">
                     ย่อหน้าที่ 2
                   </label>
-                  <textarea
+                  <Textarea
                     id="aep-body2"
                     className="aep-textarea"
                     rows={4}
@@ -387,11 +390,11 @@ export default function AdminEditorPanel({ contents }: Props) {
                 </div>
 
                 {/* Quote */}
-                <div className="aep-field">
+                <div className="flex flex-col gap-1.5">
                   <label className="aep-label" htmlFor="aep-quote">
                     Quote
                   </label>
-                  <textarea
+                  <Textarea
                     id="aep-quote"
                     className="aep-textarea aep-textarea-sm"
                     rows={2}
@@ -404,7 +407,7 @@ export default function AdminEditorPanel({ contents }: Props) {
                 </div>
 
                 {/* Cover image */}
-                <div className="aep-field">
+                <div className="flex flex-col gap-1.5">
                   <label className="aep-label">รูปภาพปก</label>
                   <div className="aep-image-row">
                     {edit.cover_image_url ? (
@@ -471,7 +474,9 @@ export default function AdminEditorPanel({ contents }: Props) {
                     ? "บันทึกการเปลี่ยนแปลงแล้ว"
                     : "ข้อความจะเผยแพร่เมื่อกดบันทึก"}
                 </span>
-                <button
+                <Button
+                  variant="unstyled"
+                  size="auto"
                   className="aep-save-btn"
                   onClick={handleSave}
                   disabled={saving || isPending}
@@ -484,10 +489,15 @@ export default function AdminEditorPanel({ contents }: Props) {
                       บันทึกการเปลี่ยนแปลง
                     </>
                   )}
-                </button>
-                <button className="aep-discard-btn" onClick={closeEditor}>
+                </Button>
+                <Button
+                  variant="unstyled"
+                  size="auto"
+                  className="aep-discard-btn"
+                  onClick={closeEditor}
+                >
                   ยกเลิก
-                </button>
+                </Button>
               </div>
             </>
           )}

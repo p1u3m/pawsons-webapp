@@ -2,6 +2,8 @@
 import { useState } from "react";
 import { characters, houses } from "@/lib/data";
 import { CharacterCard } from "./ui";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 export default function CharacterDirectory() {
   const [house, setHouse] = useState("all");
@@ -17,29 +19,34 @@ export default function CharacterDirectory() {
 
   return (
     <>
-      <div className="directory-tools">
-        <div className="filter-row" aria-label="กรองตามบ้าน">
-          <button
+      <div className="mb-7 flex flex-wrap items-center justify-between gap-4">
+        <div className="flex flex-wrap gap-2" aria-label="กรองตามบ้าน">
+          <Button
+            variant="unstyled"
+            size="auto"
             className={house === "all" ? "filter active" : "filter"}
             aria-pressed={house === "all"}
             onClick={() => setHouse("all")}
           >
             เพื่อนทั้งหมด
-          </button>
+          </Button>
           {houses.map((h) => (
-            <button
+            <Button
+              variant="unstyled"
+              size="auto"
               key={h.id}
               className={house === h.id ? "filter active" : "filter"}
               aria-pressed={house === h.id}
               onClick={() => setHouse(h.id)}
             >
               {h.name}
-            </button>
+            </Button>
           ))}
         </div>
         <label className="search-label">
           <span className="sr-only">ค้นหาชื่อหรือบุคลิก</span>
-          <input
+          <Input
+            className="h-auto"
             type="search"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
@@ -62,7 +69,9 @@ export default function CharacterDirectory() {
         <div className="empty-state">
           <h2>ยังไม่เจอเพื่อนที่ตามหา</h2>
           <p>ลองใช้ชื่อหรือบุคลิกอื่น หรือกลับมาดูเพื่อนทั้งหมด</p>
-          <button
+          <Button
+            variant="unstyled"
+            size="auto"
             className="button"
             onClick={() => {
               setHouse("all");
@@ -70,8 +79,10 @@ export default function CharacterDirectory() {
             }}
           >
             <span>ดูเพื่อนทั้งหมด</span>
-            <span className="icon-disc" aria-hidden="true">↺</span>
-          </button>
+            <span className="icon-disc" aria-hidden="true">
+              ↺
+            </span>
+          </Button>
         </div>
       )}
     </>

@@ -1,141 +1,204 @@
-import { PageIntro } from "@/components/ui";
-import { PreviewArt } from "@/components/shop/preview-art";
-import {
-  featuredShopPreviews,
-  getCharacterPreviews,
-  type PreviewKind,
-} from "@/lib/shop/preview-catalog";
+import Image from "next/image";
 import Link from "next/link";
+import { Suspense } from "react";
+import { CartButton, CartDrawer } from "@/components/shop/cart";
+import { FilterSheet } from "@/components/shop/filter-sheet";
+import { ProductCard } from "@/components/shop/product-card";
+import { ProductGrid } from "@/components/shop/product-grid";
+import { ShopSearch } from "@/components/shop/shop-search";
+import { getCharacter, houses } from "@/lib/data";
+import { getProducts, isCheckoutReady } from "@/lib/shop/catalog";
 
-export const metadata = { title: "Little shop" };
+export const dynamic = "force-dynamic";
+export const metadata = { title: "Shop" };
 
 type ShopSearchParams = {
   character?: string;
   kind?: string;
-  demo?: string;
+  house?: string;
+  q?: string;
+  cart?: string;
+  payment?: string;
 };
 
-function filterHref(kind: PreviewKind | "all", character?: string) {
-  const params = new URLSearchParams();
-  if (character) params.set("character", character);
-  if (kind !== "all") params.set("kind", kind);
-  const query = params.toString();
-  return query ? `/shop?${query}` : "/shop";
-}
+// Messages for a return from Stripe that could not be confirmed.
+const paymentNotice: Record<string, string> = {
+  unconfirmed: "ยังยืนยันการชำระเงินไม่ได้ กรุณาลองอีกครั้ง",
+  invalid: "ไม่พบรายการชำระเงินนี้ กรุณาลองอีกครั้ง",
+};
+
+const kinds = [
+  ["all", "ทั้งหมด"],
+  ["sticker", "สติกเกอร์"],
+  ["postcard", "โปสการ์ด"],
+] as const;
 
 export default async function Page({
   searchParams,
 }: {
   searchParams: Promise<ShopSearchParams>;
 }) {
-  const { character, kind, demo } = await searchParams;
-  const sandboxReady =
-    process.env.NODE_ENV === "development" &&
-    process.env.STRIPE_MODE === "sandbox" &&
-    Boolean(process.env.STRIPE_API_KEY);
-  const selectedPreviews = character ? getCharacterPreviews(character) : [];
-  const hasSelectedCharacter = selectedPreviews.length > 0;
-  const currentKind: PreviewKind | "all" =
-    kind === "sticker" || kind === "postcard" ? kind : "all";
-  const previews = hasSelectedCharacter
-    ? selectedPreviews
-    : featuredShopPreviews;
-  const visiblePreviews =
-    currentKind === "all"
-      ? previews
-      : previews.filter((preview) => preview.kind === currentKind);
-  const selectedCharacter = hasSelectedCharacter
-    ? selectedPreviews[0].character
-    : undefined;
-
-  return (
-    <div className="wrap page-space">
-      <PageIntro
-        label="THE LITTLE SHOP"
-        title="พาเพื่อนตัวน้อย กลับไปอยู่ใกล้ ๆ"
-      >
-        ของเล็ก ๆ ที่อยากให้วันธรรมดาของคุณอบอุ่นขึ้น
-      </PageIntro>
-
-      <div className="shop-notice">
-        <span>กำลังเตรียมร้านด้วยความตั้งใจ</span>
-        <p>
-          ภาพด้านล่างเป็นไอเดียตัวอย่าง ยังไม่มีสินค้า ราคา หรือสต็อกจริง
-          และยังไม่เปิดรับคำสั่งซื้อ
-        </p>
-      </div>
-
-      {sandboxReady && (
-        <section
-          className="shop-sandbox-panel"
-          aria-labelledby="shop-sandbox-title"
-        >
-          <div>
-            <span className="eyebrow">SANDBOX ONLY</span>
-            <h2 id="shop-sandbox-title">ลองระบบชำระเงิน</h2>
-            <p>
-              รายการทดสอบ 100 บาท ไม่มีการตัดเงินจริง ไม่ใช่สินค้าด้านล่าง
-              และไม่มีการสร้างออเดอร์หรือจัดส่ง
-            </p>
-          </div>
-          <form action="/api/stripe/demo-checkout" method="post">
-            <button className="button shop-sandbox-button" type="submit">
-              ทดลองจ่าย 100 บาท <span aria-hidden="true">↗</span>
-            </button>
-          </form>
-        </section>
-      )}
-
-      {demo === "error" && (
-        <p className="shop-demo-error" role="alert">
-          เปิดหน้าทดสอบไม่สำเร็จ กรุณาตรวจคีย์ sandbox ใน .env.local
-          แล้วลองอีกครั้ง
-        </p>
-      )}
-
-      {selectedCharacter && (
-        <div className="shop-selected-heading">
-          <p>ไอเดียสินค้า: {selectedCharacter.name}</p>
-          <Link className="text-link" href="/shop">
-            <span>ดูตัวอย่างทั้งหมด</span>
-            <span aria-hidden="true">↗</span>
-          </Link>
-        </div>
-      )}
-
-      <nav className="shop-filters" aria-label="ประเภทตัวอย่างสินค้า">
-        {(
-          [
-            ["all", "ทั้งหมด"],
-            ["sticker", "สติกเกอร์"],
-            ["postcard", "โปสการ์ด"],
-          ] as const
-        ).map(([value, label]) => (
+  const { character, kind, house, q, cart, payment } = await searchParams;
+  const query = q?.trim().toLowerCase() ?? "";
+  const products = await getProducts();
+  const currentKind = kind === "sticker" || kind === "postcard" ? kind : "all";
+  const selectedCharacter = character ? getCharacter(character) : undefined;
+  const currentHouse = houses.find((item) => item.id === house)?.id;
+  const visible = products.filter((product) => {
+    const productCharacter = getCharacter(product.character_type);
+    const matchesQuery =
+      !query ||
+      [
+        product.title,
+        product.description,
+        product.character_type,
+        productCharacter?.name ?? "",
+      ].some((text) => text.toLowerCase().includes(query));
+    return (
+      matchesQuery &&
+      (currentKind === "all" || product.kind === currentKind) &&
+      (!selectedCharacter ||
+        product.character_type === selectedCharacter.type) &&
+      (!currentHouse || productCharacter?.house.id === currentHouse)
+    );
+  });
+  const filterHref = (next: { kind?: string; house?: string | null }) => {
+    const params = new URLSearchParams();
+    if (selectedCharacter) params.set("character", selectedCharacter.type);
+    const nextKind = next.kind ?? currentKind;
+    if (nextKind !== "all") params.set("kind", nextKind);
+    const nextHouse = next.house === undefined ? currentHouse : next.house;
+    if (nextHouse) params.set("house", nextHouse);
+    if (query) params.set("q", q!.trim());
+    return `/shop${params.size ? `?${params}` : ""}`;
+  };
+  const activeFilters =
+    Number(currentKind !== "all") + Number(Boolean(currentHouse));
+  // Rendered inline on desktop and inside the filter sheet on mobile.
+  const filters = (
+    <>
+      <nav className="store-segmented" aria-label="ประเภทสินค้า">
+        {kinds.map(([value, label]) => (
           <Link
             key={value}
-            className={`shop-filter${currentKind === value ? " is-active" : ""}`}
-            href={filterHref(value, selectedCharacter?.type)}
+            href={filterHref({ kind: value })}
             aria-current={currentKind === value ? "page" : undefined}
+            scroll={false}
           >
             {label}
           </Link>
         ))}
       </nav>
-
-      <div className="shop-grid">
-        {visiblePreviews.map((preview) => (
-          <article key={preview.slug} className="product">
-            <PreviewArt preview={preview} />
-            <span className="product-state">ตัวอย่าง · ยังไม่จำหน่าย</span>
-            <h2>{preview.title}</h2>
-            <p>{preview.description}</p>
-            <Link className="text-link" href={`/shop/${preview.slug}`}>
-              <span>ดูไอเดียนี้</span>
-              <span aria-hidden="true">↗</span>
+      <nav className="store-houses" aria-label="บ้าน">
+        {houses.map((item) => {
+          const active = currentHouse === item.id;
+          return (
+            <Link
+              key={item.id}
+              href={filterHref({ house: active ? null : item.id })}
+              aria-current={active ? "page" : undefined}
+              style={
+                {
+                  "--house": item.badgeColor,
+                  "--house-bg": item.color,
+                } as React.CSSProperties
+              }
+              scroll={false}
+            >
+              <span className="store-dot" aria-hidden="true" />
+              {item.name}
             </Link>
-          </article>
-        ))}
-      </div>
+          );
+        })}
+      </nav>
+    </>
+  );
+
+  return (
+    <div className="store store--landing">
+      <section className="wrap store-hero">
+        <div className="store-hero-copy">
+          <h1>
+            พาเพื่อนตัวน้อย
+            <br />
+            กลับไปอยู่ใกล้ ๆ
+          </h1>
+          <p>
+            สติกเกอร์และโปสการ์ดของชาว Pawsons ของเล็ก ๆ
+            ที่อยากให้วันธรรมดาของคุณอบอุ่นขึ้น
+          </p>
+        </div>
+        <div className="store-hero-art" aria-hidden="true">
+          {/* Always animates, even with reduced motion; unoptimized keeps the WebP frames intact. */}
+          <Image
+            src="/shop/hero-character-drive.webp"
+            alt=""
+            width={500}
+            height={500}
+            unoptimized
+            priority
+          />
+        </div>
+      </section>
+
+      <section className="store-band" aria-label="สินค้า">
+        <div className="wrap">
+          <div className="store-toolbar">
+            <div className="store-toolbar-filters">{filters}</div>
+            <Suspense>
+              <ShopSearch />
+            </Suspense>
+            <FilterSheet activeCount={activeFilters}>{filters}</FilterSheet>
+            <div className="store-toolbar-end">
+              <span className="store-count">{visible.length} รายการ</span>
+              <CartButton />
+            </div>
+          </div>
+
+          {selectedCharacter && (
+            <div className="store-filter-banner">
+              <p>
+                ของจาก <strong>{selectedCharacter.name}</strong> ·{" "}
+                {selectedCharacter.type}
+              </p>
+              <Link className="store-text-link" href="/shop">
+                ดูสินค้าทั้งหมด
+              </Link>
+            </div>
+          )}
+
+          {visible.length ? (
+            <ProductGrid>
+              {visible.map((product) => (
+                <ProductCard key={product.slug} product={product} />
+              ))}
+            </ProductGrid>
+          ) : (
+            <div className="store-empty">
+              <p>
+                {query
+                  ? `ไม่พบสินค้าที่ตรงกับ “${q!.trim()}”`
+                  : "ยังไม่มีสินค้าในหมวดนี้"}
+              </p>
+              <span>
+                {query
+                  ? "ลองค้นหาด้วยคำอื่น หรือกลับไปดูทั้งหมด"
+                  : "ลองเปลี่ยนตัวกรอง หรือกลับไปดูทั้งหมด"}
+              </span>
+              <Link className="store-cta" href="/shop">
+                ดูสินค้าทั้งหมด
+              </Link>
+            </div>
+          )}
+        </div>
+      </section>
+
+      <CartDrawer
+        products={products}
+        checkoutReady={isCheckoutReady()}
+        openOnLoad={cart === "open" || Boolean(payment)}
+        notice={payment ? paymentNotice[payment] : undefined}
+      />
     </div>
   );
 }

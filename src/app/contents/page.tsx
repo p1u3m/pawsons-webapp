@@ -1,3 +1,4 @@
+import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowUpRightIcon } from "@phosphor-icons/react/dist/ssr";
@@ -19,7 +20,7 @@ export default async function Page({
   const contentRows = await getAllContents();
 
   return (
-    <div className="wrap page-space">
+    <div className="wrap min-h-[70vh] pt-10 pb-[90px]">
       {/* ── INTRO ── */}
       <div className="contents-intro">
         <div className="contents-intro-left">
@@ -34,7 +35,8 @@ export default async function Page({
           </h1>
           {!selected && (
             <p className="contents-sub">
-              ที่ไม่ธรรมดาสำหรับเรา — บางเรื่องทำให้ยิ้ม บางเรื่องทำให้รู้ว่าเราไม่ได้รู้สึกแบบนี้คนเดียว
+              ที่ไม่ธรรมดาสำหรับเรา — บางเรื่องทำให้ยิ้ม
+              บางเรื่องทำให้รู้ว่าเราไม่ได้รู้สึกแบบนี้คนเดียว
             </p>
           )}
         </div>
@@ -45,7 +47,9 @@ export default async function Page({
 
       {/* ── TABS ── */}
       <div className="content-tabs">
-        <span className="filter active">16 Situations</span>
+        <Badge variant="unstyled" className="filter active h-auto">
+          16 Situations
+        </Badge>
         {["Dukdik", "Franchise Rosters", "Pair Conflicts"].map((t) => (
           <span key={t} className="pending-tab">
             {t}

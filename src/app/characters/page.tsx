@@ -3,7 +3,7 @@ import CharacterDirectory from "@/components/character-directory";
 export const metadata = { title: "Characters" };
 export default function Page() {
   return (
-    <div className="wrap page-space">
+    <div className="wrap min-h-[70vh] pt-10 pb-[90px]">
       <PageIntro
         label="OUR LITTLE FRIENDS"
         title="ทุกตัวตน มีเรื่องราวของตัวเอง"

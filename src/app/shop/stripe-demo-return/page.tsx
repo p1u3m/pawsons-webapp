@@ -51,11 +51,11 @@ export default async function StripeDemoReturn({
   }[result];
 
   return (
-    <main className="wrap page-space">
+    <main className="wrap min-h-[70vh] pt-10 pb-[90px]">
       <PageIntro label="STRIPE SANDBOX" title={content.title}>
         {content.description}
       </PageIntro>
-      <BackLink href="/shop">กลับไปที่ Little Shop</BackLink>
+      <BackLink href="/shop">กลับไปหน้า Shop</BackLink>
     </main>
   );
 }

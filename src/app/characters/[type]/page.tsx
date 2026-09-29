@@ -19,7 +19,7 @@ export default async function Page({
   if (!c) notFound();
 
   return (
-    <div className="wrap page-space">
+    <div className="wrap min-h-[70vh] pt-10 pb-[90px]">
       <BackLink />
       <section className="character-detail">
         <div
