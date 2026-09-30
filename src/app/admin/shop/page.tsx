@@ -8,22 +8,26 @@ import {
   CoinsIcon,
   ImageIcon,
   MagnifyingGlassIcon,
+  PackageIcon,
   PencilSimpleIcon,
   PlusIcon,
   WarningCircleIcon,
 } from "@phosphor-icons/react/dist/ssr";
 import { saveProduct } from "./actions";
 import { AdminSheet } from "@/components/admin-sheet";
+import { AdminOrderDetail } from "@/components/admin-order-detail";
 import { kindLabel, lowStockThreshold } from "@/components/shop/product-card";
 import { isAdmin } from "@/lib/supabase/contents";
 import { createClient } from "@/lib/supabase/server";
 import { getProducts, type ShopProduct } from "@/lib/shop/catalog";
+import { getAdminOrder, getRecentOrders, getShopStats } from "@/lib/shop/admin-stats";
 import {
-  getRecentOrders,
-  getShopStats,
+  fulfillmentLabel,
+  orderNumber,
   orderStatusLabel,
+  type FulfillmentStatus,
   type OrderStatus,
-} from "@/lib/shop/admin-stats";
+} from "@/lib/shop/orders";
 import { formatPrice } from "@/lib/shop/price";
 import { characters, getCharacter } from "@/lib/data";
 import { Button } from "@/components/ui/button";
@@ -51,6 +55,8 @@ type SearchParams = {
   new?: string;
   saved?: string;
   error?: string;
+  order?: string;
+  updated?: string;
 };
 
 const productFilters = [
@@ -60,6 +66,8 @@ const productFilters = [
   ["low", "ใกล้หมด"],
 ] as const;
 const orderStatuses = ["paid", "pending", "canceled"] as const;
+/** "to_ship" is the packing queue: paid orders not yet shipped. */
+const orderFilters = ["to_ship", ...orderStatuses] as const;
 
 const errorMessage: Record<string, string> = {
   invalid: "ข้อมูลสินค้าไม่ถูกต้อง กรุณาตรวจ slug ราคา จำนวน และ TYPE",
@@ -78,15 +86,21 @@ export default async function AdminShopPage({
   const params = await searchParams;
   const tab = params.tab === "orders" ? "orders" : "products";
   const show = productFilters.some(([value]) => value === params.show) ? params.show! : "all";
-  const status = orderStatuses.find((value) => value === params.status);
+  const status = orderFilters.find((value) => value === params.status);
   const q = params.q?.trim().toLowerCase() ?? "";
   const supabase = await createClient();
   if (!supabase) throw new Error("Supabase unavailable");
 
-  const [products, stats, { orders, error: ordersError }] = await Promise.all([
+  const [products, stats, { orders, error: ordersError }, openOrder] = await Promise.all([
     getProducts(true),
     getShopStats(supabase),
-    getRecentOrders(supabase, { status, limit: 50 }),
+    getRecentOrders(
+      supabase,
+      status === "to_ship" ? { queue: "to_ship", limit: 50 } : { status, limit: 50 },
+    ),
+    params.order && /^[0-9a-f-]{36}$/.test(params.order)
+      ? getAdminOrder(supabase, params.order)
+      : null,
   ]);
 
   const isLow = (product: ShopProduct) => product.active && product.stock_qty <= lowStockThreshold;
@@ -118,9 +132,14 @@ export default async function AdminShopPage({
     if (merged.tab !== "orders" && merged.q) search.set("q", merged.q);
     if (next.edit) search.set("edit", next.edit);
     if (next.new) search.set("new", next.new);
+    if (next.order) search.set("order", next.order);
     return `/admin/shop${search.size ? `?${search}` : ""}`;
   };
   const totalOrders = stats.counts.paid + stats.counts.pending + stats.counts.canceled;
+  const filterCount = (value: (typeof orderFilters)[number]) =>
+    value === "to_ship" ? stats.toShip : stats.counts[value];
+  const filterLabel = (value: (typeof orderFilters)[number]) =>
+    value === "to_ship" ? "รอจัดส่ง" : orderStatusLabel[value];
 
   return (
     <div className="admin-contents-page ashop">
@@ -163,10 +182,12 @@ export default async function AdminShopPage({
           tone="green"
         />
         <Kpi
-          icon={<CheckCircleIcon size={18} aria-hidden="true" />}
-          label="ออเดอร์ชำระแล้ว"
-          value={stats.failed ? "—" : number.format(stats.counts.paid)}
-          detail={`จากทั้งหมด ${number.format(totalOrders)} ออเดอร์`}
+          icon={<PackageIcon size={18} aria-hidden="true" />}
+          label="รอจัดส่ง"
+          value={stats.failed ? "—" : number.format(stats.toShip)}
+          detail={`ชำระแล้ว ${number.format(stats.counts.paid)} จาก ${number.format(totalOrders)} ออเดอร์`}
+          tone={stats.toShip ? "amber" : undefined}
+          href={href({ tab: "orders", status: "to_ship" })}
         />
         <Kpi
           icon={<ClockIcon size={18} aria-hidden="true" />}
@@ -274,18 +295,20 @@ export default async function AdminShopPage({
               >
                 ทั้งหมด <span>{totalOrders}</span>
               </Link>
-              {orderStatuses.map((value) => (
+              {orderFilters.map((value) => (
                 <Link
                   key={value}
                   href={href({ status: value })}
                   aria-current={status === value ? "page" : undefined}
                   scroll={false}
                 >
-                  {orderStatusLabel[value]} <span>{stats.counts[value]}</span>
+                  {filterLabel(value)} <span>{filterCount(value)}</span>
                 </Link>
               ))}
             </nav>
-            <span className="ashop-toolbar-note">แสดงล่าสุด 50 รายการ</span>
+            <span className="ashop-toolbar-note">
+              {status === "to_ship" ? "เก่าสุดก่อน · 50 รายการ" : "แสดงล่าสุด 50 รายการ"}
+            </span>
           </div>
           {ordersError ? (
             <p className="ashop-empty" role="alert">
@@ -301,6 +324,9 @@ export default async function AdminShopPage({
                     <th scope="col" className="is-num">ยอดรวม</th>
                     <th scope="col">วันที่สร้าง</th>
                     <th scope="col">สถานะ</th>
+                    <th scope="col">
+                      <span className="sr-only">ดูรายละเอียด</span>
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -308,12 +334,12 @@ export default async function AdminShopPage({
                     <tr key={order.id}>
                       <td>
                         <code className="ashop-order-id" title={order.id}>
-                          #{order.id.slice(0, 8).toUpperCase()}
+                          {orderNumber(order.id)}
                         </code>
                       </td>
                       <td>
                         <div className="ashop-cell-stack">
-                          <strong>{order.email || "ยังไม่มีอีเมล"}</strong>
+                          <strong>{order.customer_name || order.email || "ยังไม่มีอีเมล"}</strong>
                           <small>
                             {order.shop_order_items
                               ?.map((item) => `${item.title} × ${item.quantity}`)
@@ -330,7 +356,22 @@ export default async function AdminShopPage({
                         </time>
                       </td>
                       <td>
-                        <StatusPill status={order.status} />
+                        <div className="ashop-pill-stack">
+                          <StatusPill status={order.status} />
+                          {order.status === "paid" && (
+                            <FulfillmentPill status={order.fulfillment_status} />
+                          )}
+                        </div>
+                      </td>
+                      <td className="is-action">
+                        <Link
+                          href={href({ order: order.id })}
+                          className="ashop-icon-button"
+                          scroll={false}
+                          aria-label={`ดูออเดอร์ ${orderNumber(order.id)}`}
+                        >
+                          <PackageIcon size={16} aria-hidden="true" />
+                        </Link>
                       </td>
                     </tr>
                   ))}
@@ -339,10 +380,25 @@ export default async function AdminShopPage({
             </div>
           ) : (
             <p className="ashop-empty">
-              {status ? `ยังไม่มีออเดอร์สถานะ “${orderStatusLabel[status]}”` : "ยังไม่มีออเดอร์ทดสอบ"}
+              {status ? `ยังไม่มีออเดอร์สถานะ “${filterLabel(status)}”` : "ยังไม่มีออเดอร์ทดสอบ"}
             </p>
           )}
         </section>
+      )}
+
+      {openOrder && (
+        <AdminSheet
+          title={`ออเดอร์ ${orderNumber(openOrder.id)}`}
+          description={dateFormatter.format(new Date(openOrder.created_at))}
+          closeHref={href({})}
+        >
+          <AdminOrderDetail
+            order={openOrder}
+            backHref={href({})}
+            error={params.error}
+            updated={params.updated === "1"}
+          />
+        </AdminSheet>
       )}
 
       {(editing || creating) && (
@@ -400,6 +456,10 @@ function Kpi({
 
 function StatusPill({ status }: { status: OrderStatus }) {
   return <span className={`ashop-pill is-${status}`}>{orderStatusLabel[status]}</span>;
+}
+
+function FulfillmentPill({ status }: { status: FulfillmentStatus }) {
+  return <span className={`ashop-pill is-${status}`}>{fulfillmentLabel[status]}</span>;
 }
 
 function ProductThumb({ product }: { product: ShopProduct }) {

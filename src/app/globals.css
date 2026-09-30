@@ -1051,10 +1051,6 @@ input:focus-visible {
   flex-shrink: 0;
 }
 
-.account-sheet-link-icon-wrap .material-symbols-rounded {
-  font-size: 20px;
-}
-
 .account-sheet-link-icon-wrap.admin-badge {
   background: rgba(61, 127, 88, 0.12);
   color: #255338;
@@ -1105,10 +1101,6 @@ input:focus-visible {
   align-items: center;
   justify-content: center;
   box-shadow: 0 4px 12px rgba(184, 134, 11, 0.25);
-}
-
-.account-sheet-guest-icon {
-  font-size: 28px;
 }
 
 .account-sheet-guest-heading {
@@ -1341,8 +1333,8 @@ input:focus-visible {
   transition: var(--spring);
 }
 
-.auth-dropdown-item .material-symbols-rounded {
-  font-size: 19px;
+.auth-dropdown-item svg {
+  flex-shrink: 0;
   opacity: 0.85;
 }
 
@@ -1478,11 +1470,6 @@ input:focus-visible {
   gap: 10px;
 }
 
-.auth-btn-label .material-symbols-rounded {
-  font-size: 20px;
-  line-height: 1;
-}
-
 .mobile-auth-room-btn:hover {
   background: #faf8f5 !important;
   border-color: var(--line-strong) !important;
@@ -1504,10 +1491,6 @@ input:focus-visible {
   border-radius: 8px;
   cursor: pointer;
   transition: var(--spring);
-}
-
-.mobile-auth-signout-btn .material-symbols-rounded {
-  font-size: 16px;
 }
 
 .mobile-auth-signout-btn:hover {

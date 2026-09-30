@@ -44,3 +44,31 @@ test("mobile shop does not overflow and admin is protected", async ({
   await page.goto("/admin/shop");
   await expect(page).toHaveURL("/");
 });
+
+test("checkout and order history require sign-in", async ({ page, request }) => {
+  await page.goto("/shop/infp-sticker");
+  await page.getByRole("button", { name: /ลงตะกร้า/ }).first().click();
+  await page.getByRole("button", { name: /เปิดตะกร้า/ }).click();
+  const drawer = page.getByRole("dialog", { name: /ตะกร้า/ });
+  await expect(
+    drawer.getByRole("button", { name: "เข้าสู่ระบบเพื่อชำระเงิน" }),
+  ).toBeEnabled();
+
+  const response = await request.post("/api/stripe/shop-checkout", {
+    headers: { origin: "http://localhost:3000" },
+    data: { items: [{ slug: "infp-sticker", quantity: 1 }] },
+  });
+  // 503 when the sandbox is not configured on this machine.
+  expect([401, 503]).toContain(response.status());
+
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/shop/orders");
+  await expect(
+    page.getByRole("button", { name: "เข้าสู่ระบบด้วย Google" }),
+  ).toBeEnabled();
+  expect(
+    await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth),
+  ).toBe(true);
+  await page.goto("/shop/orders/00000000-0000-0000-0000-000000000000");
+  await expect(page).toHaveURL("/shop/orders");
+});

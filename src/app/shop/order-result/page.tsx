@@ -14,11 +14,12 @@ export default async function OrderResult({
   if (process.env.STRIPE_MODE !== "sandbox") notFound();
   const { session_id: sessionId } = await searchParams;
   let status: ShopOrderState = "invalid";
+  let orderId: string | null = null;
   if (sessionId?.startsWith("cs_test_")) {
     try {
-      status = await syncShopOrder(
-        await getStripeClient().checkout.sessions.retrieve(sessionId),
-      );
+      const session = await getStripeClient().checkout.sessions.retrieve(sessionId);
+      status = await syncShopOrder(session);
+      if (status !== "invalid") orderId = session.metadata?.order_id ?? null;
     } catch {
       /* Show an unavailable result. */
     }
@@ -26,7 +27,11 @@ export default async function OrderResult({
   return (
     <div className="wrap store store-result-page">
       <BackLink href="/shop">กลับไปหน้า Shop</BackLink>
-      <ShopPaymentStatus sessionId={sessionId ?? ""} initialStatus={status} />
+      <ShopPaymentStatus
+        sessionId={sessionId ?? ""}
+        orderId={orderId}
+        initialStatus={status}
+      />
     </div>
   );
 }

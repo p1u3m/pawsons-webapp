@@ -4,7 +4,8 @@ import { createClient } from "@/lib/supabase/server";
 import { isAdmin } from "@/lib/supabase/contents";
 import { characters } from "@/lib/data";
 import { getProducts } from "@/lib/shop/catalog";
-import { getRecentOrders, getShopStats, orderStatusLabel } from "@/lib/shop/admin-stats";
+import { getRecentOrders, getShopStats } from "@/lib/shop/admin-stats";
+import { orderStatusLabel } from "@/lib/shop/orders";
 import { formatPrice } from "@/lib/shop/price";
 import { ArrowRightIcon } from "@phosphor-icons/react/dist/ssr";
 
@@ -116,11 +117,11 @@ export default async function AdminDashboard() {
             <strong>{number.format(lowStockProducts.length)}</strong>
             <span>สต็อกใกล้หมด</span>
           </Link>
-          <Link href="/admin/shop?tab=orders&status=pending">
+          <Link href="/admin/shop?tab=orders&status=to_ship">
             <strong>
-              {shopStats.failed ? "—" : number.format(shopStats.counts.pending)}
+              {shopStats.failed ? "—" : number.format(shopStats.toShip)}
             </strong>
-            <span>ออเดอร์รอชำระ</span>
+            <span>ออเดอร์รอจัดส่ง</span>
           </Link>
         </div>
         {recentOrders.length > 0 && (

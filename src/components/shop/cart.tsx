@@ -16,9 +16,11 @@ import {
   MinusIcon,
   PlusIcon,
   ShoppingBagIcon,
+  SignInIcon,
   TrashIcon,
   XIcon,
 } from "@phosphor-icons/react";
+import { useAuth } from "@/lib/use-auth";
 import { Button } from "@/components/ui/button";
 import { NoProductImage } from "@/components/shop/no-product-image";
 import { type ShopProduct } from "@/lib/shop/catalog";
@@ -388,6 +390,7 @@ function CheckoutBlock({
   lines: ReturnType<typeof useCartDetails>["validLines"];
 }) {
   const { checkout, busy, error } = useCheckout(lines);
+  const { user, loading, signInWithGoogle } = useAuth();
   return (
     <div className="store-checkout">
       <dl>
@@ -400,7 +403,23 @@ function CheckoutBlock({
           <dd>{formatPrice(total)}</dd>
         </div>
       </dl>
-      {checkoutReady ? (
+      {checkoutReady && !loading && !user ? (
+        <>
+          <Button
+            type="button"
+            variant="unstyled"
+            size="auto"
+            className="store-cta store-cta--block"
+            onClick={signInWithGoogle}
+          >
+            <SignInIcon size={18} weight="bold" aria-hidden="true" />
+            เข้าสู่ระบบเพื่อชำระเงิน
+          </Button>
+          <p className="store-fineprint">
+            ต้องเข้าสู่ระบบก่อนสั่งซื้อ เพื่อให้ติดตามคำสั่งซื้อและสถานะจัดส่งได้
+          </p>
+        </>
+      ) : checkoutReady ? (
         <Button
           type="button"
           variant="unstyled"

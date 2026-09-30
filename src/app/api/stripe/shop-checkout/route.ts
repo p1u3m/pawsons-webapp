@@ -1,10 +1,11 @@
-import { randomUUID } from "node:crypto";
 import { getStripeClient } from "@/lib/stripe/server";
+import { createClient } from "@/lib/supabase/server";
 import { createShopServerClient } from "@/lib/shop/server-client";
-import type { ShopProduct } from "@/lib/shop/catalog";
+import type { OrderItem } from "@/lib/shop/orders";
 
 export const runtime = "nodejs";
-type RequestedItem = { slug: string; quantity: number };
+// Stripe's minimum; an abandoned checkout releases its reserved stock when it expires.
+const checkoutLifetimeSeconds = 30 * 60 + 60;
 
 export async function POST(request: Request) {
   if (process.env.STRIPE_MODE !== "sandbox" || !process.env.SUPABASE_SECRET_KEY)
@@ -28,6 +29,13 @@ export async function POST(request: Request) {
       ))
   )
     return Response.json({ error: "Invalid origin" }, { status: 403 });
+  const supabase = await createClient();
+  const user = supabase ? (await supabase.auth.getUser()).data.user : null;
+  if (!user)
+    return Response.json(
+      { error: "กรุณาเข้าสู่ระบบก่อนชำระเงิน", needsLogin: true },
+      { status: 401 },
+    );
   let raw: unknown;
   try {
     raw = await request.json();
@@ -51,82 +59,53 @@ export async function POST(request: Request) {
     new Set(items.map((item) => item.slug)).size !== items.length
   )
     return Response.json({ error: "รายการสินค้าไม่ถูกต้อง" }, { status: 400 });
-  const requested = items as RequestedItem[];
   const db = createShopServerClient();
-  const { data, error } = await db
-    .from("shop_products")
-    .select("slug,title,price_satang,stock_qty,active,is_test")
-    .in(
-      "slug",
-      requested.map((item) => item.slug),
-    );
-  if (error || !data || data.length !== requested.length)
-    return Response.json({ error: "ไม่พบสินค้าบางรายการ" }, { status: 400 });
-  const products = data as Pick<
-    ShopProduct,
-    "slug" | "title" | "price_satang" | "stock_qty" | "active" | "is_test"
-  >[];
-  if (
-    products.some(
-      (product) =>
-        !product.active ||
-        !product.is_test ||
-        product.stock_qty <
-          requested.find((item) => item.slug === product.slug)!.quantity ||
-        product.price_satang < 100,
-    )
-  )
-    return Response.json(
-      { error: "สินค้าบางรายการไม่พร้อมจำหน่าย" },
-      { status: 400 },
-    );
-  const total = products.reduce(
-    (sum, product) =>
-      sum +
-      product.price_satang *
-        requested.find((item) => item.slug === product.slug)!.quantity,
-    0,
-  );
-  const orderId = randomUUID();
-  const { error: orderError } = await db
-    .from("shop_orders")
-    .insert({ id: orderId, total_satang: total });
-  if (orderError)
-    return Response.json({ error: "สร้างออเดอร์ไม่สำเร็จ" }, { status: 500 });
-  const { error: itemError } = await db.from("shop_order_items").insert(
-    products.map((product) => ({
-      order_id: orderId,
-      product_slug: product.slug,
-      title: product.title,
-      unit_price_satang: product.price_satang,
-      quantity: requested.find((item) => item.slug === product.slug)!.quantity,
-    })),
-  );
-  if (itemError) {
-    await db.from("shop_orders").delete().eq("id", orderId);
-    return Response.json({ error: "บันทึกรายการไม่สำเร็จ" }, { status: 500 });
-  }
+  // Reserves stock and prices every line from the catalog in one transaction.
+  const { data: orderId, error: placeError } = await db.rpc("shop_place_order", {
+    p_user_id: user.id,
+    p_email: user.email ?? null,
+    p_items: items.map(({ slug, quantity }) => ({ slug, quantity })),
+  });
+  if (placeError || typeof orderId !== "string")
+    return placeError?.message === "unavailable"
+      ? Response.json(
+          { error: "สินค้าบางรายการหมดหรือไม่พร้อมจำหน่าย" },
+          { status: 409 },
+        )
+      : Response.json({ error: "สร้างออเดอร์ไม่สำเร็จ" }, { status: 500 });
+  const stripe = getStripeClient();
+  let sessionId: string | undefined;
   try {
-    const session = await getStripeClient().checkout.sessions.create({
+    const { data: lines, error: linesError } = await db
+      .from("shop_order_items")
+      .select("title,unit_price_satang,quantity")
+      .eq("order_id", orderId);
+    if (linesError || !lines?.length) throw linesError ?? new Error("No items");
+    const session = await stripe.checkout.sessions.create({
       mode: "payment",
       payment_method_types: ["card", "promptpay"],
       currency: "thb",
-      line_items: products.map((product) => ({
+      customer_email: user.email,
+      client_reference_id: user.id,
+      shipping_address_collection: { allowed_countries: ["TH"] },
+      phone_number_collection: { enabled: true },
+      expires_at: Math.floor(Date.now() / 1000) + checkoutLifetimeSeconds,
+      line_items: (lines as Omit<OrderItem, "product_slug">[]).map((line) => ({
         price_data: {
           currency: "thb",
-          unit_amount: product.price_satang,
+          unit_amount: line.unit_price_satang,
           product_data: {
-            name: `${product.title} (ทดสอบ)`,
+            name: `${line.title} (ทดสอบ)`,
             description: "สินค้าจำลอง ไม่มีการจัดส่งจริง",
           },
         },
-        quantity: requested.find((item) => item.slug === product.slug)!
-          .quantity,
+        quantity: line.quantity,
       })),
       success_url: `${origin}/shop/order-confirm?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/shop?cart=open`,
-      metadata: { purpose: "shop_test_order", order_id: orderId },
+      metadata: { purpose: "shop_test_order", order_id: orderId, user_id: user.id },
     });
+    sessionId = session.id;
     if (!session.url) throw new Error("No checkout URL");
     const { error: sessionError } = await db
       .from("shop_orders")
@@ -135,10 +114,9 @@ export async function POST(request: Request) {
     if (sessionError) throw sessionError;
     return Response.json({ url: session.url });
   } catch {
-    await db
-      .from("shop_orders")
-      .update({ status: "canceled" })
-      .eq("id", orderId);
+    // Never leave a payable session pointing at a canceled order.
+    if (sessionId) await stripe.checkout.sessions.expire(sessionId).catch(() => {});
+    await db.rpc("shop_cancel_order", { p_order_id: orderId });
     return Response.json(
       { error: "เปิดหน้าชำระเงินไม่สำเร็จ กรุณาลองอีกครั้ง" },
       { status: 502 },

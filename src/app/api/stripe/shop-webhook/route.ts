@@ -25,13 +25,15 @@ export async function POST(request: Request) {
       "checkout.session.completed",
       "checkout.session.async_payment_succeeded",
       "checkout.session.async_payment_failed",
+      "checkout.session.expired",
     ].includes(event.type)
   )
     return Response.json({ received: true });
   try {
     const state = await syncShopOrder(
       event.data.object as Stripe.Checkout.Session,
-      event.type === "checkout.session.async_payment_failed",
+      event.type === "checkout.session.async_payment_failed" ||
+        event.type === "checkout.session.expired",
     );
     if (state === "invalid")
       return Response.json({ error: "Order mismatch" }, { status: 400 });

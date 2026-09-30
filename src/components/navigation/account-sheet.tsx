@@ -3,7 +3,15 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { XIcon } from "@phosphor-icons/react";
+import {
+  CaretRightIcon,
+  HouseIcon,
+  PawPrintIcon,
+  ReceiptIcon,
+  SignOutIcon,
+  SquaresFourIcon,
+  XIcon,
+} from "@phosphor-icons/react";
 import { useAuth } from "@/lib/use-auth";
 
 interface AccountSheetProps {
@@ -199,15 +207,30 @@ export default function AccountSheet({ isOpen, onClose }: AccountSheetProps) {
                   onClick={onClose}
                 >
                   <span className="account-sheet-link-icon-wrap">
-                    <span className="material-symbols-rounded">cottage</span>
+                    <HouseIcon size={20} aria-hidden="true" />
                   </span>
                   <span className="account-sheet-link-text">My Room</span>
-                  <span
-                    className="material-symbols-rounded account-sheet-link-chevron"
+                  <CaretRightIcon
+                    size={20}
+                    className="account-sheet-link-chevron"
                     aria-hidden="true"
-                  >
-                    chevron_right
+                  />
+                </Link>
+
+                <Link
+                  href="/shop/orders"
+                  className="account-sheet-link-btn"
+                  onClick={onClose}
+                >
+                  <span className="account-sheet-link-icon-wrap">
+                    <ReceiptIcon size={20} aria-hidden="true" />
                   </span>
+                  <span className="account-sheet-link-text">คำสั่งซื้อของฉัน</span>
+                  <CaretRightIcon
+                    size={20}
+                    className="account-sheet-link-chevron"
+                    aria-hidden="true"
+                  />
                 </Link>
 
                 {isAdmin && (
@@ -217,19 +240,16 @@ export default function AccountSheet({ isOpen, onClose }: AccountSheetProps) {
                     onClick={onClose}
                   >
                     <span className="account-sheet-link-icon-wrap admin-badge">
-                      <span className="material-symbols-rounded">
-                        dashboard_customize
-                      </span>
+                      <SquaresFourIcon size={20} aria-hidden="true" />
                     </span>
                     <span className="account-sheet-link-text">
                       Manage Content (Admin)
                     </span>
-                    <span
-                      className="material-symbols-rounded account-sheet-link-chevron"
+                    <CaretRightIcon
+                      size={20}
+                      className="account-sheet-link-chevron"
                       aria-hidden="true"
-                    >
-                      chevron_right
-                    </span>
+                    />
                   </Link>
                 )}
 
@@ -242,7 +262,7 @@ export default function AccountSheet({ isOpen, onClose }: AccountSheetProps) {
                   }}
                 >
                   <span className="account-sheet-link-icon-wrap signout-badge">
-                    <span className="material-symbols-rounded">logout</span>
+                    <SignOutIcon size={20} aria-hidden="true" />
                   </span>
                   <span className="account-sheet-link-text">Sign out</span>
                 </button>
@@ -252,9 +272,11 @@ export default function AccountSheet({ isOpen, onClose }: AccountSheetProps) {
             /* Signed Out State */
             <div className="account-sheet-guest">
               <div className="account-sheet-guest-icon-wrap">
-                <span className="material-symbols-rounded account-sheet-guest-icon">
-                  pets
-                </span>
+                <PawPrintIcon
+                  size={28}
+                  weight="fill"
+                  aria-hidden="true"
+                />
               </div>
               <h3 className="account-sheet-guest-heading">
                 ยินดีต้อนรับสู่ Pawsons

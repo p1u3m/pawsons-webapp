@@ -1286,6 +1286,10 @@
 }
 
 .store-result-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
   margin-top: 28px;
 }
 
@@ -1492,4 +1496,361 @@
 
 .store-drawer-notice {
   margin: 16px 24px 0;
+}
+
+/* ── My orders (/shop/orders) ── */
+.store-orders-link {
+  padding: 0 18px;
+}
+
+.store-orders-page {
+  padding-bottom: 96px;
+}
+
+.store-orders-page .page-intro {
+  margin-top: 28px;
+}
+
+.store-orders {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.store-order-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 22px;
+  border-radius: 24px;
+  background: var(--pw-cream);
+  box-shadow: var(--pw-ledge-sm);
+  transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.store-order-row:hover {
+  transform: translateY(-2px);
+}
+
+.store-order-row-main {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.store-order-row-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.store-order-row-items {
+  overflow: hidden;
+  color: var(--ink-secondary);
+  font-size: 14px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.store-order-row time {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.store-order-row-total {
+  font-variant-numeric: tabular-nums;
+}
+
+.store-order-row-caret {
+  color: var(--muted);
+}
+
+.store-status {
+  display: inline-flex;
+  padding: 3px 10px;
+  border-radius: var(--radius-pill);
+  background: var(--dandelion-bg);
+  color: #8a600a;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.store-status.is-preparing {
+  background: var(--forget-bg);
+  color: #2f5f8a;
+}
+
+.store-status.is-shipped {
+  background: var(--lavender-bg);
+  color: #5b4a8b;
+}
+
+.store-status.is-delivered {
+  background: var(--clover-bg);
+  color: var(--green);
+}
+
+/* ── Order detail ── */
+.store-order-head {
+  margin: 28px 0 24px;
+}
+
+.store-order-head h1 {
+  margin: 12px 0 6px;
+  font-size: clamp(28px, 4vw, 38px);
+  line-height: 1.25;
+}
+
+.store-order-head p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.store-progress {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin: 0 0 28px;
+  padding: 24px 20px;
+  border-radius: 28px;
+  background: var(--pw-cream);
+  box-shadow: var(--pw-ledge-sm);
+  list-style: none;
+}
+
+.store-progress li {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  color: var(--muted);
+  font-size: 13px;
+  text-align: center;
+}
+
+/* Connector from the previous step. */
+.store-progress li + li::before {
+  content: "";
+  position: absolute;
+  top: 17px;
+  right: calc(50% + 24px);
+  left: calc(-50% + 24px);
+  height: 3px;
+  border-radius: 2px;
+  background: var(--line);
+}
+
+.store-progress li.is-done + li.is-done::before {
+  background: var(--green);
+}
+
+.store-progress-dot {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--paper-soft);
+}
+
+.store-progress li.is-done .store-progress-dot {
+  background: var(--green);
+  color: #fff;
+}
+
+.store-progress li[aria-current="step"] .store-progress-label {
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.store-progress time {
+  font-size: 12px;
+}
+
+.store-order-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+  align-items: start;
+  gap: 20px;
+}
+
+.store-order-main,
+.store-order-side {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.store-order-card {
+  padding: 22px 24px;
+  border-radius: 24px;
+  background: var(--pw-cream);
+  box-shadow: var(--pw-ledge-sm);
+}
+
+.store-order-card h2 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 14px;
+  font-size: 17px;
+}
+
+.store-order-card address {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  color: var(--ink-secondary);
+  font-size: 14px;
+  font-style: normal;
+  line-height: 1.6;
+}
+
+.store-order-card address strong {
+  color: var(--ink);
+}
+
+.store-tracking-carrier {
+  margin: 0 0 6px;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.store-tracking-number {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.store-tracking-number code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  overflow-wrap: anywhere;
+}
+
+.store-copy {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 34px;
+  padding: 0 12px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-pill);
+  background: #fff;
+  color: var(--ink-secondary);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.store-copy:hover {
+  border-color: var(--ink-secondary);
+}
+
+.store-order-items,
+.store-order-events {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.store-order-items li {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 15px;
+}
+
+.store-order-items li > span {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.store-order-items small {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.store-order-items strong {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.store-order-sum {
+  margin: 12px 0 0;
+}
+
+.store-order-sum > div {
+  display: flex;
+  justify-content: space-between;
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.store-order-sum dd {
+  margin: 0;
+}
+
+.store-order-events {
+  gap: 10px;
+  font-size: 14px;
+}
+
+.store-order-events li {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.store-order-events time {
+  color: var(--muted);
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+@media (max-width: 767px) {
+  .store-order-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .store-order-row {
+    grid-template-columns: minmax(0, 1fr) auto;
+    padding: 16px 18px;
+  }
+
+  .store-order-row-caret {
+    display: none;
+  }
+
+  .store-progress {
+    padding: 20px 8px;
+  }
+
+  .store-progress li {
+    font-size: 12px;
+  }
+
+  .store-progress time {
+    display: none;
+  }
+
+  .store-order-events li {
+    flex-direction: column;
+    gap: 0;
+  }
 }

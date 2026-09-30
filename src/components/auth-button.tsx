@@ -3,6 +3,12 @@ import { useState, useEffect, useRef, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
+import {
+  HouseIcon,
+  ReceiptIcon,
+  SignOutIcon,
+  SquaresFourIcon,
+} from "@phosphor-icons/react";
 import { createClient } from "@/lib/supabase/client";
 import {
   openGoogleSignInWindow,
@@ -249,8 +255,21 @@ export default function AuthButton({
             onClick={() => onNavigate?.()}
           >
             <span className="auth-btn-label">
-              <span className="material-symbols-rounded">cottage</span>
+              <HouseIcon size={20} aria-hidden="true" />
               <span>My Room</span>
+            </span>
+            <span className="icon-disc" aria-hidden="true">
+              →
+            </span>
+          </Link>
+          <Link
+            href="/shop/orders"
+            className="mobile-auth-room-btn"
+            onClick={() => onNavigate?.()}
+          >
+            <span className="auth-btn-label">
+              <ReceiptIcon size={20} aria-hidden="true" />
+              <span>คำสั่งซื้อของฉัน</span>
             </span>
             <span className="icon-disc" aria-hidden="true">
               →
@@ -269,9 +288,7 @@ export default function AuthButton({
               }}
             >
               <span className="auth-btn-label">
-                <span className="material-symbols-rounded">
-                  dashboard_customize
-                </span>
+                <SquaresFourIcon size={20} aria-hidden="true" />
                 <span>Manage Content (Admin)</span>
               </span>
               <span className="icon-disc" aria-hidden="true">
@@ -287,12 +304,7 @@ export default function AuthButton({
               handleSignOut();
             }}
           >
-            <span
-              className="material-symbols-rounded"
-              style={{ fontSize: "16px" }}
-            >
-              logout
-            </span>
+            <SignOutIcon size={16} aria-hidden="true" />
             <span>Sign out</span>
           </button>
         </div>
@@ -339,8 +351,17 @@ export default function AuthButton({
             role="menuitem"
             onClick={() => setMenuOpen(false)}
           >
-            <span className="material-symbols-rounded">cottage</span>
+            <HouseIcon size={20} aria-hidden="true" />
             <span>My Room</span>
+          </Link>
+          <Link
+            href="/shop/orders"
+            className="auth-dropdown-item"
+            role="menuitem"
+            onClick={() => setMenuOpen(false)}
+          >
+            <ReceiptIcon size={20} aria-hidden="true" />
+            <span>คำสั่งซื้อของฉัน</span>
           </Link>
           {isAdmin && (
             <Link
@@ -350,9 +371,7 @@ export default function AuthButton({
               onClick={() => setMenuOpen(false)}
               style={{ color: "#3d7f58", fontWeight: 600 }}
             >
-              <span className="material-symbols-rounded">
-                dashboard_customize
-              </span>
+              <SquaresFourIcon size={20} aria-hidden="true" />
               <span>Manage Content (Admin)</span>
             </Link>
           )}
@@ -361,7 +380,7 @@ export default function AuthButton({
             onClick={handleSignOut}
             role="menuitem"
           >
-            <span className="material-symbols-rounded">logout</span>
+            <SignOutIcon size={20} aria-hidden="true" />
             <span>Sign out</span>
           </button>
         </div>

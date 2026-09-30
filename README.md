@@ -28,6 +28,7 @@ Open http://localhost:3000. The site still renders without Supabase configured; 
 - `/characters`, `/characters/[type]` · `/houses`, `/houses/[house]`
 - `/contents`, `/contents/[id]` — articles stored in Supabase
 - `/shop`, `/shop/[slug]`, `/shop/order-result` — catalog, cart drawer, Stripe checkout
+- `/shop/orders`, `/shop/orders/[id]` — signed-in customer order history, shipping status and tracking number
 - `/room`, `/letters` — signed-in profile room and coming-soon letters
 - `/admin`, `/admin/contents`, `/admin/shop` — admin only (`profiles.role = 'admin'`, enforced in `src/proxy.ts`)
 - `/api/stripe/shop-checkout`, `/api/stripe/shop-webhook`, `/api/stripe/shop-order-status`, `/auth/callback`
@@ -39,7 +40,7 @@ src/app/            routes; route-scoped CSS lives next to its route (shop.css, 
 src/components/     feature components; ui/ holds shadcn primitives
 src/lib/data.ts     static characters, houses, quiz questions and scoring
 src/lib/supabase/   browser/server clients and content/profile queries
-src/lib/shop/       catalog, prices, order confirmation (service-role client)
+src/lib/shop/       catalog, prices, orders (status, carriers, tracking), order confirmation (service-role client)
 src/lib/stripe/     Stripe client guarded by STRIPE_MODE
 supabase/migrations SQL migrations
 tests/              Playwright specs

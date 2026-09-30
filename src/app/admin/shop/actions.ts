@@ -10,6 +10,13 @@ import {
   productImageTypes,
   shopImageBucket,
 } from "@/lib/shop/images";
+import {
+  carriers,
+  fulfillmentLabel,
+  trackingPattern,
+  type Carrier,
+  type FulfillmentStatus,
+} from "@/lib/shop/orders";
 
 function textValue(data: FormData, key: string) {
   return String(data.get(key) ?? "").trim();
@@ -120,4 +127,46 @@ export async function saveProduct(formData: FormData) {
   revalidatePath(`/shop/${slug}`);
   revalidatePath("/admin/shop");
   redirect(`/admin/shop?saved=${slug}`);
+}
+
+export async function updateFulfillment(formData: FormData) {
+  if (!(await isAdmin())) throw new Error("Unauthorized");
+  const id = textValue(formData, "order_id");
+  const fulfillment = textValue(formData, "fulfillment_status") as FulfillmentStatus;
+  const carrierValue = textValue(formData, "carrier");
+  const tracking = textValue(formData, "tracking_number").replace(/\s+/g, "").toUpperCase();
+  const back = textValue(formData, "back");
+  // Only return to admin shop URLs, keeping the list filters the admin was on.
+  const returnTo = /^\/admin\/shop(\?[\w=&%-]*)?$/.test(back) ? back : "/admin/shop?tab=orders";
+  const withParam = (key: string, value: string) =>
+    `${returnTo}${returnTo.includes("?") ? "&" : "?"}order=${id}&${key}=${value}`;
+  if (!/^[0-9a-f-]{36}$/.test(id)) redirect(returnTo);
+  const needsTracking = fulfillment === "shipped" || fulfillment === "delivered";
+  if (
+    !Object.hasOwn(fulfillmentLabel, fulfillment) ||
+    (carrierValue && !Object.hasOwn(carriers, carrierValue)) ||
+    (tracking && !trackingPattern.test(tracking)) ||
+    (needsTracking && (!carrierValue || !tracking))
+  ) {
+    redirect(withParam("error", needsTracking ? "tracking" : "fulfillment"));
+  }
+  const supabase = await createClient();
+  if (!supabase) throw new Error("Supabase unavailable");
+  const { data, error } = await supabase
+    .from("shop_orders")
+    .update({
+      fulfillment_status: fulfillment,
+      carrier: (carrierValue || null) as Carrier | null,
+      tracking_number: tracking || null,
+    })
+    .eq("id", id)
+    .eq("status", "paid")
+    .select("id")
+    .maybeSingle();
+  if (error || !data) redirect(withParam("error", "fulfillment"));
+  revalidatePath("/admin/shop");
+  revalidatePath("/admin");
+  revalidatePath("/shop/orders");
+  revalidatePath(`/shop/orders/${id}`);
+  redirect(withParam("updated", "1"));
 }

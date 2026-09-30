@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Suspense } from "react";
+import { ReceiptIcon } from "@phosphor-icons/react/dist/ssr";
 import { CartButton, CartDrawer } from "@/components/shop/cart";
 import { FilterSheet } from "@/components/shop/filter-sheet";
 import { ProductCard } from "@/components/shop/product-card";
@@ -151,6 +152,14 @@ export default async function Page({
             <FilterSheet activeCount={activeFilters}>{filters}</FilterSheet>
             <div className="store-toolbar-end">
               <span className="store-count">{visible.length} รายการ</span>
+              <Link
+                href="/shop/orders"
+                className="store-cart-button store-orders-link"
+                aria-label="คำสั่งซื้อของฉัน"
+              >
+                <ReceiptIcon size={18} weight="bold" aria-hidden="true" />
+                <span>คำสั่งซื้อ</span>
+              </Link>
               <CartButton />
             </div>
           </div>

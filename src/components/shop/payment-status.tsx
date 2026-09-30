@@ -14,7 +14,7 @@ const copy = {
   paid: {
     Icon: CheckCircleIcon,
     title: "ชำระเงินทดสอบสำเร็จ",
-    body: "Stripe ยืนยันยอดแล้ว ออเดอร์ทดสอบถูกบันทึกเป็นชำระแล้วในหลังบ้าน ไม่มีการตัดเงินจริงหรือจัดส่งสินค้า",
+    body: "Stripe ยืนยันยอดแล้ว ติดตามสถานะจัดส่งและเลขพัสดุได้ในหน้าคำสั่งซื้อ (โหมดทดสอบ ไม่มีการตัดเงินจริง)",
   },
   pending: {
     Icon: HourglassMediumIcon,
@@ -38,9 +38,11 @@ const copy = {
 
 export function ShopPaymentStatus({
   sessionId,
+  orderId,
   initialStatus,
 }: {
   sessionId: string;
+  orderId: string | null;
   initialStatus: ShopOrderState;
 }) {
   const [status, setStatus] = useState(initialStatus);
@@ -85,9 +87,16 @@ export function ShopPaymentStatus({
       )}
       <div className="store-result-actions">
         {status === "paid" ? (
-          <Link className="store-cta" href="/shop">
-            เลือกสินค้าต่อ
-          </Link>
+          <>
+            {orderId && (
+              <Link className="store-cta" href={`/shop/orders/${orderId}`}>
+                ดูคำสั่งซื้อ
+              </Link>
+            )}
+            <Link className="store-text-link" href="/shop">
+              เลือกสินค้าต่อ
+            </Link>
+          </>
         ) : (
           <Link className="store-cta" href="/shop?cart=open">
             กลับไปที่ตะกร้า
