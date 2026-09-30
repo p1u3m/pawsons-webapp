@@ -1,5 +1,13 @@
 -- Fulfillment ends at "shipped": the shop cannot see delivery, customers follow the tracking number.
 
+-- Undo shop_delivery_confirmation (20260930053822, applied on the project but
+-- never committed): the hourly auto-confirm job and both confirm functions
+-- would fail against the narrowed checks below.
+select cron.unschedule('shop-auto-confirm-delivery')
+where exists (select 1 from cron.job where jobname = 'shop-auto-confirm-delivery');
+drop function if exists private.shop_auto_confirm_delivery();
+drop function if exists public.shop_confirm_delivery(uuid);
+
 create or replace function private.shop_orders_stamp()
 returns trigger language plpgsql set search_path = '' as $$
 begin
