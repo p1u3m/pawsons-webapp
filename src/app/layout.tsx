@@ -1,9 +1,16 @@
 import type { Metadata, Viewport } from "next";
+import { Fredoka } from "next/font/google";
 import Link from "next/link";
 import Image from "next/image";
 import Navigation from "@/components/navigation";
 import Reveal from "@/components/reveal";
 import "./globals.css";
+
+const fredoka = Fredoka({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-fredoka",
+});
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -27,7 +34,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="th">
+    <html lang="th" className={fredoka.variable}>
       <head>
         {["en-regular", "en-bold", "th-regular", "th-bold"].map((font) => (
           <link
@@ -42,7 +49,7 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
-          href="https://fonts.googleapis.com/css2?family=Itim&family=Varela+Round&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Itim&display=swap"
           rel="stylesheet"
         />
         <link

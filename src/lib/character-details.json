@@ -1,0 +1,354 @@
+{
+  "characters": {
+    "INTJ": {
+      "name_en": "The Mastermind",
+      "name_th": "จอมวางแผน",
+      "house": "Lavenders",
+      "char": "Caine",
+      "keywords": ["deliberate", "precise", "sovereign"],
+      "tagline_en": "I don't need to be the loudest. I need to be right.",
+      "tagline_th": "เสียงที่ดังกว่าไม่ได้แปลว่าถูก ฉันขอเลือกเป็นฝ่ายถูก",
+      "desc": "Caine ไม่ได้เงียบเพราะไม่มีอะไรจะพูด แต่รอให้ทุกอย่างตกตะกอน ในหัวของ INTJ มีแผน, แผนสำรอง, แล้วก็แผนสำรองของแผนสำรองอีกที เขามีคำตอบ ก่อนที่คนอื่นจะรู้ว่ามีปัญหา INTJ ไม่จำเป็นต้องพิสูจน์ว่าตัวเองเก่งที่สุดในห้อง และจะไม่ยอมเสียเวลากับเรื่องไร้สาระเด็ดขาด",
+      "quote_en": "If you want to change the world, you have to be ready to change your mind.",
+      "quote_th": "ใครอยากเปลี่ยนโลก ต้องพร้อมจะเปลี่ยนความคิดตัวเองก่อน",
+      "author_en": "Christopher Hitchens",
+      "author_th": "คริสโตเฟอร์ ฮิตเชนส์"
+    },
+    "INTP": {
+      "name_en": "The Theorist",
+      "name_th": "นักปรัชญา",
+      "house": "Lavenders",
+      "char": "Mavis",
+      "keywords": ["curious", "analytical", "observant"],
+      "tagline_en": "I'm not lost in thought. I live there.",
+      "tagline_th": "ฉันไม่ได้หลงอยู่ในหัวตัวเอง — ฉันแค่อาศัยอยู่ที่นั่น",
+      "desc": "Mavis ชอบคำถามที่คนอื่นมองว่าไม่มีประโยชน์ แต่สำหรับ INTP มันคือสิ่งที่น่าสนใจที่สุดในโลก เรื่องที่ยากที่สุดสำหรับ INTP ไม่ใช่การหาคำตอบ แต่คือการหยุดตั้งคำถามใหม่",
+      "quote_en": "The more I read, the more I acquire, the more certain I am that I know nothing.",
+      "quote_th": "ยิ่งฉันอ่านมาก ยิ่งรู้ว่าฉันไม่รู้อะไรเลย",
+      "author_en": "Voltaire",
+      "author_th": "วอลแตร์"
+    },
+    "ENTJ": {
+      "name_en": "The Conqueror",
+      "name_th": "ผู้บัญชาการ",
+      "house": "Lavenders",
+      "char": "Conrad",
+      "keywords": ["driven", "decisive", "assertive"],
+      "tagline_en": "Vision without execution is just hallucination.",
+      "tagline_th": "วิสัยทัศน์ที่ไม่มีใครลงมือทำ ก็ไม่ต่างอะไรจากภาพหลอน",
+      "desc": "Conrad มีเป้าหมาย และมีแผนที่จะไปถึงแบบจับต้องได้ 100% เขามองเห็นโอกาส ในเวลาที่คนอื่นเห็นแต่อุปสรรค และตอนที่ ENTJ เคี่ยวเข็ญใคร คือเวลาที่เขาอยากพาคนคนนั้นไปยังจุดที่ดีกว่าเดิม",
+      "quote_en": "The price of greatness is responsibility.",
+      "quote_th": "ราคาของความยิ่งใหญ่ คือความรับผิดชอบ",
+      "author_en": "Winston Churchill",
+      "author_th": "วินสตัน เชอร์ชิลล์"
+    },
+    "ENTP": {
+      "name_en": "The Challenger",
+      "name_th": "นักโต้วาที",
+      "house": "Lavenders",
+      "char": "Felix",
+      "keywords": ["mischievous", "inventive", "restless"],
+      "tagline_en": "The best ideas come from the worst questions.",
+      "tagline_th": "ความคิดที่ยอดเยี่ยม เกิดจากคำถามที่ดูไร้สาระ",
+      "desc": "Felix ไม่ได้เถียงเพื่อเอาชนะ แต่เขาเถียงเพราะยังไม่เห็นใครตั้งคำถามที่สำคัญที่สุด ENTP ไม่สบายใจกับคำตอบที่ทุกคนยอมรับกันได้ง่ายๆ โดยไม่ตรวจสอบ เขาไม่สนว่าคนอื่นจะเห็นด้วยไหม ENTP แค่อยากรู้ว่าถ้าเปลี่ยนมุมมองไป เราจะได้คำตอบใหม่หรือเปล่า",
+      "quote_en": "The role of the artist is to ask questions, not answer them.",
+      "quote_th": "หน้าที่ของศิลปิน คือตั้งคำถาม ไม่ใช่หาคำตอบ",
+      "author_en": "Anton Chekhov",
+      "author_th": "อันตอน เชคอฟ"
+    },
+    "INFJ": {
+      "name_en": "The Oracle",
+      "name_th": "ที่ปรึกษา",
+      "house": "Clovers",
+      "char": "Luna",
+      "keywords": ["perceptive", "purposeful", "private"],
+      "tagline_en": "I've learned to trust the feeling before the reason catches up.",
+      "tagline_th": "ฉันเรียนรู้ที่จะเชื่อในสัญชาตญาณของตัวเองก่อน เพราะเหตุผลมักจะช้ากว่าเสมอ",
+      "desc": "Luna รู้สึกได้ถึงบางอย่าง ก่อนที่เหตุการณ์จะเกิดขึ้น และมักจะพิสูจน์ได้ในภายหลังว่าเธอไม่ได้คิดไปเอง INFJ มักจะเข้าใจคนอื่นได้ลึกซึ้ง ยิ่งกว่าที่คนคนนั้นเข้าใจตัวเองเสียอีก และบางทีนั่นก็ทำให้เหนื่อยเหลือเกิน สิ่งที่ INFJ อยากได้ คือพื้นที่ที่ไม่ต้องแบกรับความรู้สึกของใครเลยสักครั้ง",
+      "quote_en": "The quieter you become, the more you are able to hear.",
+      "quote_th": "ยิ่งเงียบ ยิ่งได้ยิน",
+      "author_en": "Rumi",
+      "author_th": "รูมี"
+    },
+    "INFP": {
+      "name_en": "The Idealist",
+      "name_th": "นักจินตนาการ",
+      "house": "Clovers",
+      "char": "Kumo",
+      "keywords": ["gentle", "dreamy", "whole"],
+      "tagline_en": "There are always flowers for those who want to see them.",
+      "tagline_th": "โลกนี้มีดอกไม้งาม สำหรับผู้ที่มองหาเสมอ",
+      "desc": "Kumo มีโลกส่วนตัวที่คนอื่นไม่เคยเห็น ไม่ใช่เพราะซ่อนเอาไว้ แต่ไม่รู้ว่าจะแชร์มันออกมายังไงดี INFP รู้สึกกับทุกอย่างได้ลึกซึ้งเกินกว่าจะถ่ายทอดออกมาเป็นคำพูด และในวันที่โลกโหดร้ายอย่างไร้เหตุผล INFP เป็นคนสุดท้ายที่ยังเลือกจะเชื่อ ว่าโลกนี้ยังมีสิ่งสวยงามซ่อนอยู่เสมอ",
+      "quote_en": "Not all those who wander are lost.",
+      "quote_th": "ไม่ใช่ทุกคนที่ร่อนเร่ จะกำลังหลงทาง",
+      "author_en": "J.R.R. Tolkien",
+      "author_th": "เจ.อาร์.อาร์. โทลคีน"
+    },
+    "ENFJ": {
+      "name_en": "The Solace",
+      "name_th": "ที่พึ่งของทุกคน",
+      "house": "Clovers",
+      "char": "Alfred",
+      "keywords": ["inspiring", "warm", "protective"],
+      "tagline_en": "The hardest part isn't caring. It's knowing when to stop.",
+      "tagline_th": "ส่วนที่ยากที่สุดไม่ใช่การใส่ใจ แต่คือการรู้ว่าเมื่อไหร่ควรพอ",
+      "desc": "Alfred มองเห็นศักยภาพในตัวคุณ ก่อนที่คุณจะมองเห็นสิ่งนั้นในตัวเอง และเขาจะคอยช่วยให้คุณเป็นเวอร์ชั่นที่ดีที่สุด ENFJ เป็นคนช่างดูแลโดยธรรมชาติ แต่บางทีเขาก็อยากให้มีใครสักคนถามว่า แล้วเธอเป็นยังไงบ้าง อยู่เหมือนกัน",
+      "quote_en": "A candle loses nothing by lighting another candle.",
+      "quote_th": "แสงเทียนไม่เคยหม่นลง เพียงเพราะส่งต่อเปลวไฟให้คนอื่น",
+      "author_en": "James Keller",
+      "author_th": "เจมส์ เคลเลอร์"
+    },
+    "ENFP": {
+      "name_en": "The Trailblazer",
+      "name_th": "ผู้บุกเบิกเส้นทาง",
+      "house": "Clovers",
+      "char": "Penny",
+      "keywords": ["enthusiastic", "magnetic", "boundless"],
+      "tagline_en": "I fall in love with new ideas the way other people fall in love with people.",
+      "tagline_th": "ฉันตกหลุมรักไอเดียใหม่ๆ เหมือนกับที่คนอื่นตกหลุมรักใครสักคน",
+      "desc": "Penny ตื่นเต้นกับทุกสิ่งอย่างบริสุทธิ์ใจ และรู้สึกว่าทุกอย่างเป็นไปได้เสมอ นั่นอาจทำให้ ENFP ดูเป็นคนสมาธิสั้น เพราะกระโดดจากเรื่องหนึ่งไปอีกเรื่องหนึ่งอยู่ตลอดเวลา โดยที่คนอื่นอาจไม่รู้ว่า ภายใต้ความสดใส ก็มีความหนักใจตอนที่ทำไม่ได้อย่างที่คิดอยู่เหมือนกัน",
+      "quote_en": "Life is either a daring adventure or nothing at all.",
+      "quote_th": "ชีวิตมีสองทางเลือก ไม่ยอมเสี่ยงเพื่อผจญภัย ก็ยอมจำนนต่อความว่างเปล่า",
+      "author_en": "Helen Keller",
+      "author_th": "เฮเลน เคลเลอร์"
+    },
+    "ISTJ": {
+      "name_en": "The Steward",
+      "name_th": "ผู้พิทักษ์",
+      "house": "Forget-me-nots",
+      "char": "Henry",
+      "keywords": ["disciplined", "methodical", "stoic"],
+      "tagline_en": "I don't need credit. I need it done right.",
+      "tagline_th": "ฉันไม่ต้องการเอาหน้า ฉันต้องการให้งานมันออกมาสมบูรณ์แบบ",
+      "desc": "Henry ทำในสิ่งที่ควรทำ โดยไม่สนว่าจะมีคนดูอยู่หรือเปล่า เขาไม่ต้องการเสียงปรบมือ แต่ต้องการให้ทุกอย่างถูกต้อง แม้ ISTJ จะไม่ค่อยพูด แต่ก็เป็นคนที่พึ่งพาได้ที่สุดหากรับปากแล้ว ถ้าวันไหนเขาไม่อยู่ขึ้นมา ทุกคนจะรู้สึกทันทีว่ามีอะไรไม่เหมือนเดิม",
+      "quote_en": "Well done is better than well said.",
+      "quote_th": "พูดดีได้ ไม่สู้ทำได้ดี",
+      "author_en": "Benjamin Franklin",
+      "author_th": "เบนจามิน แฟรงคลิน"
+    },
+    "ISFJ": {
+      "name_en": "The Wellspring",
+      "name_th": "ผู้ดูแล",
+      "house": "Forget-me-nots",
+      "char": "Charlotte",
+      "keywords": ["caring", "attentive", "selfless"],
+      "tagline_en": "The closest thing to being cared for is to care for someone else.",
+      "tagline_th": "อยากถูกรัก ให้เริ่มที่การรักคนอื่น",
+      "desc": "Charlotte จำวันเกิดของทุกคนได้ ใครแพ้อาหาร ใครเคยพูดไว้ว่าชอบอะไรบ้าง และทำทุกอย่างให้ทุกคนเอง โดยไม่หวังอะไรตอบแทนเลย สิ่งที่ ISFJ ไม่ค่อยพูดถึง คือบางครั้งเธอก็เหนื่อยกับการที่ต้องคิดถึงทุกคนก่อน ในขณะที่ไม่ค่อยแน่ใจว่ามีใครคิดถึงเธอบ้างหรือยัง",
+      "quote_en": "Kindness is the language which the deaf can hear and the blind can see.",
+      "quote_th": "ความกรุณา คือภาษาที่คนหูหนวกได้ยิน และคนตาบอดมองเห็น",
+      "author_en": "Mark Twain",
+      "author_th": "มาร์ก ทเวน"
+    },
+    "ESTJ": {
+      "name_en": "The Marshal",
+      "name_th": "ผู้บริหาร",
+      "house": "Forget-me-nots",
+      "char": "Aalto",
+      "keywords": ["direct", "responsible", "structured"],
+      "tagline_en": "I hold the line so others don't have to.",
+      "tagline_th": "ฉันขอเป็นแนวหน้า เพื่อให้คนข้างหลังได้อยู่อย่างปลอดภัย",
+      "desc": "Aalto ไม่ได้เข้มงวดเพราะชอบเป็นนายใคร แต่เขาทำเพราะรู้ว่าถ้าไม่มีใครยืนหยัดในสิ่งที่ถูก ระบบจะค่อยๆ พังทลาย เขาอาจดูแข็งกระด้างในสายตาคนที่ยังไม่รู้จักดี แต่วันไหนคุณต้องการคนที่พร้อมจะทำหน้าที่ให้ลุล่วง ESTJ คือคนที่เหมาะที่สุด",
+      "quote_en": "An army of sheep led by a lion would defeat an army of lions led by a sheep.",
+      "quote_th": "ฝูงแกะที่นำโดยราชสีห์ เอาชนะฝูงสิงโตที่นำโดยแกะได้เสมอ",
+      "author_en": "Alexander the Great",
+      "author_th": "อเล็กซานเดอร์มหาราช"
+    },
+    "ESFJ": {
+      "name_en": "The Peacekeeper",
+      "name_th": "ผู้สมานฉันท์",
+      "house": "Forget-me-nots",
+      "char": "Julian",
+      "keywords": ["generous", "nurturing", "harmonious"],
+      "tagline_en": "We rise by lifting others.",
+      "tagline_th": "คนเราเติบโตด้วยการพยุงผู้อื่นให้สูงตาม",
+      "desc": "Julian สัมผัสมู้ดในห้องได้ทันที และก็ทำให้บรรยากาศดีขึ้นได้เสมอ ESFJ มีพลังพิเศษที่ทำให้คนอื่นรู้สึกว่าตัวเองมีค่า แต่คนอื่นมักเข้าใจผิดว่าเขาไม่มีความต้องการของตัวเอง ทั้งๆ ที่เขาแค่เลือกจะเอาใจใส่ความต้องการของคนอื่นก่อนเสมอ ซึ่งไม่ใช่สิ่งที่ใครก็ทำได้",
+      "quote_en": "The quality of your life is the quality of your relationships.",
+      "quote_th": "หากอยากรู้ว่าชีวิตของคุณงดงามแค่ไหน ให้หันไปดูผู้คนที่อยู่เคียงข้างคุณ",
+      "author_en": "Tony Robbins",
+      "author_th": "โทนี ร็อบบินส์"
+    },
+    "ISTP": {
+      "name_en": "The Fixer",
+      "name_th": "นายช่าง",
+      "house": "Dandelions",
+      "char": "Jax",
+      "keywords": ["cool", "resourceful", "self-reliant"],
+      "tagline_en": "I trust my hands more than most people trust their words.",
+      "tagline_th": "คำพูดไม่น่าเชื่อถือ เท่าฝีมือที่ทำได้จริง",
+      "desc": "Jax พูดน้อย แต่สังเกตทุกอย่าง เขารู้ว่าอะไรพัง และรู้ว่าต้องทำอะไรต่อก่อนที่คนอื่นจะทันถามว่าเกิดอะไรขึ้น ISTP อาจจะดูนิ่งเฉย แต่เขาไม่เคยหนีไปไหน และพร้อมเสมอหากคุณต้องการ",
+      "quote_en": "Action is eloquence.",
+      "quote_th": "การกระทำงดงามที่สุดเสมอ",
+      "author_en": "William Shakespeare",
+      "author_th": "วิลเลียม เชกสเปียร์"
+    },
+    "ISFP": {
+      "name_en": "The Vignette",
+      "name_th": "นักสุนทรียภาพ",
+      "house": "Dandelions",
+      "char": "Wendy",
+      "keywords": ["vivid", "tactile", "present"],
+      "tagline_en": "Beauty isn't a luxury. It's how I understand the world.",
+      "tagline_th": "เมื่อใดที่มองเห็นความงาม เมื่อนั้นเราจะเข้าใจโลกใบนี้อย่างแท้จริง",
+      "desc": "Wendy สัมผัสได้ถึงความงามในสิ่งที่คนอื่นไม่สังเกต แสงตอนเย็น เสียงฝนตก รอยยิ้มของคนแปลกหน้า ISFP ไม่ได้เงียบเพราะไม่มีอะไรจะพูด แต่เพราะบางอย่างมันสวยงามในตัวมันเองแล้ว โดยที่เราไม่ต้องไปพยายามอธิบายมันก็ได้",
+      "quote_en": "To be yourself in a world that is constantly trying to make you something else is the greatest accomplishment.",
+      "quote_th": "การเป็นตัวของตัวเองได้ในโลกที่พยายามบังคับให้คุณเป็นคนอื่นตลอดเวลา คือความสำเร็จที่ยิ่งใหญ่ที่สุดในชีวิต",
+      "author_en": "Ralph Waldo Emerson",
+      "author_th": "ราล์ฟ วัลโด เอเมอร์สัน"
+    },
+    "ESTP": {
+      "name_en": "The Maverick",
+      "name_th": "ผู้โลดโผน",
+      "house": "Dandelions",
+      "char": "Axel",
+      "keywords": ["charged", "spontaneous", "charismatic"],
+      "tagline_en": "The best plan is the one that's already in motion.",
+      "tagline_th": "คิดแทบตาย ไม่เท่าลงมือทำ",
+      "desc": "Axel ไม่รอให้ใครอนุญาต แต่ลงมือทำไปแล้ว และมักจะออกมาดีกว่าที่วางแผนไว้ด้วย ESTP ไม่ค่อยกลัวความผิดพลาด แต่กลัวการอยู่นิ่งๆ โดยไม่ได้ทำอะไรเลยมากกว่า ภายใต้โลดโผนโจนทะยานนั้น Axel อ่านคนเก่งมาก อ่านบรรยากาศคล่อง และมองเห็นภาพกว้างกว่าที่หลายคนคิดเยอะ",
+      "quote_en": "You miss 100% of the shots you don't take.",
+      "quote_th": "ยิงพลาด ยังดีกว่าไม่ได้ยิง",
+      "author_en": "Wayne Gretzky",
+      "author_th": "เวย์น เกรตซ์กี"
+    },
+    "ESFP": {
+      "name_en": "The Spotlight",
+      "name_th": "ดารา",
+      "house": "Dandelions",
+      "char": "Hanni",
+      "keywords": ["joyful", "radiant", "spirited"],
+      "tagline_en": "Dance like no one is watching, love like you've never been hurt.",
+      "tagline_th": "จงเต้นรำราวกับไม่มีใครมอง และจงรักราวกับไม่เคยต้องเจ็บปวด",
+      "desc": "ในทุกๆ ห้องที่ Hanni ก้าวเข้าไป จะทำให้ทุกคนรู้สึกว่ามีแสงสปอตไลท์ส่องลงมา ESFP แจกความสุขของตัวเองไปยังคนรอบข้างโดยธรรมชาติ สิ่งที่คนอื่นไม่รู้คือ ESFP ก็แอบรู้สึกว่าถ้าวันไหนไฟในตัวฉันมอดลงแล้ว คนจะมองมาที่ฉันน้อยลงหรือเปล่า",
+      "quote_en": "You only live once, but if you do it right, once is enough.",
+      "quote_th": "ชีวิตมีแค่ครั้งเดียว แต่ถ้าใช้ถูกแล้ว ครั้งเดียวก็เกินพอ",
+      "author_en": "Mae West",
+      "author_th": "เม เวสต์"
+    }
+  },
+  "houses": {
+    "Lavenders": {
+      "slug": "lavenders",
+      "color": "#8b3fc8",
+      "bg": "#f0e6ff",
+      "label": "🟣 Lavender House",
+      "flower": "LAVENDER",
+      "sub": "The Visionaries",
+      "motto_th": "เวลาไม่เข้าข้างใคร",
+      "motto_en": "For all, the sand falls the same.",
+      "latin": "Aedifica Dum Fluit — จงสร้างในขณะที่เวลาไหลผ่านไป",
+      "keywords": ["visionary", "strategic", "relentless", "sharp"],
+      "members": [
+        {
+          "type": "INTJ",
+          "char": "Caine"
+        },
+        {
+          "type": "INTP",
+          "char": "Mavis"
+        },
+        {
+          "type": "ENTJ",
+          "char": "Conrad"
+        },
+        {
+          "type": "ENTP",
+          "char": "Felix"
+        }
+      ],
+      "desc": "เพราะมองโลกเป็นระบบ และคิดคำนวณทะลุทะลวงถึงแก่น ชาว Lavenders ที่มีความคิดในหัวแล่นอยู่ตลอดเวลา อาจจะทำให้คนที่นั่งข้างๆ รู้สึกตามไม่ทันอยู่นิดนึง (เขาไม่ได้ตั้งใจหรอกนะ)\n\nภายนอกอาจจะดูเย็นชา แต่จริงๆ แล้วเค้าแค่กำลังโฟกัสสุดๆ เท่านั้นแหละ ชาว Lavenders ไม่ได้ไม่แคร์ แค่แคร์ในแบบของตัวเอง"
+    },
+    "Clovers": {
+      "slug": "clovers",
+      "color": "#0d7c55",
+      "bg": "#e0f7ee",
+      "label": "🟢 Clover House",
+      "flower": "CLOVER",
+      "sub": "The Velveteens",
+      "motto_th": "ขนนกไร้น้ำหนัก หยดหมึกอยู่นิรันดร์",
+      "motto_en": "The quill drifts. The ink remains.",
+      "latin": "Sentio Ergo Sum — ฉันรู้สึก ดังนั้นฉันจึงมีอยู่",
+      "keywords": ["empathetic", "imaginative", "sincere", "open"],
+      "members": [
+        {
+          "type": "INFJ",
+          "char": "Luna"
+        },
+        {
+          "type": "INFP",
+          "char": "Kumo"
+        },
+        {
+          "type": "ENFJ",
+          "char": "Alfred"
+        },
+        {
+          "type": "ENFP",
+          "char": "Penny"
+        }
+      ],
+      "desc": "โอบกอดทุกคนโดยไม่มีเงื่อนไข ไม่ต้องอธิบายอะไร แค่อยู่ด้วยกันก็โอเคแล้ว บ้าน Clovers ทำให้คุณรู้สึกได้ทันทีว่าเป็นที่ต้อนรับ\n\nเสาหลักเดียวกันของบ้านเขียว คือความรู้สึกเป็นสิ่งสำคัญ แต่ข้างในของชาว Clovers ก็เหนื่อยได้เหมือนกัน เพราะคนที่รู้สึกเยอะ ก็แบกรับอะไรเยอะตามไปด้วย และอาจจะแบกอยู่คนเดียวโดยไม่ทันได้บอกใคร"
+    },
+    "Forget-me-nots": {
+      "slug": "forget-me-nots",
+      "color": "#1a56a8",
+      "bg": "#dbeafe",
+      "label": "🔵 Forget-me-not House",
+      "flower": "FORGET-ME-NOT",
+      "sub": "The Vigils",
+      "motto_th": "แท่งเทียนลุกไหม้เพื่อส่องแสง",
+      "motto_en": "The candle knows the cost. It shines anyway.",
+      "latin": "Lucet Dum Ardet — สว่างอยู่ตราบที่ยังลุกไหม้",
+      "keywords": ["steady", "devoted", "reliable", "grounded"],
+      "members": [
+        {
+          "type": "ISTJ",
+          "char": "Henry"
+        },
+        {
+          "type": "ISFJ",
+          "char": "Charlotte"
+        },
+        {
+          "type": "ESTJ",
+          "char": "Aalto"
+        },
+        {
+          "type": "ESFJ",
+          "char": "Julian"
+        }
+      ],
+      "desc": "เพราะเตรียมพร้อมอยู่ตลอดเวลา และพึ่งพาได้เสมอ ชาว Forget-me-nots จึงเป็นเบื้องหลังของความสำเร็จของทุกสิ่งอยู่แบบเงียบๆ\n\nทั้งสี่คนมีสิ่งหนึ่งที่เหมือนกัน คือพวกเขาทำสิ่งที่พูดไว้จริงๆ ในโลกที่ทุกคนดีแต่พูด ชาว Forget-me-nots คือคนที่ทำ \"ทุกครั้ง\" โดยไม่ต้องรอแรงบันดาลใจ เขาทำมันลงไปอย่างเป็นธรรมชาติ\n\nสิ่งที่คนส่วนใหญ่มักมองข้ามคือชาว Forget-me-nots ก็ต้องการคนมาดูแลเขาบ้างเหมือนกัน แม้จะไม่เคยออกปากขอก็ตาม"
+    },
+    "Dandelions": {
+      "slug": "dandelions",
+      "color": "#92400e",
+      "bg": "#fef3c7",
+      "label": "🟡 Dandelion House",
+      "flower": "DANDELION",
+      "sub": "The Voyageurs",
+      "motto_th": "ลมเลือกทิศ เราเลือกบิน",
+      "motto_en": "The wind decides the direction. We decide to fly.",
+      "latin": "Quo Fert Ventus Volamus — ลมพาไป เราบิน",
+      "keywords": ["free", "instinctive", "bold", "alive"],
+      "members": [
+        {
+          "type": "ISTP",
+          "char": "Jax"
+        },
+        {
+          "type": "ISFP",
+          "char": "Wendy"
+        },
+        {
+          "type": "ESTP",
+          "char": "Axel"
+        },
+        {
+          "type": "ESFP",
+          "char": "Hanni"
+        }
+      ],
+      "desc": "ข้อจำกัดคืออะไร? ชาว Dandelions ไม่รู้จัก เพราะเต็มไปด้วยพลังใจที่ล้นเหลือ และอยู่กับปัจจุบันได้เก่งที่สุดในบรรดาทั้งสี่บ้าน ชาวบ้านเหลืองเลยสามารถใช้ชีวิตในแบบที่คนอื่นมองเข้ามาแล้วก็อยากจะเอาอย่างบ้าง แต่ก็ไม่สามารถเลียนแบบได้\n\nพวกเขาไม่ได้ประมาท แค่ไม่คิดว่าชีวิตจำเป็นต้องรอให้ทุกอย่างพร้อมก่อน แต่สิ่งที่คนในบ้านนี้ยังเรียนรู้กันอยู่คือบางทีการชะลอสักนิดนึงแล้วมองข้างหลังก็ไม่ใช่เรื่องเสียหาย"
+    }
+  }
+}

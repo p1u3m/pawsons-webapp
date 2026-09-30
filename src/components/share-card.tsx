@@ -17,6 +17,13 @@ export default function ShareCard({ character: c }: { character: Character }) {
   const [message, setMessage] = useState("");
 
   async function makeCard() {
+    const englishFont = getComputedStyle(document.documentElement)
+      .getPropertyValue("--font-fredoka")
+      .trim() || '"LINE Seed EN"';
+    await Promise.all([
+      document.fonts.load(`400 32px ${englishFont}`),
+      document.fonts.load(`600 90px ${englishFont}`),
+    ]);
     await document.fonts.ready;
     const canvas = document.createElement("canvas");
     canvas.width = 1080;
@@ -33,12 +40,12 @@ export default function ShareCard({ character: c }: { character: Character }) {
 
     ctx.fillStyle = "#181818";
     ctx.textAlign = "center";
-    ctx.font = '32px "LINE Seed EN"';
+    ctx.font = `32px ${englishFont}`;
     ctx.fillText("A LITTLE PIECE OF ME", 540, 270);
-    ctx.font = '600 90px "LINE Seed EN"';
+    ctx.font = `600 90px ${englishFont}`;
     const title = `I feel like ${c.name}.`;
     if (ctx.measureText(title).width > 940)
-      ctx.font = `600 ${Math.floor((90 * 940) / ctx.measureText(title).width)}px "LINE Seed EN"`;
+      ctx.font = `600 ${Math.floor((90 * 940) / ctx.measureText(title).width)}px ${englishFont}`;
     ctx.fillText(`I feel like ${c.name}.`, 540, 415);
 
     const img = await loadImage(c.image);
@@ -52,12 +59,12 @@ export default function ShareCard({ character: c }: { character: Character }) {
     );
 
     ctx.fillStyle = c.house.ink;
-    ctx.font = '600 66px "LINE Seed EN"';
+    ctx.font = `600 66px ${englishFont}`;
     ctx.fillText(c.type, 540, 1450);
-    ctx.font = '32px "LINE Seed EN"';
+    ctx.font = `32px ${englishFont}`;
     ctx.fillText(`${c.house.name} House`, 540, 1510);
     ctx.fillStyle = "#181818";
-    ctx.font = '36px "LINE Seed EN"';
+    ctx.font = `36px ${englishFont}`;
     ctx.fillText("A little place to be you.", 540, 1670);
 
     const logo = await loadImage("/logos/Logo_main.svg");

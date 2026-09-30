@@ -36,13 +36,15 @@ test("mobile navigation, filtering, quiz result, and story download", async ({
     .getByRole("navigation", { name: "Mobile Bottom Navigation" })
     .getByRole("link", { name: "Characters", exact: true })
     .click();
-  await expect(page.locator(".character-card")).toHaveCount(16);
-  await page.getByRole("button", { name: "Clover", exact: true }).click();
-  await expect(page.locator(".character-card")).toHaveCount(4);
-  await page.getByRole("searchbox").fill("Kumo");
-  await expect(page.locator(".character-card")).toHaveCount(1);
-  await page.locator(".character-card").click();
-  await expect(page.getByRole("heading", { name: "Meet Kumo." })).toBeVisible();
+  await expect(page.locator(".chars-card")).toHaveCount(16);
+  // One section per house, four friends each.
+  const clover = page.getByRole("region", { name: /Clover/ });
+  await expect(clover.locator(".chars-card")).toHaveCount(4);
+  await clover.getByRole("link", { name: /Kumo/ }).click();
+  // The TYPE heading carries the name in a pill: "INFP Kumo".
+  await expect(
+    page.getByRole("heading", { name: "INFP Kumo", exact: true }),
+  ).toBeVisible();
   await page.goto("/quiz");
   await page.getByRole("button", { name: "เริ่มทำแบบทดสอบ" }).click();
   await page.getByRole("button", { name: "เริ่มออกเดินทาง" }).click();
@@ -119,16 +121,12 @@ test("routes render at mobile and desktop without horizontal overflow", async ({
   }
 });
 
-test("empty search and invalid character are handled", async ({ page }) => {
+test("house sections and invalid character are handled", async ({ page }) => {
   await page.goto("/characters");
-  await page.getByRole("searchbox").fill("nobody");
-  await expect(
-    page.getByRole("heading", { name: "ยังไม่เจอเพื่อนที่ตามหา" }),
-  ).toBeVisible();
-  await page
-    .getByRole("button", { name: "ดูเพื่อนทั้งหมด", exact: true })
-    .click();
-  await expect(page.locator(".character-card")).toHaveCount(16);
+  await expect(page.locator(".chars-band")).toHaveCount(4);
+  for (const band of await page.locator(".chars-band").all()) {
+    await expect(band.locator(".chars-card")).toHaveCount(4);
+  }
   await page.goto("/characters/missing");
   await expect(
     page.getByRole("heading", { name: "ดูเหมือนเราจะหลงทางนิดหน่อย" }),

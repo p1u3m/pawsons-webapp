@@ -50,6 +50,37 @@ export function CharacterCard({ character }: { character: Character }) {
   );
 }
 
+/** Card for the /characters pages (styles: app/characters/characters.css). */
+export function CharacterTile({ character: c }: { character: Character }) {
+  return (
+    <Link
+      className="chars-card"
+      href={`/characters/${c.type.toLowerCase()}`}
+      style={{ "--house": c.house.badgeColor } as React.CSSProperties}
+    >
+      <span
+        className="chars-card-art"
+        style={{ background: houseBackground(c.house) }}
+      >
+        <Image
+          src={c.image}
+          alt=""
+          width={480}
+          height={480}
+          sizes="(max-width: 767px) 45vw, 260px"
+        />
+      </span>
+      <span className="chars-card-body">
+        <span className="chars-card-name">
+          {c.name}
+          <span className="chars-type">{c.type}</span>
+        </span>
+        <span className="chars-card-tagline">{c.tagline}</span>
+      </span>
+    </Link>
+  );
+}
+
 export function PageIntro({
   label,
   title,

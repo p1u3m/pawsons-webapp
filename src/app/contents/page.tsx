@@ -8,7 +8,7 @@ import { featuredPosts, toPost } from "@/lib/posts";
 import ContentsGrid from "@/components/contents-grid";
 import { FilterSheet } from "@/components/filter-sheet";
 import { SearchField } from "@/components/search-field";
-import { StoriesMagazine } from "@/components/stories-magazine";
+import { MagazineBands, MagazineSpread } from "@/components/stories-magazine";
 
 export const metadata = { title: "Little Stories · Pawsons" };
 export const dynamic = "force-dynamic";
@@ -51,6 +51,7 @@ export default async function Page({
     !selected && !currentCategory && !currentHouse && !query && view !== "all";
 
   const posts = rows.map((row) => toPost(row, categories));
+  const featured = featuredPosts(posts);
   const visible = posts.filter(
     (post) =>
       (!selected || post.character.type === selected.type) &&
@@ -232,11 +233,7 @@ export default async function Page({
           )}
 
           {magazine ? (
-            <StoriesMagazine
-              posts={posts}
-              categories={categories}
-              featured={featuredPosts(posts)}
-            />
+            <MagazineSpread featured={featured} />
           ) : visible.length ? (
             // Client component for the GSAP scroll reveal.
             <ContentsGrid posts={visible} />
@@ -259,6 +256,14 @@ export default async function Page({
           )}
         </div>
       </section>
+
+      {magazine && (
+        <MagazineBands
+          posts={posts}
+          categories={categories}
+          featured={featured}
+        />
+      )}
     </div>
   );
 }

@@ -6,8 +6,11 @@
    ---------------------------------------------------- */
 .stories {
   --pw-band: #e4f3dc;
+  --pattern: url("/patterns/contents.svg");
   min-height: 70vh;
   padding: 40px 0 110px;
+  /* The hero friends lean past the edge at tablet widths; never scroll sideways. */
+  overflow-x: clip;
 }
 
 .stories a {
@@ -262,9 +265,12 @@
   }
 }
 
-/* ── Symbol band (home/shop wavy edge, green for stories) ──
+/* ── Symbol bands (home/shop wavy edge) ──
+   The first band is green; on the magazine view each shelf below gets its
+   own band (--pw-band / --pattern from MagazineBands) whose wave laps over
+   the bottom of the band above, so they stack like the /characters page.
    The band's pattern continues from where the --wave edge above it ends.
-   Tile from scripts/build-patterns.mjs. */
+   Tiles from scripts/build-patterns.mjs. */
 .stories-band {
   --wave: 120px;
   position: relative;
@@ -272,6 +278,32 @@
   padding: 24px 0 120px;
   isolation: isolate; /* keeps the pattern layer (z-index -1) above the band colour */
   background: var(--pw-band);
+}
+
+/* A band followed by another ends with room for the next one's wave. */
+.stories-band:has(+ .stories-band) {
+  padding-bottom: calc(var(--wave) + 56px);
+}
+
+.stories-band + .stories-band {
+  margin-top: 0;
+  padding-top: 8px;
+}
+
+/* The last band hangs a wave (the site wave, flipped) over the page below. */
+.stories-band:has(+ .stories-band-end) {
+  padding-bottom: 24px;
+}
+
+.stories-band-end {
+  --wave: 120px;
+  height: var(--wave);
+  margin-top: -1px;
+  margin-bottom: 24px;
+  background: var(--pw-band);
+  transform: scaleY(-1);
+  -webkit-mask: url("/home-wave-mask.svg") center / 100% 100% no-repeat;
+  mask: url("/home-wave-mask.svg") center / 100% 100% no-repeat;
 }
 
 /* Pattern layer: continues from the wave edge, then fades out from the middle
@@ -282,8 +314,7 @@
   inset: 0;
   z-index: -1;
   pointer-events: none;
-  background: url("/patterns/contents.svg") 0 calc(-1 * var(--wave)) / 1134px
-    756px repeat;
+  background: var(--pattern) 0 calc(-1 * var(--wave)) / 1134px 756px repeat;
   -webkit-mask: linear-gradient(to bottom, #000 0, #000 50%, transparent 90%);
   mask: linear-gradient(to bottom, #000 0, #000 50%, transparent 90%);
 }
@@ -295,8 +326,7 @@
   bottom: calc(100% - 1px);
   height: var(--wave);
   pointer-events: none;
-  background: var(--pw-band) url("/patterns/contents.svg") 0 0 / 1134px 756px
-    repeat;
+  background: var(--pw-band) var(--pattern) 0 0 / 1134px 756px repeat;
   -webkit-mask: url("/home-wave-mask.svg") center bottom / 100% 100% no-repeat;
   mask: url("/home-wave-mask.svg") center bottom / 100% 100% no-repeat;
 }
@@ -595,12 +625,6 @@ a.post-card:hover .post-image {
 /* ── Magazine (default view) ──
    Desktop spread:  lead lead  2  3
                     lead lead  4  5                                     */
-.mag {
-  display: flex;
-  flex-direction: column;
-  gap: 72px;
-}
-
 .mag-spread {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -643,10 +667,13 @@ a.post-card:hover .post-image {
 
 .mag-section-head h2 {
   display: flex;
+  flex-wrap: wrap;
+  max-width: 100%;
   align-items: baseline;
   gap: 10px;
   margin: 0;
-  font-size: 26px;
+  font-size: 30px;
+  letter-spacing: 0;
 }
 
 .mag-section-head h2 small {
@@ -661,17 +688,24 @@ a.post-card:hover .post-image {
   font-size: 15px;
 }
 
-/* Browse by house. */
+/* Browse by house: on the plain page after the last band. */
+.mag-houses {
+  padding-top: 8px;
+}
+
 .mag-house-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 16px;
 }
 
+/* Text on the left, the house symbol on the right. */
 .mag-house {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-content: center;
+  column-gap: 12px;
+  row-gap: 2px;
   padding: 18px 20px 16px;
   border-radius: 28px;
   box-shadow: var(--pw-ledge-sm);
@@ -682,21 +716,23 @@ a.post-card:hover .post-image {
   transform: translateY(-4px);
 }
 
-.mag-house-friends {
-  display: flex;
-  margin-bottom: 14px;
+/* The house symbol (a tall crest, ~0.6:1). */
+.mag-house > * {
+  grid-column: 1;
 }
 
-.mag-house-friends img {
-  width: 56px;
-  height: 56px;
-  margin-right: -14px;
+.mag-house > .mag-house-crest {
+  grid-column: 2;
+  grid-row: 1 / span 3;
+  align-self: center;
+  width: auto;
+  height: 120px;
   object-fit: contain;
-  transition: translate 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: rotate 0.3s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.mag-house:hover .mag-house-friends img:nth-child(odd) {
-  translate: 0 -4px;
+.mag-house:hover .mag-house-crest {
+  rotate: -6deg;
 }
 
 .mag-house strong {
@@ -720,6 +756,7 @@ a.post-card:hover .post-image {
 .mag-more {
   display: flex;
   justify-content: center;
+  margin-top: 56px;
 }
 
 /* ── Post page ── */
@@ -875,6 +912,10 @@ a.post-card:hover .post-image {
 
 /* ── Responsive ── */
 @media (max-width: 1024px) {
+  .mag-house-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .stories-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
@@ -892,9 +933,6 @@ a.post-card:hover .post-image {
     aspect-ratio: 4 / 5;
   }
 
-  .mag-house-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
 }
 
 @media (max-width: 860px) {
@@ -950,17 +988,14 @@ a.post-card:hover .post-image {
     margin-top: 72px;
   }
 
-  .stories-band {
+  .stories-band,
+  .stories-band-end {
     --wave: 64px;
   }
 
   .stories-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 12px;
-  }
-
-  .mag {
-    gap: 56px;
   }
 
   .mag-spread {
@@ -990,7 +1025,7 @@ a.post-card:hover .post-image {
   }
 
   .mag-section-head h2 {
-    font-size: 22px;
+    font-size: 26px;
   }
 
   .mag-house-grid {
@@ -1002,10 +1037,8 @@ a.post-card:hover .post-image {
     border-radius: 22px;
   }
 
-  .mag-house-friends img {
-    width: 40px;
-    height: 40px;
-    margin-right: -12px;
+  .mag-house > .mag-house-crest {
+    height: 72px;
   }
 
   .mag-house small {
@@ -1024,5 +1057,12 @@ a.post-card:hover .post-image {
 @media (prefers-reduced-motion: reduce) {
   .stories-hero-art img {
     animation: none;
+  }
+}
+
+/* Phones: one house per row, so the crest can stay big beside the text. */
+@media (max-width: 480px) {
+  .mag-house-grid {
+    grid-template-columns: minmax(0, 1fr);
   }
 }

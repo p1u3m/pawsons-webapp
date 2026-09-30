@@ -1,4 +1,4 @@
-// Builds the band patterns (public/patterns/{home,shop,contents}.svg) from the
+// Builds the band patterns (public/patterns/{home,shop,contents,house-*}.svg) from the
 // MBTI symbol SVGs: one folder per type, each symbol drawn with a dark outline
 // colour, lighter fills and white highlights (CSS classes .cls-n).
 //
@@ -16,7 +16,16 @@ if (!src) throw new Error("Usage: node scripts/build-patterns.mjs <symbols dir>"
 const outDir = "public/patterns";
 
 // Band colours; keep in sync with the CSS backgrounds that use each tile.
-const bands = { home: "#fff0bd", shop: "#dcefff", contents: "#e4f3dc" };
+const bands = {
+  home: "#fff0bd",
+  shop: "#dcefff",
+  contents: "#e4f3dc",
+  // /characters: one band per house, in the house colour (lib/data.ts).
+  "house-lavender": "#eee9f5",
+  "house-clover": "#eaf7e8",
+  "house-forget-me-not": "#eef6ff",
+  "house-dandelion": "#fff7d7",
+};
 
 const layout = {
   cols: 9, // 9×6 = 54 different symbols per tile, 1512×1008px (drawn at 75%: 1134×756px in CSS)
