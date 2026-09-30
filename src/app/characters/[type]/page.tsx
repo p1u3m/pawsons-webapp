@@ -75,7 +75,7 @@ export default async function Page({
             </header>
             <div className="profile-portrait doodle-bg">
               <Image
-                src={`/characters/reference/chibis/${c.type}.gif`}
+                src={`/characters/reference/chibis/${c.type}.webp`}
                 alt={`${c.name} · ${c.type}`}
                 width={360}
                 height={360}
