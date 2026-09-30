@@ -1,120 +1,145 @@
-import { houseBackground } from "@/lib/data";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import { characters, getCharacter } from "@/lib/data";
-import { BackLink } from "@/components/character-ui";
-import { getContent } from "@/lib/supabase/contents";
-import { ArrowRightIcon, ArrowUpRightIcon } from "@phosphor-icons/react/dist/ssr";
+import { ArrowLeftIcon, ArrowRightIcon } from "@phosphor-icons/react/dist/ssr";
+import { PostArt, PostCard } from "@/components/post-card";
+import { houseBackground } from "@/lib/data";
+import { getAllContents } from "@/lib/supabase/contents";
+import { postCategories, toPost } from "@/lib/posts";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
+
+async function findPost(id: string) {
+  const posts = (await getAllContents()).map(toPost);
+  const index = posts.findIndex((post) => String(post.id) === id);
+  return { posts, index, post: posts[index] };
+}
 
 export async function generateMetadata({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) {
-  const { id } = await params;
-  const content = await getContent(Number(id));
-  return {
-    title: content
-      ? `${content.situation_title} · Pawsons`
-      : "Little Stories · Pawsons",
-  };
+  const { post } = await findPost((await params).id);
+  return { title: post ? `${post.title} · Pawsons` : "Little Stories · Pawsons" };
 }
 
 export default async function Page({
   params,
-  searchParams,
 }: {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ character?: string }>;
 }) {
-  const { id } = await params;
-  const { character } = await searchParams;
-  const index = Number(id) - 1;
-  if (!Number.isInteger(index) || index < 0 || index >= 16) notFound();
+  const { posts, index, post } = await findPost((await params).id);
+  if (!post) notFound();
 
-  const c = (character && getCharacter(character)) || characters[index];
-  const content = await getContent(Number(id));
-
-  const title = content?.situation_title ?? `สถานการณ์ที่ ${id}`;
-  const body1 =
-    content?.body_1 ??
-    `สำหรับ ${c.name} บางวันก็ไม่จำเป็นต้องมีอะไรพิเศษ แค่ได้หยุดฟังความรู้สึกของตัวเองสักนิด ก็เป็นการเริ่มต้นที่ดีแล้ว`;
-  const body2 =
-    content?.body_2 ??
-    `${c.description} วันนี้เลยอยากชวนคุณวางเรื่องที่ยังไม่ต้องรีบไว้ก่อน แล้วให้เวลากับสิ่งเล็ก ๆ ที่ทำให้สบายใจ`;
-  const quote =
-    content?.quote ?? `"ค่อย ๆ ไปก็ได้ เราอยู่ตรงนี้ด้วยกันนะ"`;
+  const c = post.character;
+  // Newest first, so "next" walks back in time and wraps around.
+  const next = posts.length > 1 ? posts[(index + 1) % posts.length] : null;
+  const related = posts
+    .filter(
+      (item) =>
+        item.id !== post.id &&
+        (item.character.type === c.type ||
+          (post.situationNo !== null && item.situationNo === post.situationNo)),
+    )
+    .slice(0, 4);
 
   return (
-    <article className="wrap min-h-[70vh] pt-10 pb-[90px] story-open">
-      {/* Back nav */}
-      <BackLink
-        href={character ? `/contents?character=${c.type}` : "/contents"}
-      >
-        กลับไปอ่านเรื่องอื่น
-      </BackLink>
-
-      {/* Header: eyebrow + large situaton number */}
-      <div className="story-header">
-        <span className="eyebrow">16 SITUATIONS · {c.name}</span>
-        <span className="story-num" aria-hidden="true">
-          {String(index + 1).padStart(2, "0")}
-        </span>
-      </div>
-
-      <h1 className="story-title">{title}</h1>
-
-      {/* Art banner */}
-      <div
-        className="story-banner"
-        style={{ background: houseBackground(c.house) }}
-      >
-        {content?.cover_image_url ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={content.cover_image_url}
-            alt={title}
-            className="story-banner-cover"
-          />
-        ) : (
-          <Image
-            src={c.image}
-            alt={`${c.name} · ${c.type}`}
-            width={480}
-            height={480}
-            className="story-banner-char"
-            priority
-          />
-        )}
-      </div>
-
-      {/* Body */}
-      <div className="story-body">
-        <p>{body1}</p>
-        <p>{body2}</p>
-        <blockquote className="story-quote">{quote}</blockquote>
-      </div>
-
-      {/* Actions */}
-      <div className="story-actions">
-        <Link className="button" href={`/characters/${c.type.toLowerCase()}`}>
-          <span>รู้จัก {c.name}</span>
-          <span className="icon-disc" aria-hidden="true">
-            <ArrowUpRightIcon size={14} weight="bold" />
-          </span>
+    <article className="wrap stories stories-detail">
+      <div className="stories-detail-top">
+        <Link
+          href="/contents"
+          className="stories-round-button"
+          aria-label="กลับไปหน้าเรื่องราว"
+        >
+          <ArrowLeftIcon size={20} weight="bold" aria-hidden="true" />
         </Link>
         <Link
-          className="text-link"
-          href={`/contents/${((index + 1) % 16) + 1}${character ? `?character=${c.type}` : ""}`}
+          className="stories-pill"
+          href={`/contents?category=${post.category}`}
         >
-          <span>เรื่องถัดไป</span>
-          <ArrowRightIcon size={15} weight="bold" />
+          {postCategories[post.category].label}
+          {post.situationNo !== null && ` · #${String(post.situationNo).padStart(2, "0")}`}
         </Link>
       </div>
+
+      <div className="stories-detail-grid">
+        <div className="stories-detail-art">
+          <span className="post-frame">
+            <PostArt post={post} sizes="(max-width: 860px) 100vw, 50vw" priority />
+          </span>
+        </div>
+
+        <div className="stories-read">
+          <p className="stories-meta">
+            <span
+              className="stories-dot"
+              style={{ background: c.house.badgeColor }}
+              aria-hidden="true"
+            />
+            {c.name} · {c.type} · บ้าน {c.house.name}
+          </p>
+          {post.category === "quote" ? (
+            <blockquote className="stories-quote">
+              <p>“{post.title}”</p>
+              {post.author && <footer>— {post.author}</footer>}
+            </blockquote>
+          ) : (
+            <>
+              <h1>{post.title}</h1>
+              {post.lines.length > 0 && (
+                <div className="stories-body">
+                  {post.lines.map((line) => (
+                    <p key={line}>{line}</p>
+                  ))}
+                </div>
+              )}
+            </>
+          )}
+
+          {next && (
+            <div className="stories-actions">
+              <Link className="stories-cta" href={`/contents/${next.id}`}>
+                <span>โพสต์ถัดไป</span>
+                <ArrowRightIcon size={18} weight="bold" aria-hidden="true" />
+              </Link>
+            </div>
+          )}
+
+          <Link className="stories-friend" href={`/characters/${c.type.toLowerCase()}`}>
+            <span
+              className="stories-friend-avatar"
+              style={{ background: houseBackground(c.house) }}
+            >
+              <Image src={c.image} alt="" width={96} height={96} sizes="56px" />
+            </span>
+            <span>
+              <strong>รู้จัก {c.name}</strong>
+              <small>{c.tagline}</small>
+            </span>
+            <span aria-hidden="true" className="stories-friend-arrow">
+              ↗
+            </span>
+          </Link>
+        </div>
+      </div>
+
+      {related.length > 0 && (
+        <section className="stories-related" aria-labelledby="related-title">
+          <div className="mag-section-head">
+            <h2 id="related-title">อ่านต่อ</h2>
+            <Link className="stories-text-link" href={`/contents?character=${c.type}`}>
+              โพสต์ทั้งหมดของ {c.name}
+            </Link>
+          </div>
+          <div className="stories-grid">
+            {related.map((item) => (
+              <PostCard key={item.id} post={item} />
+            ))}
+          </div>
+        </section>
+      )}
     </article>
   );
 }

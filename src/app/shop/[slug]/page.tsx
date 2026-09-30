@@ -1,13 +1,14 @@
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { ArrowLeftIcon } from "@phosphor-icons/react/dist/ssr";
 import { AddToCartPanel, CartButton, CartDrawer } from "@/components/shop/cart";
 import {
   ProductArt,
   ProductCard,
-  kindLabel,
   lowStockThreshold,
 } from "@/components/shop/product-card";
+import { kindLabel } from "@/lib/shop/kinds";
 import { getCharacter, houseBackground } from "@/lib/data";
 import { getProducts, isCheckoutReady } from "@/lib/shop/catalog";
 import { formatPrice } from "@/lib/shop/price";
@@ -47,17 +48,9 @@ export default async function ShopProductPage({
   return (
     <div className="wrap store store-detail">
       <div className="store-detail-top">
-        <nav className="store-breadcrumb" aria-label="เส้นทาง">
-          <Link href="/shop">Shop</Link>
-          <span aria-hidden="true">/</span>
-          {character && (
-            <>
-              <Link href={`/shop?house=${character.house.id}`}>{character.house.name}</Link>
-              <span aria-hidden="true">/</span>
-            </>
-          )}
-          <span aria-current="page">{product.title}</span>
-        </nav>
+        <Link href="/shop" className="store-back-button" aria-label="กลับไปหน้า Shop">
+          <ArrowLeftIcon size={20} weight="bold" aria-hidden="true" />
+        </Link>
         <CartButton />
       </div>
 

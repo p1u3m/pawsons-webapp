@@ -13,9 +13,9 @@ export default async function AdminContentsPage() {
     <div className="admin-contents-page">
       <header className="admin-page-header">
         <div>
-          <h1 className="admin-page-title">16 Situations</h1>
+          <h1 className="admin-page-title">Little Stories</h1>
           <p className="admin-page-sub">
-            ดูแลทุกเรื่องราวของ Pawsons ให้พร้อมสำหรับผู้อ่าน
+            โพสต์สถานการณ์และคำคมบนหน้า Contents
           </p>
         </div>
         <Link className="admin-site-link" href="/contents" target="_blank">

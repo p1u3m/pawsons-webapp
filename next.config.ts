@@ -20,6 +20,12 @@ const nextConfig: NextConfig = {
               hostname: supabaseHost,
               pathname: "/storage/v1/object/public/shop-images/**",
             },
+            // Post pictures for /contents.
+            {
+              protocol: "https" as const,
+              hostname: supabaseHost,
+              pathname: "/storage/v1/object/public/content-images/**",
+            },
           ]
         : []),
     ],

@@ -1,0 +1,888 @@
+/* ----------------------------------------------------
+   LITTLE STORIES — posts listing (magazine + grid) and post page
+   Same language as the home page and shop: paper hero, wavy doodle band,
+   cream cards on solid ledges, yellow sign buttons (--pw-* in globals.css).
+   Posts are 4:5 illustrated cards with their text drawn in.
+   ---------------------------------------------------- */
+.stories {
+  --pw-band: #e4f3dc;
+  min-height: 70vh;
+  padding: 40px 0 110px;
+}
+
+.stories a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.stories :is(a, button):focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+}
+
+.stories-dot {
+  display: inline-block;
+  flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--house, var(--green));
+}
+
+.stories-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+/* Round icon button (back), same ledge as the shop's. */
+.stories-round-button {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: var(--pw-cream);
+  color: var(--pw-navy) !important;
+  box-shadow: 0 4px 0 #ccc9c2;
+  transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.stories-round-button:hover {
+  transform: translateY(-2px);
+}
+
+/* Yellow sign button. */
+.stories-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 52px;
+  padding: 0 26px;
+  border-radius: 26px;
+  background: var(--pw-yellow);
+  color: var(--pw-gold-ink) !important;
+  font-size: 16px;
+  font-weight: 700;
+  white-space: nowrap;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.35);
+  box-shadow:
+    0 4px 0 var(--pw-gold),
+    0 7px 0 #efe0b7;
+  transition:
+    transform 0.2s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.stories-cta:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 6px 0 var(--pw-gold),
+    0 9px 0 #efe0b7;
+}
+
+.stories-cta:active {
+  transform: translateY(4px);
+  box-shadow:
+    0 0 0 var(--pw-gold),
+    0 2px 0 #efe0b7;
+}
+
+.stories-text-link {
+  padding: 6px 14px;
+  border-radius: var(--radius-pill);
+  background: #f4efe1;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: background 0.2s;
+}
+
+.stories-text-link:hover {
+  background: #ebe4d3;
+}
+
+/* ── Hero ── */
+.stories--landing {
+  padding-bottom: 0;
+}
+
+.stories-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  align-items: center;
+  gap: 48px;
+  margin-bottom: 44px;
+}
+
+.stories-hero-copy .stories-round-button {
+  margin-bottom: 24px;
+}
+
+.stories-hero-copy h1 {
+  margin: 0 0 16px;
+  font-size: clamp(34px, 4.4vw, 54px);
+  line-height: 1.18;
+  letter-spacing: -0.02em;
+}
+
+.stories-hero-copy > p {
+  max-width: 460px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 17px;
+  line-height: 1.75;
+}
+
+/* Three friends leaning in, or the selected one on their own. */
+.stories-hero-art {
+  position: relative;
+  justify-self: center;
+  width: min(100%, 420px);
+  aspect-ratio: 1.25;
+}
+
+.stories-hero-art img {
+  position: absolute;
+  width: 46%;
+  height: auto;
+  filter: drop-shadow(0 10px 14px rgba(24, 24, 24, 0.1));
+  animation: stories-bob 6s ease-in-out infinite;
+}
+
+.stories-hero-art img:nth-child(1) {
+  top: 16%;
+  left: 0;
+  rotate: -8deg;
+}
+
+.stories-hero-art img:nth-child(2) {
+  z-index: 1;
+  top: 0;
+  left: 27%;
+  width: 50%;
+  animation-delay: -2s;
+}
+
+.stories-hero-art img:nth-child(3) {
+  top: 18%;
+  right: 0;
+  rotate: 8deg;
+  animation-delay: -4s;
+}
+
+.stories-hero-art.is-single img {
+  top: 0;
+  left: 20%;
+  width: 60%;
+  rotate: none;
+}
+
+@keyframes stories-bob {
+  50% {
+    translate: 0 -8px;
+  }
+}
+
+/* ── Symbol band (home/shop wavy edge, green for stories) ──
+   The band's pattern continues from where the --wave edge above it ends.
+   Tile from scripts/build-patterns.mjs. */
+.stories-band {
+  --wave: 120px;
+  position: relative;
+  margin-top: 96px;
+  padding: 24px 0 120px;
+  background: var(--pw-band) url("/patterns/contents.svg") 0
+    calc(-1 * var(--wave)) / 1512px 1008px repeat;
+}
+
+.stories-band::before {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  bottom: calc(100% - 1px);
+  height: var(--wave);
+  pointer-events: none;
+  background: var(--pw-band) url("/patterns/contents.svg") 0 0 / 1512px 1008px
+    repeat;
+  -webkit-mask: url("/home-wave-mask.svg") center bottom / 100% 100% no-repeat;
+  mask: url("/home-wave-mask.svg") center bottom / 100% 100% no-repeat;
+}
+
+/* ── Toolbar ── */
+.stories-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 36px;
+  padding: 12px;
+  border-radius: 28px;
+  background: var(--pw-cream);
+  box-shadow: var(--pw-ledge);
+}
+
+.stories-tabs {
+  display: flex;
+  flex: 1;
+  gap: 6px;
+  min-width: 0;
+  padding-block: 2px 4px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-mask: linear-gradient(90deg, #000 calc(100% - 28px), transparent);
+  mask: linear-gradient(90deg, #000 calc(100% - 28px), transparent);
+}
+
+.stories-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.stories-tab {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 8px;
+  height: 36px;
+  padding: 0 16px;
+  border-radius: var(--radius-pill);
+  background: #f4efe1;
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: var(--spring);
+}
+
+.stories-tab:hover {
+  color: var(--ink);
+}
+
+.stories-tab[aria-current="page"] {
+  background: var(--pw-yellow);
+  color: var(--pw-gold-ink);
+  box-shadow: 0 2px 0 var(--pw-gold);
+}
+
+.stories-tab small {
+  display: grid;
+  place-items: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 6px;
+  border-radius: var(--radius-pill);
+  background: var(--pw-cream);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* House chips: outlined, fill with the house tint when active. */
+.stories-tab--house {
+  gap: 7px;
+  padding: 0 14px;
+  background: var(--pw-cream);
+  box-shadow: inset 0 0 0 1.5px #ebe4d3;
+  font-size: 13px;
+}
+
+.stories-tab--house[aria-current="page"] {
+  background: var(--house-bg);
+  color: var(--ink);
+  box-shadow: inset 0 0 0 1.5px
+    color-mix(in srgb, var(--house) 55%, transparent);
+}
+
+.stories-tabs-divider {
+  flex-shrink: 0;
+  align-self: center;
+  width: 1.5px;
+  height: 24px;
+  margin-inline: 6px;
+  background: #ebe4d3;
+}
+
+/* Selected-friend strip under the toolbar. */
+.stories-filter-banner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: -16px 0 28px;
+  padding: 12px 12px 12px 20px;
+  border-radius: 22px;
+  background: var(--pw-cream);
+  box-shadow: var(--pw-ledge-sm);
+  font-size: 14px;
+}
+
+.stories-filter-banner p {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+}
+
+.stories-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 56px 24px;
+  border-radius: 30px;
+  background: var(--pw-cream);
+  box-shadow: var(--pw-ledge);
+  text-align: center;
+}
+
+.stories-empty p {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.stories-empty span {
+  margin-bottom: 16px;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+/* ── Post cards ── */
+.stories-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.post-card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 10px;
+  border-radius: 30px;
+  background: var(--pw-cream);
+  box-shadow: var(--pw-ledge);
+  transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+a.post-card:hover {
+  transform: translateY(-5px);
+}
+
+.post-frame {
+  position: relative;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  border-radius: 22px;
+  background: #f4efe1;
+}
+
+.post-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+a.post-card:hover .post-image {
+  transform: scale(1.03);
+}
+
+/* A post (or slot) still waiting for its picture. */
+.post-waiting {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: var(--muted-light);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.post-waiting .material-symbols-rounded {
+  font-size: 34px;
+}
+
+.post-frame:has(.post-waiting) {
+  background:
+    repeating-linear-gradient(
+      -45deg,
+      transparent 0 14px,
+      rgba(24, 24, 24, 0.025) 14px 28px
+    ),
+    #f4efe1;
+  box-shadow: inset 0 0 0 2px #e6dfcd;
+}
+
+.post-card.is-empty {
+  background: rgba(255, 253, 249, 0.55);
+  box-shadow: inset 0 0 0 2px rgba(255, 253, 249, 0.9);
+}
+
+.post-card.is-empty .post-frame {
+  background: none;
+  box-shadow: none;
+}
+
+.post-caption {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px 8px 6px;
+}
+
+.post-title {
+  display: -webkit-box;
+  overflow: hidden;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.45;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+/* ── Magazine (default view) ──
+   Desktop spread:  lead lead  2  3
+                    lead lead  4  5                                     */
+.mag {
+  display: flex;
+  flex-direction: column;
+  gap: 72px;
+}
+
+.mag-spread {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.mag-lead {
+  grid-row: span 2;
+  grid-column: span 2;
+}
+
+/* The lead's picture grows to fill the two rows beside it. */
+.mag-lead .post-frame {
+  flex: 1;
+  aspect-ratio: auto;
+  min-height: 0;
+}
+
+.mag-lead .post-caption {
+  padding: 16px 12px 8px;
+}
+
+.mag-lead .post-title {
+  font-size: clamp(20px, 2vw, 26px);
+  line-height: 1.35;
+}
+
+.mag-lead .stories-meta {
+  font-size: 13px;
+}
+
+.mag-section-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 16px;
+  margin-bottom: 20px;
+}
+
+.mag-section-head h2 {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin: 0;
+  font-size: 26px;
+}
+
+.mag-section-head h2 small {
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.mag-section-head p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 15px;
+}
+
+/* Browse by house. */
+.mag-house-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.mag-house {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 18px 20px 16px;
+  border-radius: 28px;
+  box-shadow: var(--pw-ledge-sm);
+  transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.mag-house:hover {
+  transform: translateY(-4px);
+}
+
+.mag-house-friends {
+  display: flex;
+  margin-bottom: 14px;
+}
+
+.mag-house-friends img {
+  width: 56px;
+  height: 56px;
+  margin-right: -14px;
+  object-fit: contain;
+  transition: translate 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.mag-house:hover .mag-house-friends img:nth-child(odd) {
+  translate: 0 -4px;
+}
+
+.mag-house strong {
+  font-size: 18px;
+}
+
+.mag-house small {
+  font-size: 13px;
+  opacity: 0.8;
+}
+
+.mag-house-foot {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 12px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.mag-more {
+  display: flex;
+  justify-content: center;
+}
+
+/* ── Post page ── */
+.stories-detail-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.stories-pill {
+  padding: 8px 16px;
+  border-radius: var(--radius-pill);
+  background: var(--pw-cream);
+  box-shadow: var(--pw-ledge-sm);
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  transition: color 0.2s;
+}
+
+.stories-pill:hover {
+  color: var(--ink);
+}
+
+.stories-detail-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: start;
+  gap: 56px;
+}
+
+.stories-detail-art {
+  position: sticky;
+  top: 110px;
+  max-width: 540px;
+  padding: 10px;
+  border-radius: 34px;
+  background: var(--pw-cream);
+  box-shadow: var(--pw-ledge);
+}
+
+.stories-detail-art .post-frame {
+  border-radius: 26px;
+}
+
+.stories-read h1 {
+  margin: 12px 0 24px;
+  font-size: clamp(28px, 3.4vw, 42px);
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+}
+
+.stories-read .stories-meta {
+  font-size: 13px;
+}
+
+.stories-body p {
+  margin: 0 0 14px;
+  color: var(--muted);
+  font-size: 18px;
+  line-height: 1.8;
+}
+
+.stories-body p:first-child {
+  color: var(--ink);
+  font-weight: 500;
+}
+
+.stories-quote {
+  margin: 20px 0 0;
+}
+
+.stories-quote p {
+  margin: 0 0 16px;
+  font-size: clamp(24px, 2.8vw, 34px);
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+.stories-quote footer {
+  color: var(--muted);
+  font-size: 16px;
+}
+
+.stories-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 36px 0 28px;
+  padding-bottom: 28px;
+  border-bottom: 1px solid var(--line);
+}
+
+.stories-friend {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 18px 12px 12px;
+  border-radius: 24px;
+  background: var(--pw-cream);
+  box-shadow: var(--pw-ledge-sm);
+  transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.stories-friend:hover {
+  transform: translateY(-3px);
+}
+
+.stories-friend-avatar {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  overflow: hidden;
+  border-radius: 16px;
+}
+
+.stories-friend-avatar img {
+  width: 84%;
+  height: auto;
+}
+
+.stories-friend > span:nth-child(2) {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.stories-friend small {
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 13px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.stories-friend-arrow {
+  transition: transform 0.3s;
+}
+
+.stories-friend:hover .stories-friend-arrow {
+  transform: translate(2px, -2px);
+}
+
+.stories-related {
+  margin-top: 80px;
+}
+
+/* ── Responsive ── */
+@media (max-width: 1024px) {
+  .stories-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .mag-spread {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .mag-lead {
+    grid-row: auto;
+  }
+
+  .mag-lead .post-frame {
+    flex: none;
+    aspect-ratio: 4 / 5;
+  }
+
+  .mag-house-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 860px) {
+  .stories-hero {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .stories-hero-art {
+    width: min(80%, 340px);
+  }
+
+  .stories-detail-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .stories-detail-art {
+    position: static;
+    width: 100%;
+    margin-inline: auto;
+  }
+}
+
+@media (max-width: 767px) {
+  .stories {
+    padding-top: 24px;
+  }
+
+  .stories--landing {
+    padding-top: 56px;
+  }
+
+  .stories-hero {
+    gap: 8px;
+    text-align: center;
+  }
+
+  .stories-hero-copy h1 {
+    margin-bottom: 14px;
+    font-size: 32px;
+    line-height: 1.3;
+  }
+
+  .stories-hero-copy > p {
+    max-width: 320px;
+    margin-inline: auto;
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  .stories-band {
+    margin-top: 72px;
+  }
+
+  .stories-band {
+    --wave: 64px;
+  }
+
+  .stories-toolbar {
+    padding: 8px;
+  }
+
+  .stories-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .mag {
+    gap: 56px;
+  }
+
+  .mag-spread {
+    gap: 12px;
+  }
+
+  .post-card {
+    padding: 6px;
+    border-radius: 20px;
+  }
+
+  .post-frame {
+    border-radius: 15px;
+  }
+
+  .post-caption {
+    padding: 10px 6px 4px;
+  }
+
+  .post-title,
+  .mag-lead .post-title {
+    font-size: 13px;
+  }
+
+  .mag-lead .post-title {
+    font-size: 17px;
+  }
+
+  .mag-section-head h2 {
+    font-size: 22px;
+  }
+
+  .mag-house-grid {
+    gap: 12px;
+  }
+
+  .mag-house {
+    padding: 14px;
+    border-radius: 22px;
+  }
+
+  .mag-house-friends img {
+    width: 40px;
+    height: 40px;
+    margin-right: -12px;
+  }
+
+  .mag-house small {
+    display: none;
+  }
+
+  .stories-body p {
+    font-size: 16px;
+  }
+
+  .stories-actions .stories-cta {
+    flex: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stories-hero-art img {
+    animation: none;
+  }
+}

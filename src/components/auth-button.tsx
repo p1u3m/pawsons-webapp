@@ -289,7 +289,7 @@ export default function AuthButton({
             >
               <span className="auth-btn-label">
                 <SquaresFourIcon size={20} aria-hidden="true" />
-                <span>Manage Content (Admin)</span>
+                <span>Admin</span>
               </span>
               <span className="icon-disc" aria-hidden="true">
                 →
@@ -372,7 +372,7 @@ export default function AuthButton({
               style={{ color: "#3d7f58", fontWeight: 600 }}
             >
               <SquaresFourIcon size={20} aria-hidden="true" />
-              <span>Manage Content (Admin)</span>
+              <span>Admin</span>
             </Link>
           )}
           <button

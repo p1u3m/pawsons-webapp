@@ -6,16 +6,8 @@
    Uses the Pawsons paper/ink tokens from globals.css.
    ---------------------------------------------------- */
 .store {
-  /* Home-page palette: cream cards on solid "ledges", yellow sign buttons. */
-  --pw-cream: #fffdf9;
+  /* Home-page palette (--pw-* in globals.css); the shop's band is blue. */
   --pw-band: #dcefff;
-  --pw-yellow: #ffdf42;
-  --pw-gold: #d6a027;
-  --pw-gold-ink: #60420d;
-  --pw-navy: #142d3b;
-  --pw-ledge: 0 4px 0 #d7d3cc, 0 8px 0 #e6e1d8;
-  --pw-ledge-sm: 0 3px 0 #d7d3cc, 0 5px 0 #e6e1d8;
-  --pw-ledge-pressed: 0 1px 0 #d7d3cc, 0 2px 0 #e6e1d8;
   min-height: 70vh;
   padding: 40px 0 110px;
 }
@@ -141,17 +133,20 @@
   line-height: 1.75;
 }
 
-/* ── Doodle band (same background and wavy edge as the home page) ── */
+/* ── Symbol band (same pattern and wavy edge as the home page) ──
+   The band's pattern continues from where the --wave edge above it ends.
+   Tile from scripts/build-patterns.mjs. */
 .store--landing {
   padding-bottom: 0;
 }
 
 .store-band {
+  --wave: 120px;
   position: relative;
   margin-top: 96px;
   padding: 24px 0 120px;
-  background: var(--pw-band) url("/shop/doodle-texture-blue.svg") 0 -120px /
-    900px 480px repeat;
+  background: var(--pw-band) url("/patterns/shop.svg") 0
+    calc(-1 * var(--wave)) / 1512px 1008px repeat;
 }
 
 .store-band::before {
@@ -159,52 +154,82 @@
   position: absolute;
   inset-inline: 0;
   bottom: calc(100% - 1px);
-  height: 120px;
+  height: var(--wave);
   pointer-events: none;
-  background: var(--pw-band) url("/shop/doodle-texture-blue.svg") 0 0 / 900px
-    480px repeat;
+  background: var(--pw-band) url("/patterns/shop.svg") 0 0 / 1512px 1008px
+    repeat;
   -webkit-mask: url("/home-wave-mask.svg") center bottom / 100% 100% no-repeat;
   mask: url("/home-wave-mask.svg") center bottom / 100% 100% no-repeat;
 }
 
-/* ── Toolbar ── */
+/* ── Toolbar ──
+   Desktop: search + orders/cart on top; kind chips | houses below. */
 .store-toolbar {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 12px 16px;
+  gap: 12px;
   margin-bottom: 36px;
-  padding: 12px;
+  padding: 12px 12px 14px;
   border-radius: 28px;
   background: var(--pw-cream);
   box-shadow: var(--pw-ledge);
 }
 
-.store-segmented {
+/* Product kinds: one chip each, scrolls sideways once there are many. */
+.store-kinds {
   display: flex;
-  gap: 4px;
-  padding: 4px;
-  border-radius: var(--radius-pill);
-  background: #f4efe1;
+  flex: 1 1 280px;
+  gap: 6px;
+  min-width: 0;
+  padding-block: 2px 4px; /* room for the active chip's ledge */
+  overflow-x: auto;
+  scrollbar-width: none;
+  overscroll-behavior-x: contain;
+  -webkit-mask: linear-gradient(90deg, #000 calc(100% - 28px), transparent);
+  mask: linear-gradient(90deg, #000 calc(100% - 28px), transparent);
 }
 
-.store-segmented a {
-  padding: 7px 16px;
+.store-kinds::-webkit-scrollbar {
+  display: none;
+}
+
+.store-kinds a {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 8px;
+  height: 36px;
+  padding: 0 8px 0 16px;
   border-radius: var(--radius-pill);
+  background: #f4efe1;
   color: var(--muted) !important;
   font-size: 14px;
   font-weight: 600;
+  white-space: nowrap;
   transition: var(--spring);
 }
 
-.store-segmented a:hover {
+.store-kinds a:hover {
   color: var(--ink) !important;
 }
 
-.store-segmented a[aria-current="page"] {
+.store-kinds a[aria-current="page"] {
   background: var(--pw-yellow);
   color: var(--pw-gold-ink) !important;
   box-shadow: 0 2px 0 var(--pw-gold);
+}
+
+.store-kind-count {
+  display: grid;
+  place-items: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 6px;
+  border-radius: var(--radius-pill);
+  background: var(--pw-cream);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
 }
 
 .store-houses {
@@ -217,7 +242,8 @@
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  padding: 7px 14px;
+  height: 36px;
+  padding: 0 14px;
   border-radius: var(--radius-pill);
   background: var(--pw-cream);
   color: var(--muted) !important;
@@ -240,7 +266,22 @@
 }
 
 .store-toolbar-filters {
-  display: contents;
+  display: flex;
+  flex-wrap: wrap;
+  flex-basis: 100%;
+  order: 2;
+  align-items: center;
+  gap: 10px 14px;
+  padding: 14px 4px 0;
+  border-top: 1.5px dashed #ebe4d3;
+}
+
+/* Houses stay put on the right while the kind rail scrolls. */
+.store-toolbar-filters .store-houses {
+  flex-wrap: nowrap;
+  margin-left: auto;
+  padding-left: 14px;
+  border-left: 1.5px solid #ebe4d3;
 }
 
 /* Search pill (matches the mobile reference: pale tint, icon, no border). */
@@ -248,9 +289,8 @@
   display: flex;
   flex: 1 1 200px;
   align-items: center;
-  gap: 8px;
-  max-width: 320px;
-  height: 44px;
+  gap: 10px;
+  height: 46px;
   padding: 0 16px;
   border-radius: var(--radius-pill);
   background: #f4efe1;
@@ -262,13 +302,13 @@
   box-shadow: 0 0 0 2px color-mix(in srgb, var(--green) 35%, transparent);
 }
 
-.store-search[data-pending] .material-symbols-rounded {
-  opacity: 0.5;
+.store-search svg {
+  flex-shrink: 0;
+  transition: opacity 0.2s;
 }
 
-.store-search .material-symbols-rounded {
-  font-size: 22px;
-  transition: opacity 0.2s;
+.store-search[data-pending] svg {
+  opacity: 0.5;
 }
 
 .store-search input {
@@ -398,9 +438,12 @@
   cursor: pointer;
 }
 
-.store-sheet .store-segmented a {
-  flex: 1;
-  text-align: center;
+/* The sheet has room to wrap, so no sideways scrolling there. */
+.store-sheet .store-kinds {
+  flex-wrap: wrap;
+  overflow: visible;
+  -webkit-mask: none;
+  mask: none;
 }
 
 .store-sheet .store-houses a {
@@ -418,13 +461,6 @@
   align-items: center;
   gap: 14px;
   margin-left: auto;
-}
-
-.store-count {
-  color: var(--muted);
-  font-size: 13px;
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
 }
 
 .store-cart-button {
@@ -490,7 +526,7 @@
 /* ── Product grid & cards ── */
 .store-grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 20px;
 }
 
@@ -739,21 +775,22 @@
   margin-bottom: 28px;
 }
 
-.store-breadcrumb {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px;
-  color: var(--muted);
-  font-size: 14px;
+/* Round back button, same ledge as the cart button beside it. */
+.store-back-button {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: var(--pw-cream);
+  color: var(--pw-navy) !important;
+  box-shadow: 0 4px 0 #ccc9c2;
+  transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.store-breadcrumb a:hover {
-  color: var(--ink);
-}
-
-.store-breadcrumb [aria-current] {
-  color: var(--ink);
+.store-back-button:hover {
+  transform: translateY(-2px);
 }
 
 .store-detail-grid {
@@ -1349,8 +1386,8 @@
     padding-bottom: 120px;
   }
 
-  .store-band::before {
-    height: 64px;
+  .store-band {
+    --wave: 64px;
   }
 
   .store-grid {
@@ -1419,10 +1456,6 @@
   }
 
   .store-toolbar .store-cart-count[data-empty] {
-    display: none;
-  }
-
-  .store-count {
     display: none;
   }
 
@@ -1587,11 +1620,6 @@
 }
 
 .store-status.is-shipped {
-  background: var(--lavender-bg);
-  color: #5b4a8b;
-}
-
-.store-status.is-delivered {
   background: var(--clover-bg);
   color: var(--green);
 }

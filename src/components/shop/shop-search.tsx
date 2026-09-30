@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, useTransition } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { MagnifyingGlassIcon } from "@phosphor-icons/react";
 
 /**
  * Search field that updates `?q=` as the user types, keeping other filters.
@@ -50,15 +51,13 @@ export function ShopSearch() {
         .map(([key, param]) => (
           <input key={key} type="hidden" name={key} value={param} />
         ))}
-      <span className="material-symbols-rounded" aria-hidden="true">
-        search
-      </span>
+      <MagnifyingGlassIcon size={20} weight="bold" aria-hidden="true" />
       <input
         ref={input}
         type="search"
         name="q"
         value={value}
-        placeholder="Search"
+        placeholder="ค้นหาสินค้าหรือตัวละคร"
         aria-label="ค้นหาสินค้า"
         autoComplete="off"
         enterKeyHint="search"

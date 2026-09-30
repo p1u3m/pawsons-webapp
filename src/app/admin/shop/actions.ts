@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { isAdmin } from "@/lib/supabase/contents";
 import { createClient } from "@/lib/supabase/server";
 import { getCharacter } from "@/lib/data";
+import { isProductKind } from "@/lib/shop/kinds";
 import {
   maxProductImageBytes,
   productImageTypes,
@@ -51,7 +52,7 @@ export async function saveProduct(formData: FormData) {
     title.length < 1 ||
     title.length > 120 ||
     description.length > 1000 ||
-    !["sticker", "postcard"].includes(kind) ||
+    !isProductKind(kind) ||
     !getCharacter(character_type) ||
     priceBaht < 1 ||
     priceBaht > 100000 ||

@@ -16,7 +16,8 @@ import {
 import { saveProduct } from "./actions";
 import { AdminSheet } from "@/components/admin-sheet";
 import { AdminOrderDetail } from "@/components/admin-order-detail";
-import { kindLabel, lowStockThreshold } from "@/components/shop/product-card";
+import { lowStockThreshold } from "@/components/shop/product-card";
+import { kindLabel, productKinds } from "@/lib/shop/kinds";
 import { isAdmin } from "@/lib/supabase/contents";
 import { createClient } from "@/lib/supabase/server";
 import { getProducts, type ShopProduct } from "@/lib/shop/catalog";
@@ -551,9 +552,12 @@ function ProductForm({ product }: { product?: ShopProduct }) {
         </label>
         <label>
           ประเภท
-          <select name="kind" defaultValue={product?.kind || "sticker"}>
-            <option value="sticker">สติกเกอร์</option>
-            <option value="postcard">โปสการ์ด</option>
+          <select name="kind" defaultValue={product?.kind || productKinds[0]}>
+            {productKinds.map((kind) => (
+              <option key={kind} value={kind}>
+                {kindLabel[kind]}
+              </option>
+            ))}
           </select>
         </label>
         <label>

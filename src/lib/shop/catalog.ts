@@ -1,11 +1,12 @@
 import { createClient } from "@/lib/supabase/server";
 import { shopImageBucket } from "@/lib/shop/images";
+import type { ProductKind } from "@/lib/shop/kinds";
 
 export type ShopProduct = {
   slug: string;
   title: string;
   description: string;
-  kind: "sticker" | "postcard";
+  kind: ProductKind;
   character_type: string;
   price_satang: number;
   stock_qty: number;

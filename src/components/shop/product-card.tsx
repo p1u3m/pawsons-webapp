@@ -4,9 +4,9 @@ import { AddToCartIcon } from "@/components/shop/cart";
 import { NoProductImage } from "@/components/shop/no-product-image";
 import { getCharacter } from "@/lib/data";
 import type { ShopProduct } from "@/lib/shop/catalog";
+import { kindLabel } from "@/lib/shop/kinds";
 import { formatPrice } from "@/lib/shop/price";
 
-export const kindLabel = { sticker: "สติกเกอร์", postcard: "โปสการ์ด" } as const;
 export const lowStockThreshold = 5;
 
 export function StockBadge({ stock }: { stock: number }) {

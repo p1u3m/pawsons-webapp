@@ -1,23 +1,15 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import Link from "next/link";
-import Image from "next/image";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { houseBackground } from "@/lib/data";
-import type { Character } from "@/lib/data";
-import type { ContentRow } from "@/lib/supabase/contents";
+import { PostCard } from "@/components/post-card";
+import type { Post } from "@/lib/posts";
 
 gsap.registerPlugin(ScrollTrigger);
 
-type Props = {
-  characters: readonly Character[];
-  contentRows: ContentRow[];
-  selected: Character | null;
-};
-
-export default function ContentsGrid({ characters, contentRows, selected }: Props) {
+/** Filtered /contents view: every matching post, revealed on scroll. */
+export default function ContentsGrid({ posts }: { posts: Post[] }) {
   const gridRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -28,7 +20,7 @@ export default function ContentsGrid({ characters, contentRows, selected }: Prop
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     const ctx = gsap.context(() => {
-      const cards = gsap.utils.toArray<HTMLElement>(".sit-card", el);
+      const cards = gsap.utils.toArray<HTMLElement>(".post-card", el);
       cards.forEach((card, i) => {
         gsap.fromTo(
           card,
@@ -44,64 +36,21 @@ export default function ContentsGrid({ characters, contentRows, selected }: Prop
               start: "top 90%",
               once: true,
             },
+            // Hand the transform back to CSS so the hover lift works.
+            clearProps: "transform",
           }
         );
       });
     }, el);
 
     return () => ctx.revert();
-  }, []);
+  }, [posts]);
 
   return (
-    <div className="sit-grid" ref={gridRef}>
-      {characters.map((char, i) => {
-        const c = selected || char;
-        const row = contentRows.find((r) => r.id === i + 1);
-        const title = row?.situation_title ?? `สถานการณ์ที่ ${i + 1}`;
-        const isFeatured = i === 0 && !selected;
-        const href = `/contents/${i + 1}${selected ? `?character=${selected.type}` : ""}`;
-
-        return (
-          <Link
-            key={i + 1}
-            href={href}
-            className={`sit-card ${isFeatured ? "sit-card-featured" : ""}`}
-          >
-            <div
-              className="sit-art"
-              style={{ background: houseBackground(c.house) }}
-            >
-              {row?.cover_image_url ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={row.cover_image_url}
-                  alt={title}
-                  className="sit-cover-img"
-                />
-              ) : (
-                <Image
-                  src={c.image}
-                  alt={`${c.name} · ${c.type}`}
-                  width={isFeatured ? 320 : 220}
-                  height={isFeatured ? 320 : 220}
-                  className="sit-char-img"
-                  sizes="(max-width: 640px) 50vw, 25vw"
-                />
-              )}
-            </div>
-            <div className="sit-body">
-              <span className="sit-meta">
-                {c.name} · {c.type}
-              </span>
-              <h2 className="sit-title">{title}</h2>
-              <span className="sit-read">
-                อ่านเรื่องนี้
-                <span aria-hidden="true" className="sit-arrow">↗</span>
-              </span>
-            </div>
-          </Link>
-        );
-      })}
+    <div className="stories-grid" ref={gridRef}>
+      {posts.map((post) => (
+        <PostCard key={post.id} post={post} />
+      ))}
     </div>
   );
 }

@@ -243,7 +243,7 @@ export default function AccountSheet({ isOpen, onClose }: AccountSheetProps) {
                       <SquaresFourIcon size={20} aria-hidden="true" />
                     </span>
                     <span className="account-sheet-link-text">
-                      Manage Content (Admin)
+                      Admin
                     </span>
                     <CaretRightIcon
                       size={20}

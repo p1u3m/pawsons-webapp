@@ -9,6 +9,7 @@ import { ProductGrid } from "@/components/shop/product-grid";
 import { ShopSearch } from "@/components/shop/shop-search";
 import { getCharacter, houses } from "@/lib/data";
 import { getProducts, isCheckoutReady } from "@/lib/shop/catalog";
+import { isProductKind, kindLabel, productKinds } from "@/lib/shop/kinds";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Shop" };
@@ -28,12 +29,6 @@ const paymentNotice: Record<string, string> = {
   invalid: "ไม่พบรายการชำระเงินนี้ กรุณาลองอีกครั้ง",
 };
 
-const kinds = [
-  ["all", "ทั้งหมด"],
-  ["sticker", "สติกเกอร์"],
-  ["postcard", "โปสการ์ด"],
-] as const;
-
 export default async function Page({
   searchParams,
 }: {
@@ -42,10 +37,11 @@ export default async function Page({
   const { character, kind, house, q, cart, payment } = await searchParams;
   const query = q?.trim().toLowerCase() ?? "";
   const products = await getProducts();
-  const currentKind = kind === "sticker" || kind === "postcard" ? kind : "all";
+  const currentKind = isProductKind(kind) ? kind : "all";
   const selectedCharacter = character ? getCharacter(character) : undefined;
   const currentHouse = houses.find((item) => item.id === house)?.id;
-  const visible = products.filter((product) => {
+  // Everything but the kind filter, so each kind chip can show its count.
+  const matching = products.filter((product) => {
     const productCharacter = getCharacter(product.character_type);
     const matchesQuery =
       !query ||
@@ -57,12 +53,33 @@ export default async function Page({
       ].some((text) => text.toLowerCase().includes(query));
     return (
       matchesQuery &&
-      (currentKind === "all" || product.kind === currentKind) &&
       (!selectedCharacter ||
         product.character_type === selectedCharacter.type) &&
       (!currentHouse || productCharacter?.house.id === currentHouse)
     );
   });
+  const visible =
+    currentKind === "all"
+      ? matching
+      : matching.filter((product) => product.kind === currentKind);
+  // Only kinds that exist in the catalog get a chip (plus the selected one).
+  const kindChips = [
+    ["all", "ทั้งหมด", matching.length] as const,
+    ...productKinds
+      .filter(
+        (value) =>
+          value === currentKind ||
+          products.some((product) => product.kind === value),
+      )
+      .map(
+        (value) =>
+          [
+            value,
+            kindLabel[value],
+            matching.filter((product) => product.kind === value).length,
+          ] as const,
+      ),
+  ];
   const filterHref = (next: { kind?: string; house?: string | null }) => {
     const params = new URLSearchParams();
     if (selectedCharacter) params.set("character", selectedCharacter.type);
@@ -78,8 +95,8 @@ export default async function Page({
   // Rendered inline on desktop and inside the filter sheet on mobile.
   const filters = (
     <>
-      <nav className="store-segmented" aria-label="ประเภทสินค้า">
-        {kinds.map(([value, label]) => (
+      <nav className="store-kinds" aria-label="ประเภทสินค้า">
+        {kindChips.map(([value, label, count]) => (
           <Link
             key={value}
             href={filterHref({ kind: value })}
@@ -87,6 +104,7 @@ export default async function Page({
             scroll={false}
           >
             {label}
+            <span className="store-kind-count">{count}</span>
           </Link>
         ))}
       </nav>
@@ -151,7 +169,6 @@ export default async function Page({
             </Suspense>
             <FilterSheet activeCount={activeFilters}>{filters}</FilterSheet>
             <div className="store-toolbar-end">
-              <span className="store-count">{visible.length} รายการ</span>
               <Link
                 href="/shop/orders"
                 className="store-cart-button store-orders-link"
