@@ -3,7 +3,6 @@ import {
   ArrowSquareOutIcon,
   CheckIcon,
   CreditCardIcon,
-  HouseLineIcon,
   PackageIcon,
   TruckIcon,
 } from "@phosphor-icons/react/dist/ssr";
@@ -30,13 +29,11 @@ const steps = [
   { key: "paid", label: "ชำระเงินแล้ว", Icon: CreditCardIcon },
   { key: "preparing", label: "กำลังเตรียมจัดส่ง", Icon: PackageIcon },
   { key: "shipped", label: "จัดส่งแล้ว", Icon: TruckIcon },
-  { key: "delivered", label: "ได้รับสินค้า", Icon: HouseLineIcon },
 ] as const;
 const stepIndex: Record<FulfillmentStatus, number> = {
   unfulfilled: 0,
   preparing: 1,
   shipped: 2,
-  delivered: 3,
 };
 
 export default async function OrderPage({ params }: { params: Promise<{ id: string }> }) {

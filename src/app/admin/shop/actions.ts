@@ -132,16 +132,21 @@ export async function saveProduct(formData: FormData) {
 export async function updateFulfillment(formData: FormData) {
   if (!(await isAdmin())) throw new Error("Unauthorized");
   const id = textValue(formData, "order_id");
-  const fulfillment = textValue(formData, "fulfillment_status") as FulfillmentStatus;
   const carrierValue = textValue(formData, "carrier");
   const tracking = textValue(formData, "tracking_number").replace(/\s+/g, "").toUpperCase();
+  const selected = textValue(formData, "fulfillment_status") as FulfillmentStatus;
+  // A tracking number means the parcel has left, so an unshipped order becomes shipped.
+  const fulfillment =
+    carrierValue && tracking && (selected === "unfulfilled" || selected === "preparing")
+      ? "shipped"
+      : selected;
   const back = textValue(formData, "back");
   // Only return to admin shop URLs, keeping the list filters the admin was on.
   const returnTo = /^\/admin\/shop(\?[\w=&%-]*)?$/.test(back) ? back : "/admin/shop?tab=orders";
   const withParam = (key: string, value: string) =>
     `${returnTo}${returnTo.includes("?") ? "&" : "?"}order=${id}&${key}=${value}`;
   if (!/^[0-9a-f-]{36}$/.test(id)) redirect(returnTo);
-  const needsTracking = fulfillment === "shipped" || fulfillment === "delivered";
+  const needsTracking = fulfillment === "shipped";
   if (
     !Object.hasOwn(fulfillmentLabel, fulfillment) ||
     (carrierValue && !Object.hasOwn(carriers, carrierValue)) ||

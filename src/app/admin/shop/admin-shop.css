@@ -901,11 +901,6 @@ a.ashop-kpi:hover {
 }
 
 .ashop-pill.is-shipped {
-  background: var(--lavender-bg);
-  color: #5b4a8b;
-}
-
-.ashop-pill.is-delivered {
   background: var(--clover-bg);
   color: var(--green);
 }

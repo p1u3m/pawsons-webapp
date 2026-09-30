@@ -1,5 +1,5 @@
 export type OrderStatus = "pending" | "paid" | "canceled";
-export type FulfillmentStatus = "unfulfilled" | "preparing" | "shipped" | "delivered";
+export type FulfillmentStatus = "unfulfilled" | "preparing" | "shipped";
 export type Carrier = "thailand_post" | "flash" | "kerry" | "jt" | "other";
 export type OrderEventKind =
   | "placed"
@@ -7,7 +7,6 @@ export type OrderEventKind =
   | "canceled"
   | "preparing"
   | "shipped"
-  | "delivered"
   | "tracking_updated";
 
 export type ShippingAddress = {
@@ -40,13 +39,12 @@ export type OrderDetail = {
   created_at: string;
   paid_at: string | null;
   shipped_at: string | null;
-  delivered_at: string | null;
   shop_order_items: OrderItem[] | null;
   shop_order_events: { kind: OrderEventKind; created_at: string }[] | null;
 };
 
 export const orderDetailColumns =
-  "id,status,fulfillment_status,email,customer_name,phone,shipping_address,total_satang,carrier,tracking_number,created_at,paid_at,shipped_at,delivered_at,shop_order_items(product_slug,title,unit_price_satang,quantity),shop_order_events(kind,created_at)";
+  "id,status,fulfillment_status,email,customer_name,phone,shipping_address,total_satang,carrier,tracking_number,created_at,paid_at,shipped_at,shop_order_items(product_slug,title,unit_price_satang,quantity),shop_order_events(kind,created_at)";
 
 export const orderStatusLabel: Record<OrderStatus, string> = {
   paid: "ชำระแล้ว",
@@ -58,7 +56,6 @@ export const fulfillmentLabel: Record<FulfillmentStatus, string> = {
   unfulfilled: "รอเตรียมจัดส่ง",
   preparing: "กำลังเตรียมจัดส่ง",
   shipped: "จัดส่งแล้ว",
-  delivered: "ได้รับสินค้าแล้ว",
 };
 
 export const eventLabel: Record<OrderEventKind, string> = {
@@ -67,7 +64,6 @@ export const eventLabel: Record<OrderEventKind, string> = {
   canceled: "ยกเลิกคำสั่งซื้อ",
   preparing: "กำลังเตรียมจัดส่ง",
   shipped: "จัดส่งแล้ว",
-  delivered: "ได้รับสินค้าแล้ว",
   tracking_updated: "อัปเดตเลขพัสดุ",
 };
 
