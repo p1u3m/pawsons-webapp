@@ -1,51 +1,55 @@
 "use client";
 
-import { useRef, type ReactNode } from "react";
-import { XIcon } from "@phosphor-icons/react";
+import { useId, useRef, type ReactNode } from "react";
+import { SlidersHorizontalIcon, XIcon } from "@phosphor-icons/react";
 
-/** Mobile filter button that opens the type/house filters in a bottom sheet. */
+/**
+ * Round filter button that opens filters in a bottom sheet. Hidden by default;
+ * each page shows `.filter-button` on mobile (styles in globals.css).
+ */
 export function FilterSheet({
   activeCount,
+  title = "ตัวกรอง",
   children,
 }: {
   activeCount: number;
+  title?: string;
   children: ReactNode;
 }) {
   const dialog = useRef<HTMLDialogElement>(null);
+  const titleId = useId();
   const close = () => dialog.current?.close();
   return (
     <>
       <button
         type="button"
-        className="store-filter-button"
+        className="filter-button"
         onClick={() => dialog.current?.showModal()}
         aria-label={
-          activeCount ? `ตัวกรอง (ใช้อยู่ ${activeCount} รายการ)` : "ตัวกรอง"
+          activeCount ? `${title} (ใช้อยู่ ${activeCount} รายการ)` : title
         }
       >
-        <span className="material-symbols-rounded" aria-hidden="true">
-          tune
-        </span>
+        <SlidersHorizontalIcon size={22} weight="bold" aria-hidden="true" />
         {activeCount > 0 && (
-          <span className="store-filter-badge" aria-hidden="true">
+          <span className="filter-badge" aria-hidden="true">
             {activeCount}
           </span>
         )}
       </button>
       <dialog
         ref={dialog}
-        className="store-sheet"
-        aria-labelledby="store-sheet-title"
+        className="filter-sheet"
+        aria-labelledby={titleId}
         onClick={(event) => {
           const target = event.target as HTMLElement;
           // Backdrop tap, or picking a filter link, closes the sheet.
           if (target === event.currentTarget || target.closest("a")) close();
         }}
       >
-        <div className="store-sheet-panel">
-          <header className="store-sheet-head">
-            <h2 id="store-sheet-title">ตัวกรอง</h2>
-            <button type="button" onClick={close} aria-label="ปิดตัวกรอง">
+        <div className="filter-sheet-panel">
+          <header className="filter-sheet-head">
+            <h2 id={titleId}>{title}</h2>
+            <button type="button" onClick={close} aria-label={`ปิด${title}`}>
               <XIcon size={18} weight="bold" aria-hidden="true" />
             </button>
           </header>

@@ -3,10 +3,10 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { ReceiptIcon } from "@phosphor-icons/react/dist/ssr";
 import { CartButton, CartDrawer } from "@/components/shop/cart";
-import { FilterSheet } from "@/components/shop/filter-sheet";
+import { FilterSheet } from "@/components/filter-sheet";
 import { ProductCard } from "@/components/shop/product-card";
 import { ProductGrid } from "@/components/shop/product-grid";
-import { ShopSearch } from "@/components/shop/shop-search";
+import { SearchField } from "@/components/search-field";
 import { getCharacter, houses } from "@/lib/data";
 import { getProducts, isCheckoutReady } from "@/lib/shop/catalog";
 import { isProductKind, kindLabel, productKinds } from "@/lib/shop/kinds";
@@ -165,7 +165,11 @@ export default async function Page({
           <div className="store-toolbar">
             <div className="store-toolbar-filters">{filters}</div>
             <Suspense>
-              <ShopSearch />
+              <SearchField
+                className="store-search"
+                placeholder="ค้นหาสินค้าหรือตัวละคร"
+                label="ค้นหาสินค้า"
+              />
             </Suspense>
             <FilterSheet activeCount={activeFilters}>{filters}</FilterSheet>
             <div className="store-toolbar-end">

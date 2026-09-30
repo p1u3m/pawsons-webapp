@@ -145,8 +145,22 @@
   position: relative;
   margin-top: 96px;
   padding: 24px 0 120px;
-  background: var(--pw-band) url("/patterns/shop.svg") 0
-    calc(-1 * var(--wave)) / 1512px 1008px repeat;
+  isolation: isolate; /* keeps the pattern layer (z-index -1) above the band colour */
+  background: var(--pw-band);
+}
+
+/* Pattern layer: continues from the wave edge, then fades out from the middle
+   of the band down so the lower half is the plain band colour. */
+.store-band::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: url("/patterns/shop.svg") 0 calc(-1 * var(--wave)) / 1134px
+    756px repeat;
+  -webkit-mask: linear-gradient(to bottom, #000 0, #000 50%, transparent 90%);
+  mask: linear-gradient(to bottom, #000 0, #000 50%, transparent 90%);
 }
 
 .store-band::before {
@@ -156,7 +170,7 @@
   bottom: calc(100% - 1px);
   height: var(--wave);
   pointer-events: none;
-  background: var(--pw-band) url("/patterns/shop.svg") 0 0 / 1512px 1008px
+  background: var(--pw-band) url("/patterns/shop.svg") 0 0 / 1134px 756px
     repeat;
   -webkit-mask: url("/home-wave-mask.svg") center bottom / 100% 100% no-repeat;
   mask: url("/home-wave-mask.svg") center bottom / 100% 100% no-repeat;
@@ -284,176 +298,18 @@
   border-left: 1.5px solid #ebe4d3;
 }
 
-/* Search pill (matches the mobile reference: pale tint, icon, no border). */
-.store-search {
-  display: flex;
-  flex: 1 1 200px;
-  align-items: center;
-  gap: 10px;
-  height: 46px;
-  padding: 0 16px;
-  border-radius: var(--radius-pill);
-  background: #f4efe1;
-  color: var(--muted);
-  transition: box-shadow 0.2s;
-}
-
-.store-search:focus-within {
-  box-shadow: 0 0 0 2px color-mix(in srgb, var(--green) 35%, transparent);
-}
-
-.store-search svg {
-  flex-shrink: 0;
-  transition: opacity 0.2s;
-}
-
-.store-search[data-pending] svg {
-  opacity: 0.5;
-}
-
-.store-search input {
-  flex: 1;
-  width: 0; /* ignore the native ~20ch width so the pill can shrink */
-  min-width: 0;
-  height: 100%;
-  border: 0;
-  background: none;
-  color: var(--ink);
-  font: inherit;
-  font-size: 15px;
-  outline: none;
-  caret-color: auto;
-}
-
-.store-search input::placeholder {
-  color: var(--muted-light);
-}
-
-.store-search input::-webkit-search-cancel-button {
-  cursor: pointer;
-}
-
-.store :is(.store-search input):focus-visible {
-  outline: none;
-}
-
-.store-filter-button {
-  position: relative;
-  display: none;
-  flex-shrink: 0;
-  place-items: center;
-  width: 52px;
-  height: 52px;
-  border: 0;
-  border-radius: 50%;
-  background: var(--pw-navy);
-  color: var(--pw-cream);
-  cursor: pointer;
-  box-shadow: 0 4px 0 #0a1a23;
-}
-
-.store-filter-button .material-symbols-rounded {
-  font-size: 24px;
-}
-
-.store-filter-badge {
-  position: absolute;
-  top: -2px;
-  right: -2px;
-  display: grid;
-  place-items: center;
-  min-width: 20px;
-  height: 20px;
-  padding: 0 5px;
-  border-radius: var(--radius-pill);
-  background: #f5c64b;
-  color: var(--ink);
-  font-size: 11px;
-  font-weight: 700;
-  box-shadow: 0 0 0 2px var(--paper);
-}
-
-/* Bottom sheet holding the filters on mobile. */
-.store-sheet {
-  position: fixed;
-  inset: auto 0 0;
-  width: 100%;
-  max-width: 100%;
-  max-height: 85dvh;
-  margin: 0;
-  padding: 0;
-  border: 0;
-  background: transparent;
-  color: var(--ink);
-  transform: translateY(100%);
-  transition:
-    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
-    overlay 0.35s allow-discrete,
-    display 0.35s allow-discrete;
-}
-
-.store-sheet[open] {
-  transform: translateY(0);
-}
-
-@starting-style {
-  .store-sheet[open] {
-    transform: translateY(100%);
-  }
-}
-
-.store-sheet::backdrop {
-  background: rgba(24, 24, 24, 0.28);
-}
-
-.store-sheet-panel {
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-  padding: 18px 20px calc(24px + env(safe-area-inset-bottom));
-  border-radius: 24px 24px 0 0;
-  background: var(--paper);
-}
-
-.store-sheet-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.store-sheet-head h2 {
-  margin: 0;
-  font-size: 18px;
-}
-
-.store-sheet-head button {
-  display: grid;
-  place-items: center;
-  width: 40px;
-  height: 40px;
-  border: 0;
-  border-radius: 50%;
-  background: rgba(24, 24, 24, 0.05);
-  color: var(--ink);
-  cursor: pointer;
-}
-
 /* The sheet has room to wrap, so no sideways scrolling there. */
-.store-sheet .store-kinds {
+.filter-sheet .store-kinds {
+  flex: none;
   flex-wrap: wrap;
   overflow: visible;
   -webkit-mask: none;
   mask: none;
 }
 
-.store-sheet .store-houses a {
+.filter-sheet .store-houses a {
   padding: 9px 14px;
   font-size: 14px;
-}
-
-.store-sheet :is(a, button):focus-visible {
-  outline: 2px solid var(--ink);
-  outline-offset: 3px;
 }
 
 .store-toolbar-end {
@@ -1418,7 +1274,7 @@
     box-shadow: var(--pw-ledge-sm);
   }
 
-  .store-filter-button {
+  .filter-button {
     display: grid;
   }
 
@@ -1516,7 +1372,6 @@
 @media (prefers-reduced-motion: reduce) {
   .store-drawer,
   .store-drawer::backdrop,
-  .store-sheet,
   .store-card {
     transition: none;
   }

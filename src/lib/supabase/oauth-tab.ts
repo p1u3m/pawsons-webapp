@@ -20,7 +20,12 @@ export async function openGoogleSignInWindow(supabase: SupabaseClient) {
     "_blank",
     `popup=yes,width=${width},height=${height},left=${left},top=${top},resizable=yes,scrollbars=yes`,
   );
-  if (!popup) return;
+  if (!popup) {
+    // No popup allowed (e.g. an embedded browser): sign in in this window.
+    const here = `${window.location.pathname}${window.location.search}`;
+    window.location.assign(`/auth/google?next=${encodeURIComponent(here)}`);
+    return;
+  }
 
   // The OAuth provider should never be able to navigate the original window.
   popup.opener = null;

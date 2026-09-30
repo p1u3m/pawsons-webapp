@@ -43,10 +43,7 @@ export async function saveProduct(formData: FormData) {
   const image = upload instanceof File && upload.size > 0 ? upload : null;
   const removeImage = formData.get("remove_image") === "on";
   // Reopen the same sheet on failure so the admin keeps their context.
-  const sheet =
-    isEdit && /^[a-z0-9-]+$/.test(slug)
-      ? `edit=${slug}`
-      : "new=1";
+  const sheet = isEdit && /^[a-z0-9-]+$/.test(slug) ? `edit=${slug}` : "new=1";
   if (
     !/^[a-z0-9-]+$/.test(slug) ||
     title.length < 1 ||
@@ -134,16 +131,25 @@ export async function updateFulfillment(formData: FormData) {
   if (!(await isAdmin())) throw new Error("Unauthorized");
   const id = textValue(formData, "order_id");
   const carrierValue = textValue(formData, "carrier");
-  const tracking = textValue(formData, "tracking_number").replace(/\s+/g, "").toUpperCase();
-  const selected = textValue(formData, "fulfillment_status") as FulfillmentStatus;
+  const tracking = textValue(formData, "tracking_number")
+    .replace(/\s+/g, "")
+    .toUpperCase();
+  const selected = textValue(
+    formData,
+    "fulfillment_status",
+  ) as FulfillmentStatus;
   // A tracking number means the parcel has left, so an unshipped order becomes shipped.
   const fulfillment =
-    carrierValue && tracking && (selected === "unfulfilled" || selected === "preparing")
+    carrierValue &&
+    tracking &&
+    (selected === "unfulfilled" || selected === "preparing")
       ? "shipped"
       : selected;
   const back = textValue(formData, "back");
   // Only return to admin shop URLs, keeping the list filters the admin was on.
-  const returnTo = /^\/admin\/shop(\?[\w=&%-]*)?$/.test(back) ? back : "/admin/shop?tab=orders";
+  const returnTo = /^\/admin\/shop(\?[\w=&%-]*)?$/.test(back)
+    ? back
+    : "/admin/shop?tab=orders";
   const withParam = (key: string, value: string) =>
     `${returnTo}${returnTo.includes("?") ? "&" : "?"}order=${id}&${key}=${value}`;
   if (!/^[0-9a-f-]{36}$/.test(id)) redirect(returnTo);
@@ -175,4 +181,144 @@ export async function updateFulfillment(formData: FormData) {
   revalidatePath("/shop/orders");
   revalidatePath(`/shop/orders/${id}`);
   redirect(withParam("updated", "1"));
+}
+
+type Result = { success: boolean; error?: string };
+const slugPattern = /^[a-z0-9-]+$/;
+
+function revalidateProducts(slugs: string[]) {
+  revalidatePath("/shop");
+  for (const slug of slugs) revalidatePath(`/shop/${slug}`);
+  revalidatePath("/admin/shop");
+  revalidatePath("/admin");
+}
+
+/** Shows or hides products on the storefront (bulk or the row switch). */
+export async function setProductsActive(
+  slugs: string[],
+  active: boolean,
+): Promise<Result> {
+  if (!(await isAdmin())) return { success: false, error: "Unauthorized" };
+  if (!slugs.length || !slugs.every((slug) => slugPattern.test(slug))) {
+    return { success: false, error: "ไม่พบสินค้าที่เลือก" };
+  }
+  const supabase = await createClient();
+  if (!supabase) return { success: false, error: "Supabase unavailable" };
+  const { error } = await supabase
+    .from("shop_products")
+    .update({ active, updated_at: new Date().toISOString() })
+    .in("slug", slugs);
+  if (error) return { success: false, error: error.message };
+  revalidateProducts(slugs);
+  return { success: true };
+}
+
+/** Sets the stock count from the inline editor in the product table. */
+export async function updateStock(
+  slug: string,
+  stock: number,
+): Promise<Result> {
+  if (!(await isAdmin())) return { success: false, error: "Unauthorized" };
+  if (
+    !slugPattern.test(slug) ||
+    !Number.isSafeInteger(stock) ||
+    stock < 0 ||
+    stock > 100000
+  ) {
+    return { success: false, error: "จำนวนต้องเป็น 0–100,000" };
+  }
+  const supabase = await createClient();
+  if (!supabase) return { success: false, error: "Supabase unavailable" };
+  const { error } = await supabase
+    .from("shop_products")
+    .update({ stock_qty: stock, updated_at: new Date().toISOString() })
+    .eq("slug", slug);
+  if (error) return { success: false, error: error.message };
+  revalidateProducts([slug]);
+  return { success: true };
+}
+
+/**
+ * Copies a product as a hidden draft with a new slug. The photo is not shared:
+ * saving or deleting one product's photo would otherwise remove the other's.
+ */
+export async function duplicateProduct(
+  slug: string,
+): Promise<{ slug: string | null; error?: string }> {
+  if (!(await isAdmin())) return { slug: null, error: "Unauthorized" };
+  if (!slugPattern.test(slug)) return { slug: null, error: "ไม่พบสินค้า" };
+  const supabase = await createClient();
+  if (!supabase) return { slug: null, error: "Supabase unavailable" };
+  const { data: source } = await supabase
+    .from("shop_products")
+    .select(
+      "title,description,kind,character_type,price_satang,stock_qty,sort_order",
+    )
+    .eq("slug", slug)
+    .maybeSingle();
+  if (!source) return { slug: null, error: "ไม่พบสินค้า" };
+
+  for (let n = 1; n <= 20; n++) {
+    const copySlug = `${slug.slice(0, 60)}-copy${n > 1 ? `-${n}` : ""}`;
+    const { error } = await supabase.from("shop_products").insert({
+      ...source,
+      slug: copySlug,
+      title: `${source.title} (สำเนา)`.slice(0, 120),
+      active: false,
+      is_test: true,
+    });
+    if (!error) {
+      revalidateProducts([]);
+      return { slug: copySlug };
+    }
+    if (error.code !== "23505") return { slug: null, error: error.message };
+  }
+  return { slug: null, error: "มีสำเนาของสินค้านี้มากเกินไป" };
+}
+
+/**
+ * Deletes products and their photos. Products that already have orders are kept
+ * (order history points at them) and reported back so the admin can hide them instead.
+ */
+export async function deleteProducts(
+  slugs: string[],
+): Promise<{ deleted: string[]; blocked: string[]; error?: string }> {
+  if (!(await isAdmin()))
+    return { deleted: [], blocked: [], error: "Unauthorized" };
+  if (!slugs.length || !slugs.every((slug) => slugPattern.test(slug))) {
+    return { deleted: [], blocked: [], error: "ไม่พบสินค้าที่เลือก" };
+  }
+  const supabase = await createClient();
+  if (!supabase)
+    return { deleted: [], blocked: [], error: "Supabase unavailable" };
+
+  const { data: ordered } = await supabase
+    .from("shop_order_items")
+    .select("product_slug")
+    .in("product_slug", slugs);
+  const blocked = [...new Set((ordered ?? []).map((row) => row.product_slug))];
+  const deletable = slugs.filter((slug) => !blocked.includes(slug));
+  if (!deletable.length) return { deleted: [], blocked };
+
+  const { data: removed, error } = await supabase
+    .from("shop_products")
+    .delete()
+    .in("slug", deletable)
+    .select("slug,image_path");
+  if (error) {
+    return {
+      deleted: [],
+      blocked,
+      error:
+        error.code === "23503" ? "สินค้ามีออเดอร์อยู่ ลบไม่ได้" : error.message,
+    };
+  }
+  const paths = (removed ?? []).flatMap((row) =>
+    row.image_path ? [row.image_path] : [],
+  );
+  // Best effort: an orphaned file is harmless.
+  if (paths.length) await supabase.storage.from(shopImageBucket).remove(paths);
+  const deleted = (removed ?? []).map((row) => row.slug);
+  revalidateProducts(deleted);
+  return { deleted, blocked };
 }

@@ -7,8 +7,17 @@ import { MagnifyingGlassIcon } from "@phosphor-icons/react";
 /**
  * Search field that updates `?q=` as the user types, keeping other filters.
  * It is a GET form, so it still works before hydration or without JavaScript.
+ * Styles: `.search-pill` in globals.css.
  */
-export function ShopSearch() {
+export function SearchField({
+  placeholder,
+  label,
+  className,
+}: {
+  placeholder: string;
+  label: string;
+  className?: string;
+}) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -36,7 +45,7 @@ export function ShopSearch() {
 
   return (
     <form
-      className="store-search"
+      className={`search-pill${className ? ` ${className}` : ""}`}
       role="search"
       action={pathname}
       data-pending={pending || undefined}
@@ -57,8 +66,8 @@ export function ShopSearch() {
         type="search"
         name="q"
         value={value}
-        placeholder="ค้นหาสินค้าหรือตัวละคร"
-        aria-label="ค้นหาสินค้า"
+        placeholder={placeholder}
+        aria-label={label}
         autoComplete="off"
         enterKeyHint="search"
         onChange={(event) => {

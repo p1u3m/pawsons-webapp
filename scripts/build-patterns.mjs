@@ -19,7 +19,7 @@ const outDir = "public/patterns";
 const bands = { home: "#fff0bd", shop: "#dcefff", contents: "#e4f3dc" };
 
 const layout = {
-  cols: 9, // 9×6 = 54 different symbols per tile, 1512×1008px
+  cols: 9, // 9×6 = 54 different symbols per tile, 1512×1008px (drawn at 75%: 1134×756px in CSS)
   rows: 6, // must be even for the half-drop to wrap
   cell: 168,
   size: 78, // longest side of every symbol, px
@@ -29,7 +29,7 @@ const layout = {
   tilts: [-38, 14, -12, 32, -24, 6, 40, -4, 22, -30, 10],
   seed: 11,
   // How far the outline/fill tones sit from the band colour (1 = strong).
-  strength: 0.7,
+  strength: 0.49,
 };
 
 // ── colour ──

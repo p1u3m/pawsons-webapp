@@ -4,14 +4,18 @@ import Image from "next/image";
 import { ArrowLeftIcon, ArrowRightIcon } from "@phosphor-icons/react/dist/ssr";
 import { PostArt, PostCard } from "@/components/post-card";
 import { houseBackground } from "@/lib/data";
-import { getAllContents } from "@/lib/supabase/contents";
-import { postCategories, toPost } from "@/lib/posts";
+import { getAllContents, getCategories } from "@/lib/supabase/contents";
+import { toPost } from "@/lib/posts";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 async function findPost(id: string) {
-  const posts = (await getAllContents()).map(toPost);
+  const [rows, categories] = await Promise.all([
+    getAllContents(),
+    getCategories(),
+  ]);
+  const posts = rows.map((row) => toPost(row, categories));
   const index = posts.findIndex((post) => String(post.id) === id);
   return { posts, index, post: posts[index] };
 }
@@ -22,7 +26,9 @@ export async function generateMetadata({
   params: Promise<{ id: string }>;
 }) {
   const { post } = await findPost((await params).id);
-  return { title: post ? `${post.title} · Pawsons` : "Little Stories · Pawsons" };
+  return {
+    title: post ? `${post.title} · Pawsons` : "Little Stories · Pawsons",
+  };
 }
 
 export default async function Page({
@@ -57,17 +63,22 @@ export default async function Page({
         </Link>
         <Link
           className="stories-pill"
-          href={`/contents?category=${post.category}`}
+          href={`/contents?category=${post.category.slug}`}
         >
-          {postCategories[post.category].label}
-          {post.situationNo !== null && ` · #${String(post.situationNo).padStart(2, "0")}`}
+          {post.category.label}
+          {post.situationNo !== null &&
+            ` · #${String(post.situationNo).padStart(2, "0")}`}
         </Link>
       </div>
 
       <div className="stories-detail-grid">
         <div className="stories-detail-art">
           <span className="post-frame">
-            <PostArt post={post} sizes="(max-width: 860px) 100vw, 50vw" priority />
+            <PostArt
+              post={post}
+              sizes="(max-width: 860px) 100vw, 50vw"
+              priority
+            />
           </span>
         </div>
 
@@ -80,7 +91,7 @@ export default async function Page({
             />
             {c.name} · {c.type} · บ้าน {c.house.name}
           </p>
-          {post.category === "quote" ? (
+          {post.category.layout === "quote" ? (
             <blockquote className="stories-quote">
               <p>“{post.title}”</p>
               {post.author && <footer>— {post.author}</footer>}
@@ -107,7 +118,10 @@ export default async function Page({
             </div>
           )}
 
-          <Link className="stories-friend" href={`/characters/${c.type.toLowerCase()}`}>
+          <Link
+            className="stories-friend"
+            href={`/characters/${c.type.toLowerCase()}`}
+          >
             <span
               className="stories-friend-avatar"
               style={{ background: houseBackground(c.house) }}
@@ -129,8 +143,12 @@ export default async function Page({
         <section className="stories-related" aria-labelledby="related-title">
           <div className="mag-section-head">
             <h2 id="related-title">อ่านต่อ</h2>
-            <Link className="stories-text-link" href={`/contents?character=${c.type}`}>
+            <Link
+              className="stories-text-link"
+              href={`/contents?character=${c.type}`}
+            >
               โพสต์ทั้งหมดของ {c.name}
+              <ArrowRightIcon size={14} weight="bold" aria-hidden="true" />
             </Link>
           </div>
           <div className="stories-grid">

@@ -1,30 +1,33 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeftIcon } from "@phosphor-icons/react/dist/ssr";
+import { Suspense } from "react";
+import { ArrowLeftIcon, ArrowRightIcon } from "@phosphor-icons/react/dist/ssr";
 import { characters, getCharacter, houses } from "@/lib/data";
-import { getAllContents } from "@/lib/supabase/contents";
-import {
-  featuredPosts,
-  isPostCategory,
-  postCategories,
-  toPost,
-  type PostCategory,
-} from "@/lib/posts";
+import { getAllContents, getCategories } from "@/lib/supabase/contents";
+import { featuredPosts, toPost } from "@/lib/posts";
 import ContentsGrid from "@/components/contents-grid";
+import { FilterSheet } from "@/components/filter-sheet";
+import { SearchField } from "@/components/search-field";
 import { StoriesMagazine } from "@/components/stories-magazine";
 
 export const metadata = { title: "Little Stories · Pawsons" };
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
-// One friend from three different houses for the hero.
-const heroFriends = [characters[1], characters[6], characters[13]];
+// One friend from each house for the hero, in the order they stand.
+const heroFriends = [
+  characters[0],
+  characters[5],
+  characters[9],
+  characters[14],
+];
 
 type Filters = {
   character?: string;
   category?: string;
   house?: string;
   view?: string;
+  q?: string;
 };
 
 export default async function Page({
@@ -32,23 +35,39 @@ export default async function Page({
 }: {
   searchParams: Promise<Filters>;
 }) {
-  const { character, category, house, view } = await searchParams;
+  const { character, category, house, view, q } = await searchParams;
+  const query = q?.trim().toLowerCase() ?? "";
   const selected = character ? getCharacter(character) : undefined;
-  const currentCategory = isPostCategory(category) ? category : undefined;
+  const [rows, categories] = await Promise.all([
+    getAllContents(),
+    getCategories(),
+  ]);
+  const currentCategory = categories.find(
+    (item) => item.slug === category,
+  )?.slug;
   const currentHouse = houses.find((item) => item.id === house);
-  // The magazine is the default; any filter switches to the grid.
+  // The magazine is the default; any filter or search switches to the grid.
   const magazine =
-    !selected && !currentCategory && !currentHouse && view !== "all";
+    !selected && !currentCategory && !currentHouse && !query && view !== "all";
 
-  const posts = (await getAllContents()).map(toPost);
+  const posts = rows.map((row) => toPost(row, categories));
   const visible = posts.filter(
     (post) =>
       (!selected || post.character.type === selected.type) &&
-      (!currentCategory || post.category === currentCategory) &&
-      (!currentHouse || post.character.house.id === currentHouse.id),
+      (!currentCategory || post.category.slug === currentCategory) &&
+      (!currentHouse || post.character.house.id === currentHouse.id) &&
+      (!query ||
+        [
+          post.title,
+          ...post.lines,
+          post.author ?? "",
+          post.category.label,
+          post.character.name,
+          post.character.type,
+        ].some((text) => text.toLowerCase().includes(query))),
   );
   const filterHref = (next: {
-    category?: PostCategory | null;
+    category?: string | null;
     house?: string | null;
   }) => {
     const params = new URLSearchParams();
@@ -58,10 +77,76 @@ export default async function Page({
     if (selected) params.set("character", selected.type);
     if (nextCategory) params.set("category", nextCategory);
     if (nextHouse) params.set("house", nextHouse);
+    if (query) params.set("q", q!.trim());
     if (!params.size) params.set("view", "all");
     return `/contents?${params}`;
   };
   const artFriends = selected ? [selected] : heroFriends;
+  const houseLinks = houses.map((item) => {
+    const active = currentHouse?.id === item.id;
+    return (
+      <Link
+        key={item.id}
+        className="stories-tab stories-tab--house"
+        href={filterHref({ house: active ? null : item.id })}
+        aria-current={active ? "page" : undefined}
+        style={
+          {
+            "--house": item.badgeColor,
+            "--house-bg": item.color,
+          } as React.CSSProperties
+        }
+      >
+        <span className="stories-dot" aria-hidden="true" />
+        {item.name}
+      </Link>
+    );
+  });
+  const activeFilters =
+    Number(Boolean(currentCategory)) + Number(Boolean(currentHouse));
+  // Rendered inline on desktop and inside the filter sheet on mobile.
+  const filters = (
+    <>
+      <nav className="stories-tabs" aria-label="เลือกดูเรื่องราว">
+        {!selected && (
+          <Link
+            className="stories-tab"
+            href="/contents"
+            aria-current={magazine ? "page" : undefined}
+          >
+            เรื่องแนะนำ
+          </Link>
+        )}
+        <Link
+          className="stories-tab"
+          href={filterHref({ category: null })}
+          aria-current={!magazine && !currentCategory ? "page" : undefined}
+        >
+          ทั้งหมด
+        </Link>
+        {categories.map(({ slug, label }) => (
+          <Link
+            key={slug}
+            className="stories-tab"
+            href={filterHref({
+              category: currentCategory === slug ? null : slug,
+            })}
+            aria-current={currentCategory === slug ? "page" : undefined}
+          >
+            {label}
+            <small>
+              {posts.filter((post) => post.category.slug === slug).length}
+            </small>
+          </Link>
+        ))}
+      </nav>
+      {!selected && (
+        <nav className="stories-houses" aria-label="บ้าน">
+          {houseLinks}
+        </nav>
+      )}
+    </>
+  );
 
   return (
     <div className="stories stories--landing">
@@ -106,8 +191,9 @@ export default async function Page({
               key={friend.type}
               src={friend.image}
               alt=""
-              width={320}
-              height={320}
+              width={480}
+              height={480}
+              sizes="(max-width: 860px) 45vw, 240px"
               priority
             />
           ))}
@@ -117,64 +203,15 @@ export default async function Page({
       <section className="stories-band" aria-label="เรื่องราว">
         <div className="wrap">
           <div className="stories-toolbar">
-            <nav className="stories-tabs" aria-label="เลือกดูเรื่องราว">
-              {!selected && (
-                <Link
-                  className="stories-tab"
-                  href="/contents"
-                  aria-current={magazine ? "page" : undefined}
-                >
-                  เรื่องแนะนำ
-                </Link>
-              )}
-              <Link
-                className="stories-tab"
-                href={filterHref({ category: null })}
-                aria-current={!magazine && !currentCategory ? "page" : undefined}
-              >
-                ทั้งหมด
-              </Link>
-              {(Object.keys(postCategories) as PostCategory[]).map((value) => (
-                <Link
-                  key={value}
-                  className="stories-tab"
-                  href={filterHref({
-                    category: currentCategory === value ? null : value,
-                  })}
-                  aria-current={currentCategory === value ? "page" : undefined}
-                >
-                  {postCategories[value].label}
-                  <small>
-                    {posts.filter((post) => post.category === value).length}
-                  </small>
-                </Link>
-              ))}
-              {!selected && (
-                <>
-                  <span className="stories-tabs-divider" aria-hidden="true" />
-                  {houses.map((item) => {
-                    const active = currentHouse?.id === item.id;
-                    return (
-                      <Link
-                        key={item.id}
-                        className="stories-tab stories-tab--house"
-                        href={filterHref({ house: active ? null : item.id })}
-                        aria-current={active ? "page" : undefined}
-                        style={
-                          {
-                            "--house": item.badgeColor,
-                            "--house-bg": item.color,
-                          } as React.CSSProperties
-                        }
-                      >
-                        <span className="stories-dot" aria-hidden="true" />
-                        {item.name}
-                      </Link>
-                    );
-                  })}
-                </>
-              )}
-            </nav>
+            <Suspense>
+              <SearchField
+                className="stories-search"
+                placeholder="ค้นหาเรื่องหรือตัวละคร"
+                label="ค้นหาเรื่องราว"
+              />
+            </Suspense>
+            <FilterSheet activeCount={activeFilters}>{filters}</FilterSheet>
+            <div className="stories-toolbar-filters">{filters}</div>
           </div>
 
           {selected && (
@@ -189,19 +226,32 @@ export default async function Page({
               </p>
               <Link className="stories-text-link" href="/contents">
                 ดูของทุกคน
+                <ArrowRightIcon size={14} weight="bold" aria-hidden="true" />
               </Link>
             </div>
           )}
 
           {magazine ? (
-            <StoriesMagazine posts={posts} featured={featuredPosts(posts)} />
+            <StoriesMagazine
+              posts={posts}
+              categories={categories}
+              featured={featuredPosts(posts)}
+            />
           ) : visible.length ? (
             // Client component for the GSAP scroll reveal.
             <ContentsGrid posts={visible} />
           ) : (
             <div className="stories-empty">
-              <p>ยังไม่มีโพสต์ในหมวดนี้</p>
-              <span>รอติดตามเร็ว ๆ นี้ หรือกลับไปดูเรื่องแนะนำ</span>
+              <p>
+                {query
+                  ? `ไม่พบเรื่องที่ตรงกับ “${q!.trim()}”`
+                  : "ยังไม่มีโพสต์ในหมวดนี้"}
+              </p>
+              <span>
+                {query
+                  ? "ลองค้นหาด้วยคำอื่น หรือกลับไปดูเรื่องแนะนำ"
+                  : "รอติดตามเร็ว ๆ นี้ หรือกลับไปดูเรื่องแนะนำ"}
+              </span>
               <Link className="stories-cta" href="/contents">
                 ดูเรื่องแนะนำ
               </Link>

@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
-import { postCategories, type Post } from "@/lib/posts";
+import { ImageIcon } from "@phosphor-icons/react/dist/ssr";
+import type { Post } from "@/lib/posts";
 
 /** Picture area of a post: the artwork, or a frame waiting for it. */
 export function PostArt({
@@ -63,10 +64,10 @@ export function PostCard({
             style={{ background: c.house.badgeColor }}
             aria-hidden="true"
           />
-          {postCategories[post.category].label} · {c.name} {c.type}
+          {post.category.label} · {c.name} {c.type}
         </span>
         <span className="post-title">
-          {post.category === "quote" ? `“${post.title}”` : post.title}
+          {post.category.layout === "quote" ? `“${post.title}”` : post.title}
         </span>
       </span>
     </Link>
@@ -78,7 +79,7 @@ export function EmptySlot({ className = "" }: { className?: string }) {
   return (
     <div className={`post-card is-empty ${className}`} aria-hidden="true">
       <span className="post-frame">
-        <PostWaiting label="เร็ว ๆ นี้" />
+        <ImageIcon className="post-empty-icon" />
       </span>
     </div>
   );

@@ -21,6 +21,9 @@ export default function Navigation({ lettersBadge }: NavigationProps) {
     setAccountOpen(false);
   }, [pathname]);
 
+  // Admin has its own sidebar and header.
+  if (pathname.startsWith("/admin")) return null;
+
   return (
     <>
       {/* Desktop Navigation (>= 768px via CSS) */}

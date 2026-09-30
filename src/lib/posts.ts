@@ -4,20 +4,49 @@ import type { ContentRow } from "@/lib/supabase/contents";
 /** Slots on the /contents magazine spread, in featured_rank order. */
 export const featuredSlotCount = 5;
 
-export const postCategories = {
-  situation: { label: "สถานการณ์", english: "Situations" },
-  quote: { label: "คำคม", english: "Quotes" },
+export const postLayouts = {
+  situation: "สถานการณ์ (ชื่อเรื่อง + ข้อความ)",
+  quote: "คำคม (ข้อความ + ผู้กล่าว)",
 } as const;
+export type PostLayout = keyof typeof postLayouts;
 
-export type PostCategory = keyof typeof postCategories;
+/** A post tag from content_categories; layout decides how its posts are written and shown. */
+export type ContentCategory = {
+  slug: string;
+  label: string;
+  english: string;
+  layout: PostLayout;
+  sort_order: number;
+};
 
-export function isPostCategory(value: unknown): value is PostCategory {
-  return typeof value === "string" && Object.hasOwn(postCategories, value);
+/** The built-in tags, used when the table cannot be read. */
+export const defaultCategories: ContentCategory[] = [
+  {
+    slug: "situation",
+    label: "สถานการณ์",
+    english: "Situations",
+    layout: "situation",
+    sort_order: 10,
+  },
+  {
+    slug: "quote",
+    label: "คำคม",
+    english: "Quotes",
+    layout: "quote",
+    sort_order: 20,
+  },
+];
+export const builtInCategories = defaultCategories.map(
+  (category) => category.slug,
+);
+
+export function isPostLayout(value: unknown): value is PostLayout {
+  return typeof value === "string" && Object.hasOwn(postLayouts, value);
 }
 
 export type Post = {
   id: number;
-  category: PostCategory;
+  category: ContentCategory;
   title: string;
   lines: string[];
   author: string | null;
@@ -28,10 +57,14 @@ export type Post = {
   featuredRank: number | null;
 };
 
-export function toPost(row: ContentRow): Post {
+export function toPost(row: ContentRow, categories: ContentCategory[]): Post {
   return {
     id: row.id,
-    category: isPostCategory(row.category) ? row.category : "situation",
+    category: categories.find((category) => category.slug === row.category) ?? {
+      ...defaultCategories[0],
+      slug: row.category,
+      label: row.category,
+    },
     title: row.situation_title,
     lines: [row.body_1, row.body_2].filter((line): line is string =>
       Boolean(line?.trim()),

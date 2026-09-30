@@ -5,6 +5,9 @@ const supabaseHost = process.env.NEXT_PUBLIC_SUPABASE_URL
   : null;
 
 const nextConfig: NextConfig = {
+  // Hide the dev "N" badge: it covers the mobile bottom nav and admin UI.
+  // Build and runtime errors still open the overlay.
+  devIndicators: false,
   images: {
     remotePatterns: [
       {

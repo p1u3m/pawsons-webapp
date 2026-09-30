@@ -1,21 +1,31 @@
 "use client";
+
+import { WarningCircleIcon } from "@phosphor-icons/react";
 import { Button } from "@/components/ui/button";
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "@/components/ui/empty";
 
 export default function AdminError({ reset }: { reset: () => void }) {
   return (
-    <div className="admin-contents-page" role="alert">
-      <h1 className="admin-page-title">โหลดข้อมูลไม่สำเร็จ</h1>
-      <p className="admin-page-sub">
-        ไม่สามารถเชื่อมต่อข้อมูลได้ในขณะนี้ กรุณาลองอีกครั้ง
-      </p>
-      <Button
-        variant="unstyled"
-        size="auto"
-        className="admin-site-link"
-        onClick={reset}
-      >
-        ลองอีกครั้ง
-      </Button>
-    </div>
+    <Empty className="border bg-card" role="alert">
+      <EmptyHeader>
+        <EmptyMedia variant="icon">
+          <WarningCircleIcon />
+        </EmptyMedia>
+        <EmptyTitle>โหลดข้อมูลไม่สำเร็จ</EmptyTitle>
+        <EmptyDescription>
+          ไม่สามารถเชื่อมต่อข้อมูลได้ในขณะนี้ กรุณาลองอีกครั้ง
+        </EmptyDescription>
+      </EmptyHeader>
+      <EmptyContent>
+        <Button onClick={reset}>ลองอีกครั้ง</Button>
+      </EmptyContent>
+    </Empty>
   );
 }

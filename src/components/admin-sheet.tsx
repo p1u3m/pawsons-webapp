@@ -1,10 +1,17 @@
 "use client";
 
-import { useEffect, useRef, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
-import { XIcon } from "@phosphor-icons/react";
+import { toast } from "sonner";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
 
-/** URL-driven side sheet: opens on mount, and closing navigates to `closeHref`. */
+/** URL-driven side sheet: open while rendered; closing navigates to `closeHref` after the animation. */
 export function AdminSheet({
   title,
   description,
@@ -16,37 +23,45 @@ export function AdminSheet({
   closeHref: string;
   children: ReactNode;
 }) {
-  const dialog = useRef<HTMLDialogElement>(null);
   const router = useRouter();
-  useEffect(() => {
-    const el = dialog.current;
-    if (el && !el.open) el.showModal();
-  }, []);
+  const [open, setOpen] = useState(true);
   return (
-    <dialog
-      ref={dialog}
-      className="admin-sheet"
-      aria-labelledby="admin-sheet-title"
-      onClose={() => {
-        // A save redirect unmounts the sheet; only navigate when the user closed it.
-        if (dialog.current?.isConnected) router.replace(closeHref, { scroll: false });
-      }}
-      onClick={(event) => {
-        if (event.target === event.currentTarget) dialog.current?.close();
+    <Sheet
+      open={open}
+      onOpenChange={setOpen}
+      onOpenChangeComplete={(next) => {
+        if (!next) router.replace(closeHref, { scroll: false });
       }}
     >
-      <div className="admin-sheet-panel">
-        <header className="admin-sheet-head">
-          <div>
-            <h2 id="admin-sheet-title">{title}</h2>
-            {description && <p>{description}</p>}
-          </div>
-          <button type="button" onClick={() => dialog.current?.close()} aria-label="ปิด">
-            <XIcon size={18} weight="bold" aria-hidden="true" />
-          </button>
-        </header>
-        <div className="admin-sheet-body">{children}</div>
-      </div>
-    </dialog>
+      <SheetContent className="gap-0 data-[side=right]:w-full data-[side=right]:sm:max-w-xl">
+        <SheetHeader className="border-b">
+          <SheetTitle>{title}</SheetTitle>
+          {description && <SheetDescription>{description}</SheetDescription>}
+        </SheetHeader>
+        {children}
+      </SheetContent>
+    </Sheet>
   );
+}
+
+/** Shows a success toast once, then drops the flag from the URL so a refresh does not repeat it. */
+export function AdminFlash({
+  message,
+  description,
+  cleanHref,
+}: {
+  message: string;
+  description?: string;
+  cleanHref: string;
+}) {
+  const router = useRouter();
+  const shown = useRef(false);
+  useEffect(() => {
+    // Strict Mode runs effects twice in development.
+    if (shown.current) return;
+    shown.current = true;
+    toast.success(message, { description });
+    router.replace(cleanHref, { scroll: false });
+  }, [message, description, cleanHref, router]);
+  return null;
 }
