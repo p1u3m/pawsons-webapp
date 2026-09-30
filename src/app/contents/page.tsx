@@ -201,7 +201,7 @@ export default async function Page({
         </div>
       </section>
 
-      <section className="stories-band" aria-label="เรื่องราว">
+      <section className="stories-band stories-band--plain" aria-label="เรื่องราว">
         <div className="wrap">
           <div className="stories-toolbar">
             <Suspense>

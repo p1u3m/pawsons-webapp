@@ -159,6 +159,7 @@
   pointer-events: none;
   background: url("/patterns/shop.svg") 0 calc(-1 * var(--wave)) / 1134px
     756px repeat;
+  opacity: var(--pattern-opacity);
   -webkit-mask: linear-gradient(to bottom, #000 0, #000 50%, transparent 90%);
   mask: linear-gradient(to bottom, #000 0, #000 50%, transparent 90%);
 }
@@ -170,8 +171,9 @@
   bottom: calc(100% - 1px);
   height: var(--wave);
   pointer-events: none;
-  background: var(--pw-band) url("/patterns/shop.svg") 0 0 / 1134px 756px
-    repeat;
+  background:
+    linear-gradient(color-mix(in srgb, var(--pw-band) calc(100% - var(--pattern-opacity) * 100%), transparent) 0 0),
+    var(--pw-band) url("/patterns/shop.svg") 0 0 / 1134px 756px repeat;
   -webkit-mask: url("/home-wave-mask.svg") center bottom / 100% 100% no-repeat;
   mask: url("/home-wave-mask.svg") center bottom / 100% 100% no-repeat;
 }

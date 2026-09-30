@@ -71,7 +71,6 @@ export default async function Page({
                 {c.type} <span className="profile-name-pill">{c.name}</span>
               </h1>
               <h2>{detail.name_en}</h2>
-              <p className="profile-thai-title">{detail.name_th}</p>
             </header>
             <div className="profile-portrait doodle-bg">
               <Image

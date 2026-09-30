@@ -26,30 +26,6 @@ export function CharacterImage({
   );
 }
 
-export function CharacterCard({ character }: { character: Character }) {
-  return (
-    <Link
-      className="character-card"
-      href={`/characters/${character.type.toLowerCase()}`}
-    >
-      <div
-        className="portrait"
-        style={{ background: houseBackground(character.house) }}
-      >
-        <CharacterImage character={character} />
-        <span className="portrait-arrow" aria-hidden="true">
-          ↗
-        </span>
-      </div>
-      <div className="character-label">
-        <h3>{character.name}</h3>
-        <span className="type-pill">{character.type}</span>
-      </div>
-      <p>{character.tagline}</p>
-    </Link>
-  );
-}
-
 /** Card for the /characters pages (styles: app/characters/characters.css). */
 export function CharacterTile({ character: c }: { character: Character }) {
   return (

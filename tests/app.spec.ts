@@ -142,7 +142,7 @@ test("capture desktop and mobile layouts", async ({ page }) => {
     await page.setViewportSize({ width, height });
     await page.goto("/");
     await page.evaluate(() => document.fonts.ready);
-    await expect(page.locator(".slot-container img")).toBeVisible();
+    await expect(page.locator(".hero-chibi-img").first()).toBeVisible();
     await page.screenshot({
       path: `test-results/home-${name}.png`,
       fullPage: true,

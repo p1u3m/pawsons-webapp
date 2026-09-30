@@ -1,41 +1,42 @@
+import Image from "next/image";
 import Link from "next/link";
-import { CharacterImage } from "@/components/character-ui";
-import { characters } from "@/lib/data";
+import { ArrowRightIcon } from "@phosphor-icons/react/dist/ssr";
+import "./letters.css";
 
 export const metadata = { title: "Personal letters" };
 
+/** Letters are not built yet: Jax holds the spot until they are. */
 export default function Page() {
   return (
-    <section className="wrap letters-page">
-      <div className="letters-card">
-        <div className="letter-illustration">
-          <CharacterImage character={characters[9]} />
-          <div className="envelope">
-            <span>To: you</span>
-            <span>with a little love</span>
-          </div>
-        </div>
-        <span className="eyebrow">PERSONAL LETTERS</span>
-        <h1 style={{ marginTop: "16px" }}>
-          บางความรู้สึกดี ๆ<br />
-          ก็คุ้มค่ากับการรอ
-        </h1>
-        <p>
-          จดหมายจากเพื่อนตัวน้อยที่เขียนถึงคุณโดยตรง
-          <br />
-          ไม่ต้องรีบตอบ แค่ค่อย ๆ อ่านในวันที่พร้อม
-        </p>
-        <div>
-          <span className="coming-label">
-            กำลังเตรียมจดหมายฉบับแรก · เร็ว ๆ นี้
-          </span>
-        </div>
-        <div style={{ marginTop: "24px" }}>
-          <Link className="text-link" href="/characters">
-            <span>ระหว่างรอ แวะไปหาเพื่อน ๆ</span>
-            <span aria-hidden="true">↗</span>
-          </Link>
-        </div>
+    <section className="letters">
+      <div className="letters-stage">
+        {/* Animated WebP: served as is so every frame survives. */}
+        <Image
+          className="letters-jax"
+          src="/letters/jax.webp"
+          alt="Jax ถือประแจอยู่ในมือ"
+          width={500}
+          height={500}
+          priority
+          unoptimized
+        />
+      </div>
+
+      <h1>หน้านี้กำลังสร้างอยู่</h1>
+      <p>
+        Jax กำลังขันน็อตตัวสุดท้ายให้เข้าที่
+        <br />
+        ข้ามไปก่อนได้เลย แล้วค่อยแวะกลับมาใหม่นะ
+      </p>
+
+      <div className="letters-actions">
+        <Link className="button pawson-sign" href="/">
+          <span>กลับหน้าแรก</span>
+        </Link>
+        <Link className="text-link" href="/characters">
+          ไปหาเพื่อน ๆ ก่อน
+          <ArrowRightIcon size={14} weight="bold" aria-hidden="true" />
+        </Link>
       </div>
     </section>
   );

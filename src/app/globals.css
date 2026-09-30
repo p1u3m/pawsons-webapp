@@ -81,6 +81,11 @@
 }
 
 :root {
+  /* Strength of every doodle tile (public/patterns/) on the site. Band
+     bodies use it as opacity; wave edges paint tile and colour in one
+     background, so they lay a band-colour veil of (1 - this) on top. */
+  --pattern-opacity: 0.7;
+
   /* Home-page palette used by shop and contents: cream cards on solid
      "ledges", yellow sign buttons. */
   --pw-cream: #fffdf9;
@@ -1725,108 +1730,6 @@ input:focus-visible {
   aspect-ratio: 1;
 }
 
-.character-grid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 32px 22px;
-}
-
-/* Double-Bezel Character Card */
-.character-card {
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  background: var(--paper-surface);
-  border: 1px solid var(--line);
-  border-radius: 24px;
-  padding: 12px 12px 18px;
-  box-shadow: var(--shadow-card);
-  transition: var(--spring);
-}
-
-.character-card:hover {
-  transform: translateY(-5px);
-  border-color: rgba(24, 24, 24, 0.16);
-  box-shadow: var(--shadow-float);
-}
-
-.portrait {
-  border-radius: 18px;
-  position: relative;
-  aspect-ratio: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.6);
-}
-
-.portrait .character-image {
-  height: 82%;
-  width: 82%;
-  object-fit: contain;
-  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.character-card:hover .character-image {
-  transform: translateY(-4px) scale(1.05);
-}
-
-.portrait-arrow {
-  position: absolute;
-  right: 12px;
-  bottom: 12px;
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.85);
-  box-shadow: 0 2px 8px rgba(24, 24, 24, 0.08);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 13px;
-  opacity: 0;
-  transform: translateY(4px);
-  transition: var(--spring);
-}
-
-.character-card:hover .portrait-arrow {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.character-label {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  margin-top: 14px;
-  padding-inline: 4px;
-  gap: 8px;
-}
-
-.character-label h3 {
-  font-size: 20px;
-  font-weight: 600;
-}
-
-.type-pill {
-  font-size: 11px;
-  font-weight: 600;
-  padding: 2px 8px;
-  border-radius: var(--radius-pill);
-  background: rgba(24, 24, 24, 0.05);
-  color: var(--muted);
-  letter-spacing: 0.8px;
-}
-
-.character-card > p {
-  font-size: 13px;
-  line-height: 1.55;
-  margin-top: 6px;
-  padding-inline: 4px;
-  color: var(--muted);
-}
-
 /* ----------------------------------------------------
    FOOTER (WARM PAPER REFLECTION)
    ---------------------------------------------------- */
@@ -2012,133 +1915,6 @@ input::placeholder {
   gap: 12px;
   flex-wrap: wrap;
   margin: 32px 0 16px;
-}
-
-/* ----------------------------------------------------
-   HOUSES & HOUSE DETAIL
-   ---------------------------------------------------- */
-.houses-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 28px;
-}
-
-.house-card {
-  position: relative;
-  border: 1px solid var(--line);
-  border-radius: 36px;
-  padding: 40px 36px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 20px;
-  min-height: 290px;
-  overflow: hidden;
-  box-shadow: var(--shadow-card);
-  transition: var(--spring);
-}
-
-.house-card:hover {
-  transform: translateY(-5px);
-  box-shadow: var(--shadow-float);
-}
-
-.house-card-content {
-  flex: 1;
-  min-width: 0;
-  max-width: 320px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  z-index: 2;
-}
-
-.house-group-badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 4px 14px;
-  border-radius: var(--radius-pill);
-  color: #ffffff;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 1.4px;
-  text-transform: uppercase;
-  margin-bottom: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-}
-
-.house-card h2 {
-  font-size: clamp(30px, 3.2vw, 40px);
-  font-weight: 700;
-  line-height: 1.15;
-  letter-spacing: -0.5px;
-  margin: 0 0 10px 0;
-}
-
-.house-card p {
-  font-size: 14.5px;
-  line-height: 1.7;
-  opacity: 0.88;
-  margin: 0 0 24px 0;
-  color: inherit;
-}
-
-.house-card-art {
-  flex-shrink: 0;
-  width: 210px;
-  height: 250px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  z-index: 1;
-  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.house-card:hover .house-card-art {
-  transform: scale(1.06) rotate(3deg);
-}
-
-.house-card-art img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  filter: drop-shadow(0 12px 24px rgba(24, 24, 24, 0.08));
-}
-
-.house-banner {
-  text-align: center;
-  border-radius: 32px;
-  padding: 56px 24px;
-  box-shadow: var(--shadow-card);
-  margin-bottom: 40px;
-}
-
-.house-banner img {
-  height: 130px;
-  width: 130px;
-  object-fit: contain;
-  margin: 0 auto 20px;
-  animation: float-gentle 6.5s ease-in-out infinite;
-}
-
-.house-banner h1 {
-  margin: 12px 0;
-  font-size: 42px;
-}
-
-.house-banner p {
-  color: inherit;
-  max-width: 520px;
-  margin: 8px auto 0;
-  font-size: 17px;
-  line-height: 1.75;
-}
-
-.spaced-title {
-  margin: 50px 0 26px;
-  font-size: 28px;
 }
 
 /* ----------------------------------------------------
@@ -2662,95 +2438,6 @@ input::placeholder {
 }
 
 /* ----------------------------------------------------
-   LETTERS (PERSONAL SANCTUARY LETTERS)
-   ---------------------------------------------------- */
-.letters-page {
-  text-align: center;
-  padding-block: 40px 80px;
-  min-height: 75vh;
-}
-
-.letters-card {
-  background: var(--paper-surface);
-  border: 1px solid var(--line);
-  border-radius: 36px;
-  padding: 56px 36px;
-  max-width: 680px;
-  margin: 0 auto;
-  box-shadow: var(--shadow-card);
-}
-
-.letter-illustration {
-  position: relative;
-  width: 260px;
-  height: 260px;
-  margin: 0 auto 30px;
-}
-
-.letter-illustration > .character-image {
-  width: 160px;
-  height: 180px;
-  object-fit: contain;
-  position: absolute;
-  top: 0;
-  left: 50px;
-  transform: rotate(-6deg);
-  animation: float-gentle 7s ease-in-out infinite;
-}
-
-.envelope {
-  position: absolute;
-  bottom: 0;
-  left: 10px;
-  width: 240px;
-  height: 130px;
-  background: linear-gradient(145deg, #fbfdf9 0%, #eef6ec 55%, #deeed8 100%);
-  border: 1px solid rgba(61, 127, 88, 0.3);
-  border-radius: 16px;
-  transform: rotate(-4deg);
-  padding: 28px;
-  text-align: left;
-  box-shadow: 0 10px 24px -6px rgba(61, 127, 88, 0.12);
-}
-
-.envelope span {
-  display: block;
-  font-size: 17px;
-  font-weight: 600;
-  color: #2f5d3e;
-}
-
-.envelope span + span {
-  font-size: 11px;
-  margin-top: 12px;
-  text-align: right;
-  color: var(--muted);
-}
-
-.letters-page h1 {
-  margin: 18px 0;
-  font-size: clamp(34px, 4.5vw, 44px);
-}
-
-.letters-page > p,
-.letters-card > p {
-  font-size: 16.5px;
-  line-height: 1.85;
-  color: var(--muted);
-}
-
-.coming-label {
-  display: inline-block;
-  margin: 24px 0 18px;
-  padding: 4px 16px;
-  border-radius: var(--radius-pill);
-  background: rgba(61, 127, 88, 0.1);
-  font-size: 13px;
-  font-weight: 500;
-  color: #2f5d3e;
-}
-
-/* ----------------------------------------------------
    RESPONSIVE BREAKPOINTS (MOBILE HARMONY)
    ---------------------------------------------------- */
 @media (max-width: 1080px) {
@@ -2782,12 +2469,6 @@ input::placeholder {
   }
   .hero-copy .button {
     margin-inline: auto;
-  }
-  .character-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-  .houses-grid {
-    grid-template-columns: 1fr;
   }
   .share-layout {
     grid-template-columns: 1fr;
@@ -2823,12 +2504,8 @@ input::placeholder {
   .hero-copy p {
     font-size: 16px;
   }
-  .character-grid {
-    grid-template-columns: 1fr;
-  }
   .quiz-panel,
-  .result-card,
-  .letters-card {
+  .result-card {
     padding: 28px 20px;
     border-radius: 28px;
   }
@@ -2845,18 +2522,6 @@ input::placeholder {
     gap: 32px;
     width: 100%;
     overflow: hidden;
-  }
-  .house-card {
-    padding: 30px 24px;
-    border-radius: 28px;
-    min-height: auto;
-  }
-  .house-card-content {
-    max-width: calc(100% - 130px);
-  }
-  .house-card-art {
-    width: 120px;
-    height: 150px;
   }
   .stack-actions {
     width: 100%;
@@ -2880,23 +2545,6 @@ input::placeholder {
   }
 }
 
-@media (max-width: 480px) {
-  .house-card {
-    flex-direction: column-reverse;
-    align-items: flex-start;
-    gap: 16px;
-    padding: 26px 20px;
-  }
-  .house-card-content {
-    max-width: 100%;
-  }
-  .house-card-art {
-    width: 150px;
-    height: 170px;
-    align-self: center;
-    margin-bottom: 8px;
-  }
-}
 
 @media (max-width: 360px) {
   .wrap {
@@ -3123,6 +2771,13 @@ input::placeholder {
    ==================================================== */
 
 /* ── Full-viewport hero container ── */
+/* Height of the hero's wavy edge, shared with the explore pattern below so
+   the tile lines up across the seam. Same sizes as the other bands. */
+.minimal-hero,
+.minimal-explore {
+  --wave: 120px;
+}
+
 .minimal-hero {
   position: relative;
   min-height: 100vh;
@@ -3140,10 +2795,12 @@ input::placeholder {
   position: absolute;
   inset-inline: 0;
   bottom: -1px;
-  height: 120px;
+  height: var(--wave);
   z-index: 1;
   pointer-events: none;
-  background: #fff0bd url("/patterns/home.svg") 0 0 / 1134px 756px repeat;
+  background:
+    linear-gradient(color-mix(in srgb, #fff0bd calc(100% - var(--pattern-opacity) * 100%), transparent) 0 0),
+    #fff0bd url("/patterns/home.svg") 0 0 / 1134px 756px repeat;
   -webkit-mask: url("/home-wave-mask.svg") center bottom / 100% 100% no-repeat;
   mask: url("/home-wave-mask.svg") center bottom / 100% 100% no-repeat;
 }
@@ -3176,51 +2833,83 @@ input::placeholder {
   margin-top: 28px;
 }
 
-/* ── Minimal Character Reel (Clean Floating Character) ── */
-.slot-container {
+/* ── Hero chibis: four friends, one per house, cycling through all 16 ── */
+.hero-chibis {
+  position: relative;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: center;
-  margin: 0 0 38px;
+  width: min(560px, 100%);
+  margin: 0 0 30px;
+  padding-top: 24px;
   cursor: default;
-  animation: float-gentle 7s ease-in-out infinite;
 }
 
-.slot-char {
-  width: clamp(230px, 24vw, 320px);
-  height: clamp(230px, 24vw, 320px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  animation: slotSlideIn 0.5s cubic-bezier(0.22, 1, 0.36, 1);
-  transition: transform 0.3s ease;
-  will-change: transform;
+/* Desktop has the room: the group reads 30% larger. The hero keeps its
+   content clear of the wavy edge, growing past the fold on short screens. */
+@media (min-width: 768px) {
+  .hero-chibis {
+    width: min(728px, 100%);
+  }
+  .minimal-hero {
+    padding-bottom: calc(var(--wave) + 24px);
+  }
 }
 
-.slot-char:hover {
-  transform: scale(1.05);
+/* Soft paper glow behind the group */
+.hero-chibis::before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  left: 50%;
+  bottom: 16%;
+  width: 44%;
+  aspect-ratio: 1;
+  translate: -50% 0;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 45%, #fdfcf8 0 58%, rgba(253, 252, 248, 0) 71%);
+  pointer-events: none;
 }
 
-.slot-char .character-image {
+/* Ground shadow the group stands on */
+.hero-chibis::after {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  left: 50%;
+  bottom: 11%;
+  width: 78%;
+  height: 12%;
+  translate: -50% 0;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(24, 24, 24, 0.1), rgba(24, 24, 24, 0));
+  pointer-events: none;
+}
+
+.hero-chibi {
+  position: relative;
+  z-index: 1;
+  flex: 0 0 auto;
+  width: 33%;
+  margin-inline: -8%;
+}
+
+.hero-chibi[data-slot="1"],
+.hero-chibi[data-slot="2"] {
+  z-index: 2;
+  width: 41%;
+}
+
+.hero-chibi[data-slot="1"] {
+  z-index: 3;
+}
+
+.hero-chibi-img {
+  display: block;
   width: 100%;
-  height: 100%;
-  object-fit: contain;
-  -webkit-filter: url(#torn-paper-edge);
-  filter: url(#torn-paper-edge);
-}
-
-@keyframes slotSlideIn {
-  0% {
-    opacity: 0;
-    transform: translateX(-55px) scale(0.88);
-  }
-  65% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 1;
-    transform: translateX(0) scale(1);
-  }
+  height: auto;
+  transform-origin: 50% 100%;
+  will-change: transform, opacity;
 }
 
 /* ── Explore destinations ── */
@@ -3231,7 +2920,7 @@ input::placeholder {
   background: #fff0bd;
 }
 
-/* Pattern layer: starts where the hero's wavy edge (120px) leaves off, then
+/* Pattern layer: starts where the hero's wavy edge (--wave) leaves off, then
    fades out from the middle down to the plain colour. Tile from
    scripts/build-patterns.mjs. */
 .minimal-explore::after {
@@ -3240,201 +2929,294 @@ input::placeholder {
   inset: 0;
   z-index: -1;
   pointer-events: none;
-  background: url("/patterns/home.svg") 0 -120px / 1134px 756px repeat;
-  -webkit-mask: linear-gradient(to bottom, #000 0, #000 50%, transparent 90%);
-  mask: linear-gradient(to bottom, #000 0, #000 50%, transparent 90%);
+  background: url("/patterns/home.svg") 0 calc(-1 * var(--wave)) / 1134px 756px
+    repeat;
+  opacity: var(--pattern-opacity);
+  -webkit-mask: linear-gradient(to bottom, #000 0, #000 40%, transparent 85%);
+  mask: linear-gradient(to bottom, #000 0, #000 40%, transparent 85%);
+}
+
+.explore-heading {
+  margin: 0 0 22px;
+  text-align: center;
+  font-size: clamp(22px, 3vw, 28px);
+  letter-spacing: -0.4px;
+  color: var(--ink);
 }
 
 .explore-grid {
   display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
-  gap: 20px;
-  max-width: 595px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+  max-width: 860px;
   margin-inline: auto;
 }
 
 .explore-card {
-  grid-column: span 2;
+  --tone: var(--paper-surface);
   position: relative;
-  isolation: isolate;
-  width: 185px;
-  height: 185px;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
+  gap: 12px;
+  padding: 22px 16px 20px;
+  border-radius: 32px;
+  background: var(--tone);
+  box-shadow: 0 5px 0 #e2d3a4;
+  color: var(--ink);
+  text-align: center;
   text-decoration: none;
-  background: transparent;
-  cursor: pointer;
-  transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+  transition:
+    transform 0.22s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.22s ease;
 }
 
-.explore-card:nth-child(4) {
-  grid-column: 2 / span 2;
-}
-
-.explore-card:nth-child(5) {
-  grid-column: 4 / span 2;
-}
+.explore-card[data-tone="lavender"] { --tone: var(--lavender-bg); }
+.explore-card[data-tone="clover"] { --tone: var(--clover-bg); }
+.explore-card[data-tone="forget"] { --tone: var(--forget-bg); }
+.explore-card[data-tone="dandelion"] { --tone: var(--dandelion-bg); }
 
 .explore-card:hover,
 .explore-card:focus-visible {
   transform: translateY(-5px);
+  box-shadow: 0 10px 0 #e2d3a4;
+}
+
+.explore-card:focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: 3px;
 }
 
 .explore-card:active {
   transform: translateY(1px) scale(0.98);
+  box-shadow: 0 3px 0 #e2d3a4;
 }
 
-/* Organic Wavy Squircle SVG Background */
-.explore-card-bg {
-  position: absolute;
-  inset: -6px;
-  width: calc(100% + 12px);
-  height: calc(100% + 12px);
-  pointer-events: none;
-  filter: drop-shadow(0 4px 0 #d7d3cc) drop-shadow(0 4px 0 #e6e1d8);
-  transition: filter 0.22s ease;
-}
-
-.explore-card-shape {
-  fill: #fffdf9;
-  transition: fill 0.22s ease;
-}
-
-.explore-card:hover .explore-card-shape,
-.explore-card:focus-visible .explore-card-shape {
-  fill: #ffdf42;
-}
-
-.explore-card:hover .explore-card-bg,
-.explore-card:focus-visible .explore-card-bg {
-  filter: drop-shadow(0 4px 0 #d7d3cc) drop-shadow(0 4px 0 #e6e1d8);
-}
-
-/* The wave pattern shares the exact card silhouette, without an inner edge. */
-.explore-card-pattern {
-  opacity: 0;
-  transition: opacity 0.22s ease;
-}
-
-.explore-card:hover .explore-card-pattern,
-.explore-card:focus-visible .explore-card-pattern {
-  opacity: 0.36;
-}
-
-/* Inner content */
-.explore-card-inner {
-  position: relative;
-  z-index: 1;
+.explore-copy {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 10px;
-  padding: 12px;
-  text-align: center;
-}
-
-.explore-card-icon {
-  display: grid;
-  place-items: center;
-  width: 110px;
-  height: 90px;
-}
-
-.explore-card-icon img {
-  width: 110px;
-  height: 90px;
-  object-fit: contain;
-  transition: transform 0.24s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.explore-card:hover .explore-card-icon img,
-.explore-card:focus-visible .explore-card-icon img {
-  transform: rotate(-3deg) scale(1.08);
+  gap: 4px;
 }
 
 .explore-card-title {
-  color: #181818;
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 700;
   line-height: 1.25;
   letter-spacing: -0.3px;
-  transition: color 0.22s ease;
-  white-space: nowrap;
 }
 
-.explore-card:hover .explore-card-title,
-.explore-card:focus-visible .explore-card-title {
+.explore-card-desc {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+/* ── Card art ── */
+.explore-art {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 96px;
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.explore-card:hover .explore-art,
+.explore-card:focus-visible .explore-art {
+  transform: rotate(-3deg) scale(1.06);
+}
+
+.explore-art img {
+  display: block;
+  height: auto;
+}
+
+.explore-art--faces {
+  display: grid;
+  grid-template-columns: repeat(2, 44px);
+  align-content: center;
+  gap: 6px;
+}
+
+.explore-art--faces img {
+  width: 44px;
+  border-radius: 14px;
+}
+
+.explore-art--faces img:nth-child(odd) { rotate: -4deg; }
+.explore-art--faces img:nth-child(even) { rotate: 4deg; }
+
+.explore-art--crests img {
+  width: 40px;
+  margin-inline: -5px;
+  filter: drop-shadow(0 2px 0 rgba(24, 24, 24, 0.08));
+}
+
+.explore-art--crests img:nth-child(1) { rotate: -14deg; translate: 0 8px; }
+.explore-art--crests img:nth-child(2) { rotate: -5deg; }
+.explore-art--crests img:nth-child(3) { rotate: 5deg; }
+.explore-art--crests img:nth-child(4) { rotate: 14deg; translate: 0 8px; }
+
+.explore-art--story {
+  width: 110px;
+}
+
+.explore-page {
+  position: absolute;
+  inset: 6px 22px 4px 8px;
+  rotate: -6deg;
+  border-radius: 10px;
+  background:
+    repeating-linear-gradient(to bottom, transparent 0 13px, rgba(24, 24, 24, 0.12) 13px 15px)
+      content-box,
+    var(--paper-surface);
+  padding: 16px 12px 10px;
+  box-shadow: 0 3px 0 rgba(24, 24, 24, 0.08);
+}
+
+.explore-art--story img {
+  position: relative;
+  width: 64px;
+  margin: 34px -34px 0 0;
+}
+
+.explore-art--shop img {
+  width: 84px;
+}
+
+.explore-tag {
+  position: absolute;
+  top: 6px;
+  right: -10px;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #e8577d;
+  color: #fff;
+  rotate: 12deg;
+  box-shadow: 0 2px 0 rgba(24, 24, 24, 0.14);
+}
+
+/* ── Feature card: the quiz ── */
+.explore-card--feature {
+  grid-column: 1 / -1;
+  flex-direction: row;
+  justify-content: center;
+  gap: clamp(20px, 5vw, 56px);
+  padding: 26px clamp(20px, 5vw, 48px);
+  text-align: left;
+  --tone: #ffdf42;
+  box-shadow: 0 5px 0 #d8b21e;
+}
+
+.explore-card--feature:hover,
+.explore-card--feature:focus-visible {
+  box-shadow: 0 10px 0 #d8b21e;
+}
+
+.explore-card--feature:active {
+  box-shadow: 0 3px 0 #d8b21e;
+}
+
+.explore-card--feature .explore-copy {
+  align-items: flex-start;
+  max-width: 340px;
+}
+
+.explore-card--feature .explore-card-title {
+  font-size: clamp(22px, 3vw, 28px);
+}
+
+.explore-card--feature .explore-card-desc {
+  font-size: 15px;
   color: #523908;
 }
 
-/* Responsive: tablet and mobile */
+.explore-go {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+  padding: 8px 16px;
+  border-radius: var(--radius-pill);
+  background: var(--ink);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.explore-art--quiz {
+  height: 110px;
+}
+
+.explore-art--quiz img {
+  width: 96px;
+  margin-inline: -12px;
+}
+
+.explore-art--quiz img:nth-child(1) { rotate: -8deg; translate: 0 8px; }
+.explore-art--quiz img:nth-child(2) { position: relative; z-index: 1; width: 110px; }
+.explore-art--quiz img:nth-child(3) { rotate: 8deg; translate: 0 8px; }
+
+.explore-bubble {
+  position: absolute;
+  z-index: 2;
+  top: -12px;
+  right: -8px;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--paper-surface);
+  color: var(--ink);
+  font-size: 20px;
+  font-weight: 700;
+  box-shadow: 0 3px 0 rgba(24, 24, 24, 0.14);
+}
+
 @media (max-width: 800px) {
   .explore-grid {
-    gap: 16px;
-    max-width: 512px;
-  }
-  .explore-card {
-    width: 100%;
-    height: auto;
-    aspect-ratio: 1 / 1;
-  }
-  .explore-card-icon {
-    width: 98px;
-    height: 80px;
-  }
-  .explore-card-icon img {
-    width: 98px;
-    height: 80px;
-  }
-  .explore-card-title {
-    font-size: 14px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    max-width: 520px;
   }
 }
 
 @media (max-width: 540px) {
   .minimal-explore {
-    padding-block: 48px 64px;
+    padding-block: 40px 64px;
   }
-  .explore-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 14px;
-    max-width: 360px;
-  }
-  .explore-card,
-  .explore-card:nth-child(4),
-  .explore-card:nth-child(5) {
-    grid-column: auto;
-  }
-  .explore-card:last-child {
-    grid-column: 1 / -1;
-    width: calc(50% - 7px);
-    margin-inline: auto;
-  }
-  .explore-card-icon {
-    width: 96px;
-    height: 78px;
-  }
-  .explore-card-icon img {
-    width: 96px;
-    height: 78px;
+  .explore-card {
+    padding: 18px 10px 16px;
+    border-radius: 26px;
   }
   .explore-card-title {
-    font-size: 13.5px;
+    font-size: 14.5px;
+  }
+  .explore-card-desc {
+    font-size: 12px;
+  }
+  .explore-card--feature {
+    flex-direction: column;
+    text-align: center;
+  }
+  .explore-card--feature .explore-copy {
+    align-items: center;
   }
 }
+
 /* ── Responsive: Minimal hero + Slot ── */
 @media (max-width: 767px) {
   html {
     scrollbar-gutter: auto;
   }
-  .minimal-hero::after {
-    height: 240px;
-  }
+  .minimal-hero,
   .minimal-explore {
-    background-position: 0 -240px;
+    --wave: 64px;
   }
   .minimal-hero {
     min-height: calc(100dvh - 10px);
@@ -3460,13 +3242,8 @@ input::placeholder {
     margin-top: 20px;
   }
 
-  .slot-container {
+  .hero-chibis {
     margin: 0 0 18px;
-  }
-
-  .slot-char {
-    width: 205px;
-    height: 205px;
   }
 }
 
@@ -3484,13 +3261,8 @@ input::placeholder {
     letter-spacing: -1px;
   }
 
-  .slot-container {
+  .hero-chibis {
     margin: 0 0 16px;
-  }
-
-  .slot-char {
-    width: 180px;
-    height: 180px;
   }
 }
 
@@ -3501,11 +3273,6 @@ input::placeholder {
 
   .hero-center h1 {
     font-size: 26px;
-  }
-
-  .slot-char {
-    width: 155px;
-    height: 155px;
   }
 }
 

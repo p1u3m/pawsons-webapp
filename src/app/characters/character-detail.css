@@ -36,6 +36,7 @@
   z-index: -1;
   pointer-events: none;
   background: var(--profile-pattern) 0 0 / 1134px 756px repeat;
+  opacity: var(--pattern-opacity);
   -webkit-mask: linear-gradient(to bottom, #000 0, #000 35%, transparent 80%);
   mask: linear-gradient(to bottom, #000 0, #000 35%, transparent 80%);
 }
@@ -124,14 +125,9 @@
   line-height: 1.3;
 }
 .profile-heading h2 {
-  margin: 0 0 4px;
+  margin: 0;
   font-size: 25px;
   line-height: 1.3;
-}
-.profile-thai-title {
-  margin: 0;
-  font-size: 16px;
-  color: var(--muted);
 }
 .profile-portrait {
   position: relative;
@@ -386,8 +382,9 @@
   bottom: calc(100% - 1px);
   height: var(--wave);
   pointer-events: none;
-  background: var(--profile-tint) var(--profile-pattern) 0 0 / 1134px 756px
-    repeat;
+  background:
+    linear-gradient(color-mix(in srgb, var(--profile-tint) calc(100% - var(--pattern-opacity) * 100%), transparent) 0 0),
+    var(--profile-tint) var(--profile-pattern) 0 0 / 1134px 756px repeat;
   -webkit-mask: url("/home-wave-mask.svg") center bottom / 100% 100% no-repeat;
   mask: url("/home-wave-mask.svg") center bottom / 100% 100% no-repeat;
 }
@@ -399,6 +396,7 @@
   pointer-events: none;
   background: var(--profile-pattern) 0 calc(-1 * var(--wave)) / 1134px 756px
     repeat;
+  opacity: var(--pattern-opacity);
   -webkit-mask: linear-gradient(to bottom, #000 0, #000 40%, transparent 85%);
   mask: linear-gradient(to bottom, #000 0, #000 40%, transparent 85%);
 }
@@ -552,6 +550,13 @@
 }
 /* Phones: the face already shows which way the button goes. */
 @media (max-width: 767px) {
+  /* Phones: the TYPE, name pill and title sit centred over the portrait. */
+  .profile-heading {
+    text-align: center;
+  }
+  .profile-heading h1 {
+    justify-content: center;
+  }
   .profile-pagination a {
     gap: 8px;
     padding: 10px 12px;
@@ -745,9 +750,6 @@
   }
   .profile-heading h2 {
     font-size: 36px;
-  }
-  .profile-thai-title {
-    font-size: 20px;
   }
   .profile-keywords li {
     padding: 6px 14px;

@@ -1,51 +1,82 @@
-import { houseBackground } from "@/lib/data";
 import Image from "next/image";
 import Link from "next/link";
-import { houses } from "@/lib/data";
-import { PageIntro } from "@/components/character-ui";
+import { ArrowUpRightIcon } from "@phosphor-icons/react/dist/ssr";
+import { characters, houses } from "@/lib/data";
+import titleStyles from "@/components/section-title.module.css";
+import { crestSrc, houseBandStyle } from "./house-style";
+import HousesMotion from "./houses-motion";
 
 export const metadata = { title: "Four houses" };
 
 export default function Page() {
   return (
-    <div className="wrap min-h-[70vh] pt-10 pb-[90px]">
-      <PageIntro label="FOUR HOUSES, ONE LITTLE WORLD" title="มีที่ให้คุณเสมอ">
-        บ้านทั้งสี่มีเสน่ห์ต่างกัน แต่ทุกบ้านอบอุ่นในแบบของตัวเอง
-      </PageIntro>
-      <div className="houses-grid">
-        {houses.map((h) => (
-          <Link
-            className="house-card"
+    <HousesMotion>
+      <section className="wrap houses-hero">
+        <h1>
+          บ้านทั้งสี่
+          <br />
+          ในโลกใบเล็ก
+        </h1>
+        <p>แต่ละบ้านมีเสน่ห์ต่างกัน แต่ทุกบ้านอบอุ่นในแบบของตัวเอง</p>
+      </section>
+
+      {houses.map((h, i) => {
+        const members = characters.filter((c) => c.house.id === h.id);
+        return (
+          <section
             key={h.id}
-            href={`/houses/${h.id}`}
-            style={{ background: houseBackground(h), color: h.ink }}
+            id={h.id}
+            className="chars-band"
+            style={houseBandStyle(h)}
+            aria-labelledby={`house-${h.id}`}
           >
-            <div className="house-card-content">
-              <span
-                className="house-group-badge"
-                style={{ background: h.badgeColor }}
-              >
-                {h.groupTitle}
-              </span>
-              <h2>{h.name}</h2>
-              <p>{h.description}</p>
-              <span className="text-link" style={{ color: h.ink }}>
-                <span>แวะเข้าบ้าน</span>
-                <span aria-hidden="true">↗</span>
-              </span>
+            <div className={`wrap houses-row${i % 2 ? " houses-row--flip" : ""}`}>
+              <div className="houses-crest doodle-bg doodle-bg--2" aria-hidden="true">
+                <Image
+                  src={crestSrc(h)}
+                  alt=""
+                  width={320}
+                  height={320}
+                  priority={i === 0}
+                />
+              </div>
+
+              <div className="houses-copy">
+                <p className="houses-group">{h.groupTitle}</p>
+                <h2 id={`house-${h.id}`}>
+                  <span className={`${titleStyles.label} houses-name`}>{h.name}</span>
+                  <small>{h.thai}</small>
+                </h2>
+                <p className="houses-motto" lang="en">
+                  “{h.motto}”
+                </p>
+                <p className="houses-desc">{h.description}</p>
+
+                <ul className="houses-members" aria-label={`สมาชิกบ้าน ${h.name}`}>
+                  {members.map((c) => (
+                    <li key={c.type}>
+                      <Link href={`/characters/${c.type.toLowerCase()}`}>
+                        <Image
+                          src={`/characters/faces/${c.type}.png`}
+                          alt=""
+                          width={81}
+                          height={62}
+                        />
+                        <span>{c.name}</span>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+
+                <Link className="chars-link houses-cta" href={`/houses/${h.id}`}>
+                  แวะเข้าบ้าน {h.name}
+                  <ArrowUpRightIcon size={14} weight="bold" aria-hidden="true" />
+                </Link>
+              </div>
             </div>
-            <div className="house-card-art">
-              <Image
-                src={`/houses/${h.sigil}`}
-                width={260}
-                height={260}
-                alt={`ตราบ้าน ${h.name}`}
-                priority
-              />
-            </div>
-          </Link>
-        ))}
-      </div>
-    </div>
+          </section>
+        );
+      })}
+    </HousesMotion>
   );
 }
