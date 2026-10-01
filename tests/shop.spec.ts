@@ -4,22 +4,22 @@ test("catalog, cart drawer, and product detail keep server prices", async ({
   page,
 }) => {
   await page.goto("/shop");
-  await expect(page.locator(".store-card")).toHaveCount(8);
-  const first = page.locator(".store-card").first();
+  await expect(page.locator("[data-product]")).toHaveCount(8);
+  const first = page.locator("[data-product]").first();
   await expect(first).toContainText("฿59");
   await first.getByRole("button", { name: /ลงตะกร้า/ }).click();
 
   await page.getByRole("button", { name: "เปิดตะกร้า มีสินค้า 1 ชิ้น" }).click();
   const drawer = page.getByRole("dialog", { name: /ตะกร้า/ });
   await expect(drawer).toBeVisible();
-  await expect(drawer.locator(".store-checkout-total")).toContainText("฿59");
+  await expect(drawer.getByTestId("checkout-total")).toContainText("฿59");
   await drawer.getByRole("button", { name: "เพิ่มจำนวน" }).click();
-  await expect(drawer.locator(".store-checkout-total")).toContainText("฿118");
+  await expect(drawer.getByTestId("checkout-total")).toContainText("฿118");
 
   // The cart lives in localStorage, so it survives a reload.
   await page.reload();
   await page.getByRole("button", { name: "เปิดตะกร้า มีสินค้า 2 ชิ้น" }).click();
-  await expect(drawer.locator(".store-checkout-total")).toContainText("฿118");
+  await expect(drawer.getByTestId("checkout-total")).toContainText("฿118");
   await drawer.getByRole("button", { name: /ออกจากตะกร้า/ }).click();
   await expect(drawer.getByText("ตะกร้ายังว่างอยู่")).toBeVisible();
 

@@ -3,10 +3,7 @@
 import { useId, useRef, type ReactNode } from "react";
 import { SlidersHorizontalIcon, XIcon } from "@phosphor-icons/react";
 
-/**
- * Round filter button that opens filters in a bottom sheet. Hidden by default;
- * each page shows `.filter-button` on mobile (styles in globals.css).
- */
+/** Round filter button (phones only) that opens the filters in a bottom sheet. */
 export function FilterSheet({
   activeCount,
   title = "ตัวกรอง",
@@ -23,7 +20,7 @@ export function FilterSheet({
     <>
       <button
         type="button"
-        className="filter-button"
+        className="relative hidden size-[52px] shrink-0 place-items-center rounded-full bg-navy text-cream shadow-[0_4px_0_#0a1a23] max-md:grid"
         onClick={() => dialog.current?.showModal()}
         aria-label={
           activeCount ? `${title} (ใช้อยู่ ${activeCount} รายการ)` : title
@@ -31,14 +28,17 @@ export function FilterSheet({
       >
         <SlidersHorizontalIcon size={22} weight="bold" aria-hidden="true" />
         {activeCount > 0 && (
-          <span className="filter-badge" aria-hidden="true">
+          <span
+            className="absolute -top-0.5 -right-0.5 grid h-5 min-w-5 place-items-center rounded-full bg-[#f5c64b] px-[5px] text-[11px] font-bold text-ink shadow-[0_0_0_2px_var(--color-paper)]"
+            aria-hidden="true"
+          >
             {activeCount}
           </span>
         )}
       </button>
       <dialog
         ref={dialog}
-        className="filter-sheet"
+        className="focus-ink fixed inset-x-0 top-auto bottom-0 m-0 max-h-[85dvh] w-full max-w-full translate-y-full border-0 bg-transparent p-0 text-ink transition-[translate,overlay,display] transition-discrete duration-350 ease-spring backdrop:bg-ink/28 open:translate-y-0 motion-reduce:transition-none starting:open:translate-y-full"
         aria-labelledby={titleId}
         onClick={(event) => {
           const target = event.target as HTMLElement;
@@ -46,10 +46,17 @@ export function FilterSheet({
           if (target === event.currentTarget || target.closest("a")) close();
         }}
       >
-        <div className="filter-sheet-panel">
-          <header className="filter-sheet-head">
-            <h2 id={titleId}>{title}</h2>
-            <button type="button" onClick={close} aria-label={`ปิด${title}`}>
+        <div className="flex flex-col gap-[18px] rounded-t-3xl bg-paper px-5 pt-[18px] pb-[calc(24px+env(safe-area-inset-bottom))]">
+          <header className="flex items-center justify-between">
+            <h2 id={titleId} className="text-[18px]">
+              {title}
+            </h2>
+            <button
+              type="button"
+              className="grid size-10 place-items-center rounded-full bg-ink/5 text-ink"
+              onClick={close}
+              aria-label={`ปิด${title}`}
+            >
               <XIcon size={18} weight="bold" aria-hidden="true" />
             </button>
           </header>

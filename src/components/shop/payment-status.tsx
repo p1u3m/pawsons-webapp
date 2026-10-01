@@ -8,7 +8,17 @@ import {
   WarningCircleIcon,
   XCircleIcon,
 } from "@phosphor-icons/react";
+import { Eyebrow } from "@/components/pill-button";
+import { shopButton, shopTextLink } from "@/components/shop/shop-ui";
 import type { ShopOrderState } from "@/lib/shop/confirm-order";
+import { cn } from "@/lib/utils";
+
+const iconTone: Record<ShopOrderState, string> = {
+  paid: "bg-clover text-green",
+  pending: "bg-dandelion text-[#b88312]",
+  failed: "bg-[#fbefec] text-[#b54744]",
+  invalid: "bg-paper-soft text-ink-muted",
+};
 
 const copy = {
   paid: {
@@ -72,33 +82,35 @@ export function ShopPaymentStatus({
   const { Icon, title, body } = copy[status];
   return (
     <section
-      className={`store-result is-${status}`}
+      className="mx-auto mt-6 flex max-w-[560px] flex-col items-center rounded-[34px] bg-cream px-8 py-12 text-center shadow-ledge max-md:px-5 max-md:py-9"
       role="status"
       aria-live="polite"
     >
-      <span className="store-result-icon">
+      <span className={cn("mb-5 grid size-[72px] place-items-center rounded-full", iconTone[status])}>
         <Icon size={34} weight="fill" aria-hidden="true" />
       </span>
-      <span className="eyebrow">STRIPE SANDBOX</span>
-      <h1>{title}</h1>
-      <p>{body}</p>
+      <Eyebrow>STRIPE SANDBOX</Eyebrow>
+      <h1 className="mt-3.5 mb-2.5 text-[28px] leading-[1.3]">{title}</h1>
+      <p className="leading-[1.75]">{body}</p>
       {status === "pending" && (
-        <span className="store-result-pulse">กำลังตรวจสอบทุก 5 วินาที</span>
+        <span className="mt-4 inline-flex items-center gap-2 text-[13px] text-ink-muted before:size-2 before:animate-blink before:rounded-full before:bg-[#e0a52b] before:content-[''] motion-reduce:before:animate-none">
+          กำลังตรวจสอบทุก 5 วินาที
+        </span>
       )}
-      <div className="store-result-actions">
+      <div className="mt-7 flex flex-col items-center gap-4">
         {status === "paid" ? (
           <>
             {orderId && (
-              <Link className="store-cta" href={`/shop/orders/${orderId}`}>
+              <Link className={shopButton} href={`/shop/orders/${orderId}`}>
                 ดูคำสั่งซื้อ
               </Link>
             )}
-            <Link className="store-text-link" href="/shop">
+            <Link className={shopTextLink} href="/shop">
               เลือกสินค้าต่อ
             </Link>
           </>
         ) : (
-          <Link className="store-cta" href="/shop?cart=open">
+          <Link className={shopButton} href="/shop?cart=open">
             กลับไปที่ตะกร้า
           </Link>
         )}

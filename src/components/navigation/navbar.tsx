@@ -7,6 +7,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import gsap from "gsap";
 import AuthButton from "../auth-button";
+import { cn } from "@/lib/utils";
 import { NAV_LINKS } from "./nav-links";
 
 export default function Navbar() {
@@ -34,7 +35,7 @@ export default function Navbar() {
       const targetW = activeLink.offsetWidth;
       const targetH = activeLink.offsetHeight;
       const activeIcon =
-        activeLink.querySelector<HTMLElement>(".nav-link-icon");
+        activeLink.querySelector<HTMLElement>("[data-nav-icon]");
 
       if (isInitialRender.current || reducedMotion) {
         // Immediate position on initial mount (no jarring jump)
@@ -149,43 +150,55 @@ export default function Navbar() {
   }
 
   return (
-    <div className="header-wrapper desktop-navbar-wrapper">
-      <header className="site-header">
-        <Link href="/" className="brand" aria-label="Pawsons Home">
+    <div className="pointer-events-none sticky top-4 z-50 w-full px-4 max-md:hidden">
+      <header className="pointer-events-auto relative z-49 mx-auto flex h-16 max-w-[1040px] items-center justify-between gap-6 rounded-full border border-ink/8 bg-cream py-2 pr-3 pl-6 shadow-[0_16px_36px_-10px_rgb(74_68_53/0.12),0_2px_6px_rgb(74_68_53/0.04)] transition-all duration-350 ease-spring max-[67.5rem]:h-[58px] max-[67.5rem]:gap-3 max-[67.5rem]:py-1.5 max-[67.5rem]:pr-2 max-[67.5rem]:pl-[18px]">
+        <Link href="/" className="group flex shrink-0 items-center pr-2" aria-label="Pawsons Home">
           <Image
             src="/logos/Logo_main.svg"
             width={130}
             height={30}
             alt="pawsons"
             priority
+            className="h-7 w-[125px] object-contain transition-opacity group-hover:opacity-80 max-[67.5rem]:h-[25px] max-[67.5rem]:w-28"
           />
         </Link>
-        <nav className="desktop-nav" ref={navRef} aria-label="Main Navigation">
+        <nav
+          className="relative ml-auto flex items-center gap-1.5 max-[67.5rem]:gap-0.5"
+          ref={navRef}
+          aria-label="Main Navigation"
+        >
+          {/* Yellow pill that GSAP slides under the active link. */}
           <span
             ref={indicatorRef}
-            className="nav-active-pill"
+            className="pointer-events-none absolute top-0 left-0 z-0 rounded-full bg-sun opacity-0 shadow-[0_2px_8px_-1px_rgb(184_134_11/0.28)] will-change-[transform,width,height]"
             aria-hidden="true"
           />
-          {NAV_LINKS.map(({ href, label, icon }) => (
-            <Link
-              key={href}
-              href={href}
-              aria-current={pathname.startsWith(href) ? "page" : undefined}
-              onClick={handleNavClick}
-            >
-              <span
-                className="material-symbols-rounded nav-link-icon"
-                aria-hidden="true"
+          {NAV_LINKS.map(({ href, label, icon: Icon }) => {
+            const active = pathname.startsWith(href);
+            return (
+              <Link
+                key={href}
+                href={href}
+                aria-current={active ? "page" : undefined}
+                onClick={handleNavClick}
+                className={cn(
+                  "group relative z-1 inline-flex items-center gap-1.5 rounded-full px-3.5 py-2 text-[14px] font-medium transition-colors duration-150 max-[67.5rem]:gap-1 max-[67.5rem]:px-[9px] max-[67.5rem]:py-1.5 max-[67.5rem]:text-[13px]",
+                  active
+                    ? "font-semibold text-sun-ink hover:text-[#3d2703]"
+                    : "text-ink-muted hover:bg-ink/4 hover:text-ink active:scale-[0.97] active:bg-ink/8",
+                )}
               >
-                {icon}
-              </span>
-              <span>{label}</span>
-            </Link>
-          ))}
+                <Icon
+                  data-nav-icon
+                  aria-hidden="true"
+                  className="size-[18px] transition-transform duration-150 group-hover:scale-112 max-[67.5rem]:size-4"
+                />
+                <span>{label}</span>
+              </Link>
+            );
+          })}
         </nav>
-        <div className="desktop-auth">
-          <AuthButton />
-        </div>
+        <AuthButton />
       </header>
     </div>
   );

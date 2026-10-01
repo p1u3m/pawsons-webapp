@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { getProfile, saveQuizResult } from "@/lib/supabase/profile";
 import type { Character } from "@/lib/data";
+import { IconDisc, pillButton } from "./pill-button";
 
 export default function SaveResultCard({
   character,
@@ -56,27 +57,25 @@ export default function SaveResultCard({
   if (checking) return null;
 
   return (
-    <div className="save-result-box">
+    <div className="mx-auto mt-5 mb-7 max-w-[440px] rounded-[20px] border border-dashed border-line-strong bg-paper-soft px-5 py-4 text-center">
       {isCurrentCompanion ? (
-        <div className="save-result-saved">
-          <p>
+        <div className="flex flex-col items-center gap-2">
+          <p className="mb-1.5 text-[14.5px] font-medium text-[#2f5d3e]">
             🌿 <strong>{character.name}</strong> กำลังรอคุณอยู่ในห้องส่วนตัวแล้ว
           </p>
-          <Link href="/room" className="button pawson-gradient">
+          <Link href="/room" className={pillButton({ variant: "gradient" })}>
             <span>ไปยังห้องของคุณ</span>
-            <span className="icon-disc" aria-hidden="true">
-              →
-            </span>
+            <IconDisc>→</IconDisc>
           </Link>
         </div>
       ) : isLoggedIn ? (
-        <div className="save-result-action">
-          <p>
+        <div>
+          <p className="mb-3 text-[14.5px] text-ink">
             พาน้อง <strong>{character.name}</strong> ไปเป็นเพื่อนร่วมห้องพักใจของคุณไหม?
           </p>
           <button
             type="button"
-            className="button"
+            className={pillButton({ size: "sm" })}
             onClick={handleSave}
             disabled={loading}
           >
@@ -85,17 +84,13 @@ export default function SaveResultCard({
                 ? "กำลังบันทึก..."
                 : `🏡 เลือก ${character.name} เป็นเพื่อนในห้อง`}
             </span>
-            <span className="icon-disc" aria-hidden="true">
-              ✓
-            </span>
+            <IconDisc className="mr-0">✓</IconDisc>
           </button>
         </div>
       ) : (
-        <div className="save-result-guest">
-          <p>
-            เข้าสู่ระบบเพื่อเลือก <strong>{character.name}</strong> เป็นเพื่อนร่วมห้องของคุณ
-          </p>
-        </div>
+        <p className="text-[13.5px]">
+          เข้าสู่ระบบเพื่อเลือก <strong>{character.name}</strong> เป็นเพื่อนร่วมห้องของคุณ
+        </p>
       )}
     </div>
   );

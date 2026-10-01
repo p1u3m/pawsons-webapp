@@ -2,7 +2,7 @@
 
 A mobile-first character webapp: personality quiz, 16 characters in four houses, editorial contents, and a merch shop with Stripe checkout. Admins manage contents and the shop catalog.
 
-**Stack:** Next.js 16 (App Router) · React 19 · TypeScript · Tailwind CSS v4 (no Preflight) + plain CSS · shadcn/ui on Base UI · Phosphor icons · GSAP · Supabase (auth, database, storage) · Stripe Checkout · Playwright.
+**Stack:** Next.js 16 (App Router) · React 19 · TypeScript · Tailwind CSS v4 · shadcn/ui on Base UI · Phosphor icons · GSAP · Supabase (auth, database, storage) · Stripe Checkout · Playwright.
 
 ## Run locally
 
@@ -36,7 +36,7 @@ Open http://localhost:3000. The site still renders without Supabase configured; 
 ## Layout
 
 ```
-src/app/            routes; route-scoped CSS lives next to its route (shop.css, admin.css)
+src/app/            routes, styled with Tailwind utilities; globals.css holds the design tokens
 src/components/     feature components; ui/ holds shadcn primitives
 src/lib/data.ts     static characters, houses, quiz questions and scoring
 src/lib/supabase/   browser/server clients and content/profile queries

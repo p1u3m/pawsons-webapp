@@ -4,7 +4,9 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { gsap } from "gsap";
 import { questions, calculateType, characters } from "@/lib/data";
+import { cn } from "@/lib/utils";
 import { CharacterImage } from "./character-ui";
+import { Eyebrow, IconDisc, pillButton } from "./pill-button";
 
 type SceneStep = {
   kind: "scene";
@@ -218,20 +220,26 @@ export default function Quiz() {
   }
 
   if (!started) {
+    const playing = isPlaying && !isMuted;
     return (
-      <div className="quiz-welcome">
+      <div className="relative mx-auto max-w-[600px] rounded-[36px] border border-line bg-cream px-9 py-14 text-center shadow-card">
         {/* Invisible audio element initialized and persists across quiz */}
         <audio ref={audioRef} src="/audio/quiz-bgm.mp3" loop preload="auto" />
 
         {/* Pure circular icon button with no text (only on front page) */}
         <button
           type="button"
-          className={`quiz-music-circle ${isPlaying && !isMuted ? "playing" : ""}`}
+          className={cn(
+            "absolute top-[26px] right-[26px] z-10 flex size-11 items-center justify-center rounded-full border-[1.5px] shadow-soft transition-all duration-350 ease-spring hover:scale-108 max-xs:top-[18px] max-xs:right-[18px] max-xs:size-[38px]",
+            playing
+              ? "border-green/35 bg-clover text-[#2d6b46]"
+              : "border-line bg-white text-ink hover:border-green/40 hover:bg-[#faf8f2]",
+          )}
           onClick={toggleAudio}
-          aria-label={isPlaying && !isMuted ? "ปิดเพลงคลอ" : "เปิดเพลงคลอ"}
-          title={isPlaying && !isMuted ? "ปิดเพลงคลอ" : "เปิดเพลงคลอ"}
+          aria-label={playing ? "ปิดเพลงคลอ" : "เปิดเพลงคลอ"}
+          title={playing ? "ปิดเพลงคลอ" : "เปิดเพลงคลอ"}
         >
-          {isPlaying && !isMuted ? (
+          {playing ? (
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
               <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
@@ -246,29 +254,33 @@ export default function Quiz() {
           )}
         </button>
 
-        <div className="quiz-welcome-art">
-          <CharacterImage character={characters[5]} priority />
+        <div className="mx-auto mb-6 grid size-[180px] place-items-center rounded-full bg-[linear-gradient(145deg,#fbfdf9_0%,#eef6ec_55%,#deeed8_100%)] shadow-[inset_0_1px_3px_rgb(255_255_255/0.8)]">
+          <CharacterImage
+            character={characters[5]}
+            priority
+            className="size-[155px] animate-float object-contain"
+          />
         </div>
 
-        <span className="eyebrow">A LITTLE SELF-DISCOVERY</span>
-        <h1 style={{ marginTop: "14px" }}>
+        <Eyebrow>A LITTLE SELF-DISCOVERY</Eyebrow>
+        <h1 className="mt-3.5 mb-4 text-[clamp(34px,4.2vw,44px)]">
           เพื่อนตัวไหน
           <br />
           คล้ายคุณอยู่บ้างนะ?
         </h1>
-        <p>
+        <p className="text-[16.5px] leading-[1.8]">
           12 คำถามสบาย ๆ พร้อมเรื่องราวระหว่างทาง
           <br />
           เลือกสิ่งที่เป็นคุณ แล้วมาพบเพื่อนตัวน้อยกัน
         </p>
-        <button className="button" onClick={startQuiz}>
+        <button className={cn(pillButton(), "mt-7")} onClick={startQuiz}>
           <span>เริ่มทำแบบทดสอบ</span>
-          <span className="icon-disc" aria-hidden="true">↗</span>
+          <IconDisc>↗</IconDisc>
         </button>
-        <span className="quiz-footnote">
+        <span className="mt-4 block text-[12.5px] text-ink-muted">
           ใช้เวลาประมาณ 3 นาที · ไม่เก็บคำตอบของคุณ
         </span>
-        <p className="prototype-note">
+        <p className="mt-12 text-center text-[16.5px] leading-[1.8] text-ink-faint">
           แบบทดสอบเพื่อความสนุกและการผ่อนคลายใจ ไม่ใช่การประเมินทางจิตวิทยา
         </p>
       </div>
@@ -280,14 +292,26 @@ export default function Quiz() {
   const isSpecialVibe = currentStep.kind === "special-vibe";
   const questionIndex = isQuestion ? currentStep.questionIndex : -1;
   const q = isQuestion ? questions[questionIndex] : null;
+  // How many of the 12 progress segments are filled.
+  const progress = isQuestion
+    ? questionIndex + 1
+    : isSpecialVibe
+      ? 12
+      : (SCENE_PROGRESS[currentStep.id] ?? 12);
+  const nextButton = cn(pillButton(), "mt-7 ml-auto flex");
+  const questionHeading =
+    "mt-4 mb-6 text-[clamp(24px,3.2vw,32px)] leading-[1.45] tracking-[-0.5px] outline-none";
 
   return (
-    <div className="quiz-panel">
+    <div className="mx-auto mt-2.5 mb-10 max-w-[680px] rounded-[36px] border border-line bg-cream px-9 py-10 shadow-card max-md:rounded-[28px] max-md:px-5 max-md:py-7">
       {/* Persistent audio element continues playing seamlessly */}
       <audio ref={audioRef} src="/audio/quiz-bgm.mp3" loop preload="auto" />
 
-      <div className="quiz-topline">
-        <button className="text-button" onClick={handleBack}>
+      <div className="flex items-center justify-between text-[13.5px] font-medium text-ink-muted">
+        <button
+          className="rounded-full bg-ink/4 px-3.5 py-1.5 text-[13.5px] font-medium text-ink transition-all duration-350 ease-spring hover:bg-ink/8"
+          onClick={handleBack}
+        >
           ← ย้อนกลับ
         </button>
         <span aria-live="polite">
@@ -301,7 +325,7 @@ export default function Quiz() {
 
       {/* 12-stage progress bar across the questions */}
       <div
-        className="quiz-progress"
+        className="mt-[18px] mb-8 flex gap-2"
         role="progressbar"
         aria-label="ความคืบหน้าคำถาม"
         aria-valuemin={0}
@@ -311,25 +335,10 @@ export default function Quiz() {
         {questions.map((_, i) => (
           <span
             key={i}
-            className={
-              isQuestion
-                ? i <= questionIndex
-                  ? "done"
-                  : ""
-                : isSpecialVibe
-                ? "done"
-                : currentStep.id === "scene-intro"
-                ? ""
-                : currentStep.id === "scene-stream"
-                ? i <= 3
-                  ? "done"
-                  : ""
-                : currentStep.id === "scene-twilight"
-                ? i <= 7
-                  ? "done"
-                  : ""
-                : "done"
-            }
+            className={cn(
+              "h-1 flex-1 rounded-[4px] transition-colors duration-300",
+              i < progress ? "bg-green" : "bg-ink/7",
+            )}
           />
         ))}
       </div>
@@ -337,33 +346,34 @@ export default function Quiz() {
       <div ref={panel}>
         {/* INTERSTITIAL SCENE SLIDE */}
         {currentStep.kind === "scene" && (
-          <div className="quiz-scene-card">
-            <span className="eyebrow">{currentStep.badge ?? "PAWSONS SANCTUARY"}</span>
-            <h2 className="quiz-scene-text" ref={heading} tabIndex={-1}>
+          <div className="mx-auto flex flex-col items-center px-2 pt-4 pb-3 text-center">
+            <Eyebrow>{currentStep.badge ?? "PAWSONS SANCTUARY"}</Eyebrow>
+            <h2
+              className="mt-3 mb-2.5 text-[clamp(20px,3vw,25px)] leading-[1.6] font-semibold whitespace-pre-line text-ink outline-none"
+              ref={heading}
+              tabIndex={-1}
+            >
               {currentStep.text}
             </h2>
             {currentStep.subtext && (
-              <p className="quiz-scene-subtext">{currentStep.subtext}</p>
+              <p className="mb-5 text-[14.5px] leading-[1.6]">{currentStep.subtext}</p>
             )}
 
-            <div className="quiz-scene-image-wrap">
+            {/* Soft green glow behind the friend */}
+            <div className="relative mx-auto mt-3 mb-7 grid size-[180px] place-items-center before:absolute before:-inset-3 before:rounded-full before:bg-[radial-gradient(circle,rgb(238_246_236/0.85)_0%,rgb(247_245_238/0)_70%)] before:content-['']">
               <Image
                 src={currentStep.image}
                 alt={currentStep.imageAlt}
                 width={170}
                 height={170}
-                className="quiz-scene-image"
+                className="relative size-[155px] animate-[float_5.5s_ease-in-out_infinite] object-contain"
                 priority
               />
             </div>
 
-            <button
-              type="button"
-              className="button quiz-scene-btn"
-              onClick={handleNext}
-            >
+            <button type="button" className={cn(pillButton(), "mt-2")} onClick={handleNext}>
               <span>{currentStep.buttonText}</span>
-              <span className="icon-disc" aria-hidden="true">↗</span>
+              <IconDisc>↗</IconDisc>
             </button>
           </div>
         )}
@@ -371,22 +381,28 @@ export default function Quiz() {
         {/* SPECIAL VIBE MULTI-CHOICE QUESTION (2-COLUMN GRID LIKE QUIZ SAMPLE) */}
         {isSpecialVibe && (
           <div>
-            <span className="eyebrow">{currentStep.badge ?? "YOUR INNER SANCTUARY"}</span>
-            <h1 ref={heading} tabIndex={-1} style={{ textAlign: "center", marginBottom: "8px" }}>
+            <Eyebrow>{currentStep.badge ?? "YOUR INNER SANCTUARY"}</Eyebrow>
+            <h1 ref={heading} tabIndex={-1} className={cn(questionHeading, "mb-2 text-center")}>
               {currentStep.text}
             </h1>
             {currentStep.subtext && (
-              <p style={{ textAlign: "center", color: "var(--muted)", margin: "0 0 24px", fontSize: "15px" }}>
-                {currentStep.subtext}
-              </p>
+              <p className="mb-6 text-center text-[15px]">{currentStep.subtext}</p>
             )}
 
-            <div className="quiz-options-grid" aria-label="เลือกสิ่งที่ขาดไม่ได้ในที่พักใจ">
+            <div
+              className="mt-7 mb-5 grid grid-cols-2 gap-3 max-xs:gap-2.5"
+              aria-label="เลือกสิ่งที่ขาดไม่ได้ในที่พักใจ"
+            >
               {currentStep.options.map((option) => (
                 <button
                   key={option}
                   type="button"
-                  className={`quiz-grid-option ${selectedVibe === option ? "selected" : ""}`}
+                  className={cn(
+                    "flex items-center justify-center rounded-full border-[1.5px] px-5 py-4 text-center text-[16px] text-ink transition-all duration-350 ease-spring select-none hover:-translate-y-0.5 max-xs:px-2.5 max-xs:py-3.5 max-xs:text-[15px]",
+                    selectedVibe === option
+                      ? cn(SELECTED, "font-semibold text-[#1f4b30] shadow-[0_4px_16px_-3px_rgb(61_127_88/0.2)]")
+                      : "border-line bg-paper font-medium hover:border-green/40 hover:bg-[#faf8f2]",
+                  )}
                   onClick={() => setSelectedVibe(option)}
                 >
                   <span>{option}</span>
@@ -394,16 +410,12 @@ export default function Quiz() {
               ))}
             </div>
 
-            <button
-              className="button quiz-next"
-              disabled={!selectedVibe}
-              onClick={handleNext}
-            >
+            <button className={nextButton} disabled={!selectedVibe} onClick={handleNext}>
               <span>ข้อต่อไป</span>
-              <span className="icon-disc" aria-hidden="true">↗</span>
+              <IconDisc>↗</IconDisc>
             </button>
 
-            <p className="quiz-reassurance">
+            <p className="mt-6 text-center text-[12.5px]">
               เลือกคำที่ตรงกับความรู้สึกในใจคุณที่สุด
             </p>
           </div>
@@ -412,20 +424,26 @@ export default function Quiz() {
         {/* STANDARD QUESTION SLIDE */}
         {isQuestion && q && (
           <div>
-            <span className="eyebrow">TAKE YOUR TIME</span>
-            <h1 ref={heading} tabIndex={-1}>
+            <Eyebrow>TAKE YOUR TIME</Eyebrow>
+            <h1 ref={heading} tabIndex={-1} className={questionHeading}>
               {q.text}
             </h1>
 
-            <fieldset className="quiz-options">
+            <fieldset className="grid gap-3">
               <legend className="sr-only">เลือกคำตอบที่ตรงกับคุณ</legend>
               {q.options.map((option, i) => (
                 <label
                   key={option}
-                  className={`quiz-option ${answers[questionIndex] === i ? "selected" : ""}`}
+                  className={cn(
+                    "flex cursor-pointer items-center gap-4 rounded-[20px] border-[1.5px] px-6 py-[18px] text-[16px] transition-all duration-350 ease-spring hover:translate-x-[3px]",
+                    answers[questionIndex] === i
+                      ? cn(SELECTED, "shadow-[0_4px_16px_-3px_rgb(61_127_88/0.15)]")
+                      : "border-line bg-paper hover:border-green/30 hover:bg-[#faf8f2]",
+                  )}
                 >
                   <input
                     type="radio"
+                    className="size-5 shrink-0 accent-green"
                     name={`question-${questionIndex}`}
                     checked={answers[questionIndex] === i}
                     onChange={() =>
@@ -442,15 +460,15 @@ export default function Quiz() {
             </fieldset>
 
             <button
-              className="button quiz-next"
+              className={nextButton}
               disabled={answers[questionIndex] === undefined}
               onClick={handleNext}
             >
               <span>ข้อต่อไป</span>
-              <span className="icon-disc" aria-hidden="true">↗</span>
+              <IconDisc>↗</IconDisc>
             </button>
 
-            <p className="quiz-reassurance">
+            <p className="mt-6 text-center text-[12.5px]">
               ไม่ต้องคิดมาก เลือกแบบที่รู้สึกเป็นคุณก็พอ
             </p>
           </div>
@@ -459,3 +477,13 @@ export default function Quiz() {
     </div>
   );
 }
+
+// Progress shown on each story scene (questions answered before it).
+const SCENE_PROGRESS: Record<string, number> = {
+  "scene-intro": 0,
+  "scene-stream": 4,
+  "scene-twilight": 8,
+};
+
+const SELECTED =
+  "border-green bg-[linear-gradient(145deg,#fbfdf9_0%,#eef6ec_60%,#e0efe0_100%)]";

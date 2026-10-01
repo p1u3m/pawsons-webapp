@@ -1,6 +1,8 @@
 import { notFound } from "next/navigation";
 import { BackLink } from "@/components/character-ui";
 import { ShopPaymentStatus } from "@/components/shop/payment-status";
+import { shopPage } from "@/components/shop/shop-ui";
+import { cn } from "@/lib/utils";
 import { getStripeClient } from "@/lib/stripe/server";
 import { syncShopOrder, type ShopOrderState } from "@/lib/shop/confirm-order";
 
@@ -25,8 +27,8 @@ export default async function OrderResult({
     }
   }
   return (
-    <div className="wrap store store-result-page">
-      <BackLink href="/shop">กลับไปหน้า Shop</BackLink>
+    <div className={cn("wrap", shopPage)}>
+      <BackLink className="text-ink" href="/shop">กลับไปหน้า Shop</BackLink>
       <ShopPaymentStatus
         sessionId={sessionId ?? ""}
         orderId={orderId}

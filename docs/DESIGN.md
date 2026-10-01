@@ -1,6 +1,6 @@
 # Design System Inspired by Lovable
 
-> **Historical reference — mood and principles only.** The live source of truth is the token block at the top of `src/app/globals.css` (`--paper`, `--ink`, `--*-bg` house colors, radii). Where this file disagrees, the code wins. Outdated here: fonts are LINE Seed EN/TH + Varela Round/Itim (not Camera Plain), and components use shadcn on Base UI (not Radix).
+> **Historical reference — mood and principles only.** The live source of truth is the `@theme` token block in `src/app/globals.css` (`--color-paper`, `--color-ink`, house tints, shadows). Where this file disagrees, the code wins. Outdated here: fonts are LINE Seed EN/TH + Fredoka/Itim (not Camera Plain), and components use shadcn on Base UI (not Radix).
 
 ## 1. Visual Theme & Atmosphere
 

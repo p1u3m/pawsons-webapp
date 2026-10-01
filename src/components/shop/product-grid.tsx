@@ -3,6 +3,7 @@
 import { useEffect, useRef, type ReactNode } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { productGrid } from "@/components/shop/shop-ui";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -16,7 +17,7 @@ export function ProductGrid({ children }: { children: ReactNode }) {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     const ctx = gsap.context(() => {
-      gsap.utils.toArray<HTMLElement>(".store-card", el).forEach((card, i) => {
+      gsap.utils.toArray<HTMLElement>("[data-product]", el).forEach((card, i) => {
         gsap.fromTo(
           card,
           { opacity: 0, y: 24 },
@@ -36,7 +37,7 @@ export function ProductGrid({ children }: { children: ReactNode }) {
   }, []);
 
   return (
-    <div className="store-grid" ref={gridRef}>
+    <div className={productGrid} ref={gridRef}>
       {children}
     </div>
   );

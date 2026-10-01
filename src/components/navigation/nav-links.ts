@@ -1,14 +1,23 @@
+import {
+  BookOpenTextIcon,
+  EnvelopeSimpleIcon,
+  HouseLineIcon,
+  PawPrintIcon,
+  StorefrontIcon,
+  type Icon,
+} from "@phosphor-icons/react";
+
 export interface NavItem {
   href: string;
   label: string;
-  icon: string;
+  icon: Icon;
   badgeKey?: "letters";
 }
 
 export const NAV_LINKS: NavItem[] = [
-  { href: "/characters", label: "Characters", icon: "pets" },
-  { href: "/houses", label: "Houses", icon: "cottage" },
-  { href: "/contents", label: "Contents", icon: "auto_stories" },
-  { href: "/shop", label: "Shop", icon: "storefront" },
-  { href: "/letters", label: "Letters", icon: "mail", badgeKey: "letters" },
+  { href: "/characters", label: "Characters", icon: PawPrintIcon },
+  { href: "/houses", label: "Houses", icon: HouseLineIcon },
+  { href: "/contents", label: "Contents", icon: BookOpenTextIcon },
+  { href: "/shop", label: "Shop", icon: StorefrontIcon },
+  { href: "/letters", label: "Letters", icon: EnvelopeSimpleIcon, badgeKey: "letters" },
 ];

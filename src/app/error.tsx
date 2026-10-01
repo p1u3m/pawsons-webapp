@@ -1,13 +1,15 @@
 "use client";
-import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/character-ui";
+import { pillButton } from "@/components/pill-button";
+
 export default function ErrorPage({ reset }: { reset: () => void }) {
   return (
-    <section className="wrap empty-state">
+    <EmptyState>
       <h1>ขอพักสักครู่นะ</h1>
-      <p>หน้านี้โหลดไม่สำเร็จ ลองอีกครั้งได้เลย</p>
-      <Button variant="unstyled" size="auto" className="button" onClick={reset}>
+      <p className="mb-6">หน้านี้โหลดไม่สำเร็จ ลองอีกครั้งได้เลย</p>
+      <button type="button" className={pillButton()} onClick={reset}>
         ลองอีกครั้ง
-      </Button>
-    </section>
+      </button>
+    </EmptyState>
   );
 }

@@ -1,9 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Fredoka } from "next/font/google";
-import Link from "next/link";
-import Image from "next/image";
 import Navigation from "@/components/navigation";
 import Reveal from "@/components/reveal";
+import SiteFooter from "@/components/site-footer";
 import "./globals.css";
 
 const fredoka = Fredoka({
@@ -52,41 +51,19 @@ export default function RootLayout({
           href="https://fonts.googleapis.com/css2?family=Itim&display=swap"
           rel="stylesheet"
         />
-        <link
-          rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
-        />
       </head>
       <body>
-        <div className="noise-overlay" aria-hidden="true" />
-        <a className="skip-link" href="#main">
+        <a
+          className="fixed top-3 left-3 z-100 -translate-y-[160%] rounded-full bg-ink px-[18px] py-2.5 text-[13px] text-white transition-transform focus:translate-y-0"
+          href="#main"
+        >
           ข้ามไปเนื้อหา
         </a>
         <Navigation />
         <Reveal>
           <main id="main">{children}</main>
         </Reveal>
-        <footer className="site-footer">
-          <Link href="/" className="footer-brand" aria-label="Pawsons หน้าแรก">
-            <Image
-              src="/logos/Logo_main.svg"
-              alt="pawsons"
-              width={125}
-              height={28}
-            />
-          </Link>
-          <div className="footer-info">
-            <p>A little place to be you.</p>
-            <span>ค่อย ๆ รู้จักกัน ในจังหวะของคุณ</span>
-          </div>
-          <div className="footer-actions">
-            <Link href="/letters" className="button secondary footer-pill">
-              <span>Personal letters</span>
-              <span className="icon-disc" aria-hidden="true">↗</span>
-            </Link>
-            <small>© {new Date().getFullYear()} Pawsons · Made with a little warmth</small>
-          </div>
-        </footer>
+        <SiteFooter />
       </body>
     </html>
   );

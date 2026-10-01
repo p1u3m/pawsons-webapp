@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import { Suspense } from "react";
 import { ArrowLeftIcon, ArrowRightIcon } from "@phosphor-icons/react/dist/ssr";
@@ -8,7 +7,22 @@ import { featuredPosts, toPost } from "@/lib/posts";
 import ContentsGrid from "@/components/contents-grid";
 import { FilterSheet } from "@/components/filter-sheet";
 import { SearchField } from "@/components/search-field";
-import { MagazineBands, MagazineSpread } from "@/components/stories-magazine";
+import { HeroFriends } from "@/components/character-ui";
+import {
+  Dot,
+  pageHero,
+  pageHeroText,
+  pageHeroTitle,
+  roundButton,
+  signButton,
+} from "@/components/paper-ui";
+import {
+  MagazineBands,
+  MagazineSpread,
+  StoriesLink,
+  storiesWave,
+} from "@/components/stories-magazine";
+import { cn } from "@/lib/utils";
 
 export const metadata = { title: "Little Stories · Pawsons" };
 export const dynamic = "force-dynamic";
@@ -83,43 +97,22 @@ export default async function Page({
     return `/contents?${params}`;
   };
   const artFriends = selected ? [selected] : heroFriends;
-  const houseLinks = houses.map((item) => {
-    const active = currentHouse?.id === item.id;
-    return (
-      <Link
-        key={item.id}
-        className="stories-tab stories-tab--house"
-        href={filterHref({ house: active ? null : item.id })}
-        aria-current={active ? "page" : undefined}
-        style={
-          {
-            "--house": item.badgeColor,
-            "--house-bg": item.color,
-          } as React.CSSProperties
-        }
-      >
-        <span className="stories-dot" aria-hidden="true" />
-        {item.name}
-      </Link>
-    );
-  });
   const activeFilters =
     Number(Boolean(currentCategory)) + Number(Boolean(currentHouse));
   // Rendered inline on desktop and inside the filter sheet on mobile.
-  const filters = (
+  const filters = (inSheet: boolean) => (
     <>
-      <nav className="stories-tabs" aria-label="เลือกดูเรื่องราว">
+      <nav
+        className={cn("flex flex-wrap gap-x-1.5 gap-y-2 pb-0.5", !inSheet && "min-w-0 flex-1")}
+        aria-label="เลือกดูเรื่องราว"
+      >
         {!selected && (
-          <Link
-            className="stories-tab"
-            href="/contents"
-            aria-current={magazine ? "page" : undefined}
-          >
+          <Link className={tab(magazine)} href="/contents" aria-current={magazine ? "page" : undefined}>
             เรื่องแนะนำ
           </Link>
         )}
         <Link
-          className="stories-tab"
+          className={tab(!magazine && !currentCategory)}
           href={filterHref({ category: null })}
           aria-current={!magazine && !currentCategory ? "page" : undefined}
         >
@@ -128,41 +121,72 @@ export default async function Page({
         {categories.map(({ slug, label }) => (
           <Link
             key={slug}
-            className="stories-tab"
+            className={tab(currentCategory === slug)}
             href={filterHref({
               category: currentCategory === slug ? null : slug,
             })}
             aria-current={currentCategory === slug ? "page" : undefined}
           >
             {label}
-            <small>
+            <small className="grid h-[22px] min-w-[22px] place-items-center rounded-full bg-cream px-1.5 text-[12px] tabular-nums">
               {posts.filter((post) => post.category.slug === slug).length}
             </small>
           </Link>
         ))}
       </nav>
       {!selected && (
-        <nav className="stories-houses" aria-label="บ้าน">
-          {houseLinks}
+        <nav
+          className={cn(
+            "flex flex-wrap gap-2",
+            !inSheet && "shrink-0 flex-nowrap gap-1.5 border-l-[1.5px] border-[#ebe4d3] pl-3.5",
+          )}
+          aria-label="บ้าน"
+        >
+          {houses.map((item) => {
+            const active = currentHouse?.id === item.id;
+            return (
+              <Link
+                key={item.id}
+                className={cn(
+                  tab(false),
+                  "gap-[7px] bg-cream px-3.5 text-[13px] shadow-[inset_0_0_0_1.5px_#ebe4d3]",
+                  active &&
+                    "bg-(--house-bg) text-ink shadow-[inset_0_0_0_1.5px_color-mix(in_srgb,var(--house)_55%,transparent)]",
+                  inSheet && "h-10 text-[14px]",
+                )}
+                href={filterHref({ house: active ? null : item.id })}
+                aria-current={active ? "page" : undefined}
+                style={
+                  {
+                    "--house": item.badgeColor,
+                    "--house-bg": item.color,
+                  } as React.CSSProperties
+                }
+              >
+                <Dot className="bg-(--house)" />
+                {item.name}
+              </Link>
+            );
+          })}
         </nav>
       )}
     </>
   );
 
   return (
-    <div className="stories stories--landing">
-      <section className="wrap stories-hero">
-        <div className="stories-hero-copy">
+    <div className="focus-ink min-h-[70vh] overflow-x-clip pt-10 max-md:pt-14">
+      <section className={pageHero}>
+        <div>
           {selected && (
             <Link
               href="/contents"
-              className="stories-round-button"
+              className={cn(roundButton, "mb-6")}
               aria-label="ดูเรื่องราวของทุกคน"
             >
               <ArrowLeftIcon size={20} weight="bold" aria-hidden="true" />
             </Link>
           )}
-          <h1>
+          <h1 className={pageHeroTitle}>
             {selected ? (
               <>
                 วันเล็ก ๆ
@@ -177,58 +201,52 @@ export default async function Page({
               </>
             )}
           </h1>
-          <p>
+          <p className={pageHeroText}>
             {selected
               ? `${selected.type} · ${selected.tagline}`
               : "บางเรื่องทำให้ยิ้ม บางเรื่องทำให้รู้ว่าเราไม่ได้รู้สึกแบบนี้คนเดียว"}
           </p>
         </div>
-        <div
-          className={`stories-hero-art${selected ? " is-single" : ""}`}
-          aria-hidden="true"
-        >
-          {artFriends.map((friend) => (
-            <Image
-              key={friend.type}
-              src={friend.image}
-              alt=""
-              width={480}
-              height={480}
-              sizes="(max-width: 860px) 45vw, 240px"
-              priority
-            />
-          ))}
-        </div>
+        <HeroFriends friends={artFriends} />
       </section>
 
-      <section className="stories-band stories-band--plain" aria-label="เรื่องราว">
+      {/* The first band (toolbar + spread) sits on the plain paper; when the
+          shelf bands follow, it leaves room for the first one's wave. */}
+      <section
+        className={cn(
+          "relative mt-6 pt-6",
+          storiesWave,
+          magazine ? "pb-[calc(var(--wave)+56px)]" : "pb-[120px]",
+        )}
+        aria-label="เรื่องราว"
+      >
         <div className="wrap">
-          <div className="stories-toolbar">
+          {/* Mobile: search + filter button (filters in the sheet). From 768px:
+              one cream bar, search on top and the filters below a dashed line. */}
+          <div className="mb-7 flex flex-wrap items-center gap-2.5 md:mb-9 md:gap-3 md:rounded-[28px] md:bg-cream md:px-3 md:pt-3 md:pb-3.5 md:shadow-ledge">
             <Suspense>
               <SearchField
-                className="stories-search"
+                className="h-[52px] min-w-0 flex-1 bg-cream shadow-ledge-sm md:h-[46px] md:bg-[#f4efe1] md:shadow-none"
                 placeholder="ค้นหาเรื่องหรือตัวละคร"
                 label="ค้นหาเรื่องราว"
               />
             </Suspense>
-            <FilterSheet activeCount={activeFilters}>{filters}</FilterSheet>
-            <div className="stories-toolbar-filters">{filters}</div>
+            <FilterSheet activeCount={activeFilters}>{filters(true)}</FilterSheet>
+            <div className="hidden md:flex md:basis-full md:items-start md:gap-3.5 md:border-t-[1.5px] md:border-dashed md:border-[#ebe4d3] md:px-1 md:pt-3.5">
+              {filters(false)}
+            </div>
           </div>
 
           {selected && (
-            <div className="stories-filter-banner">
-              <p>
-                <span
-                  className="stories-dot"
-                  style={{ background: selected.house.badgeColor }}
-                  aria-hidden="true"
-                />
+            <div className="-mt-4 mb-7 flex flex-wrap items-center justify-between gap-3 rounded-[22px] bg-cream py-3 pr-3 pl-5 text-[14px] shadow-ledge-sm">
+              <p className="flex items-center gap-2">
+                <Dot color={selected.house.badgeColor} />
                 โพสต์ของ <strong>{selected.name}</strong> · {selected.type}
               </p>
-              <Link className="stories-text-link" href="/contents">
+              <StoriesLink href="/contents">
                 ดูของทุกคน
                 <ArrowRightIcon size={14} weight="bold" aria-hidden="true" />
-              </Link>
+              </StoriesLink>
             </div>
           )}
 
@@ -238,18 +256,18 @@ export default async function Page({
             // Client component for the GSAP scroll reveal.
             <ContentsGrid posts={visible} />
           ) : (
-            <div className="stories-empty">
-              <p>
+            <div className="flex flex-col items-center gap-2 rounded-[30px] bg-cream px-6 py-14 text-center shadow-ledge">
+              <p className="text-[18px] font-semibold">
                 {query
                   ? `ไม่พบเรื่องที่ตรงกับ “${q!.trim()}”`
                   : "ยังไม่มีโพสต์ในหมวดนี้"}
               </p>
-              <span>
+              <span className="mb-4 text-[14px] text-ink-muted">
                 {query
                   ? "ลองค้นหาด้วยคำอื่น หรือกลับไปดูเรื่องแนะนำ"
                   : "รอติดตามเร็ว ๆ นี้ หรือกลับไปดูเรื่องแนะนำ"}
               </span>
-              <Link className="stories-cta" href="/contents">
+              <Link className={signButton} href="/contents">
                 ดูเรื่องแนะนำ
               </Link>
             </div>
@@ -265,5 +283,15 @@ export default async function Page({
         />
       )}
     </div>
+  );
+}
+
+/** Filter tab; the active one is a yellow sign chip. */
+function tab(active: boolean) {
+  return cn(
+    "inline-flex h-9 shrink-0 items-center gap-2 rounded-full px-4 text-[14px] font-semibold whitespace-nowrap transition-all duration-350 ease-spring",
+    active
+      ? "bg-sun text-gold-ink shadow-[0_2px_0_var(--color-gold)]"
+      : "bg-[#f4efe1] text-ink",
   );
 }

@@ -19,7 +19,7 @@ export default async function Page() {
     : null;
 
   return (
-    <div className="wrap room-page">
+    <div className="wrap max-w-[600px] pt-6 pb-[60px]">
       <RoomScene profile={profile} character={character ?? null} />
     </div>
   );

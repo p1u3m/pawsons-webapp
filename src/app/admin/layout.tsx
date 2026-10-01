@@ -7,7 +7,6 @@ import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { countToShip } from "@/lib/shop/admin-stats";
 import { createClient } from "@/lib/supabase/server";
-import "./admin.css";
 
 export default async function AdminLayout({
   children,

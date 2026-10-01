@@ -3,6 +3,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import type { Character } from "@/lib/data";
+import { cn } from "@/lib/utils";
 
 const SLOTS = 4;
 const HOLD = 2.8;
@@ -32,7 +33,7 @@ export function HeroChibis({ characters }: { characters: Character[] }) {
   useLayoutEffect(() => {
     const root = rootRef.current;
     if (!root) return;
-    const chars = root.querySelectorAll<HTMLElement>(".hero-chibi-img");
+    const chars = root.querySelectorAll<HTMLElement>("[data-chibi]");
     const media = gsap.matchMedia();
     let tl: gsap.core.Timeline | undefined;
 
@@ -91,16 +92,25 @@ export function HeroChibis({ characters }: { characters: Character[] }) {
   const shown = Array.from({ length: SLOTS }, (_, s) => pick(round, s));
 
   return (
+    // A soft paper glow behind the group and a ground shadow under it.
     <div
       ref={rootRef}
-      className="hero-chibis"
+      className="relative mb-[30px] flex w-[min(560px,100%)] items-end justify-center pt-6 before:pointer-events-none before:absolute before:bottom-[16%] before:left-1/2 before:z-0 before:aspect-square before:w-[44%] before:-translate-x-1/2 before:rounded-full before:bg-[radial-gradient(circle_at_50%_45%,#fdfcf8_0_58%,rgb(253_252_248/0)_71%)] before:content-[''] after:pointer-events-none after:absolute after:bottom-[11%] after:left-1/2 after:z-0 after:h-[12%] after:w-[78%] after:-translate-x-1/2 after:rounded-full after:bg-[radial-gradient(closest-side,rgb(24_24_24/0.1),rgb(24_24_24/0))] after:content-[''] max-md:mb-[18px] max-xs:mb-4 md:w-[min(728px,100%)]"
       role="img"
       aria-label={`Pawsons: ${shown.map((c) => c.name).join(", ")}`}
     >
       {shown.map((c, s) => (
-        <div className="hero-chibi" data-slot={s} key={s}>
+        // The middle two stand in front and a little larger.
+        <div
+          key={s}
+          className={cn(
+            "relative -mx-[8%] flex-none",
+            s === 1 ? "z-3 w-[41%]" : s === 2 ? "z-2 w-[41%]" : "z-1 w-[33%]",
+          )}
+        >
           <img
-            className="hero-chibi-img"
+            data-chibi
+            className="block h-auto w-full origin-bottom will-change-[transform,opacity]"
             src={chibiSrc(c)}
             alt=""
             width={500}

@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { PostCard } from "@/components/post-card";
+import { PostCard, postGrid } from "@/components/post-card";
 import type { Post } from "@/lib/posts";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -20,7 +20,7 @@ export default function ContentsGrid({ posts }: { posts: Post[] }) {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     const ctx = gsap.context(() => {
-      const cards = gsap.utils.toArray<HTMLElement>(".post-card", el);
+      const cards = gsap.utils.toArray<HTMLElement>("[data-post]", el);
       cards.forEach((card, i) => {
         gsap.fromTo(
           card,
@@ -47,7 +47,7 @@ export default function ContentsGrid({ posts }: { posts: Post[] }) {
   }, [posts]);
 
   return (
-    <div className="stories-grid" ref={gridRef}>
+    <div className={postGrid} ref={gridRef}>
       {posts.map((post) => (
         <PostCard key={post.id} post={post} />
       ))}
