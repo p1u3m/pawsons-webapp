@@ -56,7 +56,8 @@ export const houses = [
     motto: "Let the day surprise you.",
   },
 ] as const;
-export function houseBackground(house: (typeof houses)[number]) {
+export type House = (typeof houses)[number];
+export function houseBackground(house: House) {
   return `linear-gradient(145deg, ${house.gradientStart} 0%, ${house.color} 55%, ${house.gradientEnd} 100%)`;
 }
 const entries = [

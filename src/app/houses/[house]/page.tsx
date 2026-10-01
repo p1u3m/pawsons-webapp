@@ -2,10 +2,16 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeftIcon } from "@phosphor-icons/react/dist/ssr";
-import { CharacterTile } from "@/components/character-ui";
+import {
+  CharacterTile,
+  ChipLink,
+  HouseBand,
+  characterGrid,
+  houseVars,
+} from "@/components/character-ui";
 import { characters, houses } from "@/lib/data";
-import titleStyles from "@/components/section-title.module.css";
-import { crestSrc, houseBandStyle } from "../house-style";
+import { cn } from "@/lib/utils";
+import { HouseCrest, HouseIntro, bandHalo, crestSrc } from "../house-ui";
 
 export function generateStaticParams() {
   return houses.map((h) => ({ house: h.id }));
@@ -21,6 +27,8 @@ export async function generateMetadata({
   return { title: h ? `${h.name} House` : "Four houses" };
 }
 
+const bandTitle = cn("mb-[18px] text-[24px] md:text-[30px]", bandHalo);
+
 export default async function Page({
   params,
 }: {
@@ -33,57 +41,58 @@ export default async function Page({
   const others = houses.filter((o) => o.id !== h.id);
 
   return (
-    <div className="houses houses--detail" style={houseBandStyle(h)}>
-      <section className="wrap houses-detail-hero">
-        <Link className="chars-link houses-back" href="/houses">
+    <div className="focus-ink min-h-[70vh] overflow-x-clip pt-8 md:pt-10" style={houseVars(h)}>
+      <section className="wrap grid gap-4">
+        <ChipLink className="justify-self-start" href="/houses">
           <ArrowLeftIcon size={14} weight="bold" aria-hidden="true" />
           บ้านทั้งสี่
-        </Link>
-        <div className="houses-row">
-          <div className="houses-crest doodle-bg doodle-bg--2" aria-hidden="true">
-            <Image src={crestSrc(h)} alt="" width={320} height={320} priority />
-          </div>
-          <div className="houses-copy">
-            <p className="houses-group">{h.groupTitle}</p>
-            <h1>
-              <span className={`${titleStyles.label} houses-name`}>
-                {h.name} House
-              </span>
-              <small>{h.thai}</small>
-            </h1>
-            <p className="houses-motto" lang="en">
-              “{h.motto}”
-            </p>
-            <p className="houses-desc">{h.description}</p>
-          </div>
+        </ChipLink>
+        <div className="grid justify-items-center gap-7 md:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] md:items-center md:gap-14">
+          <HouseCrest
+            house={h}
+            priority
+            className="w-[min(56vw,220px)] md:w-[min(100%,260px)] md:justify-self-end"
+          />
+          <HouseIntro house={h} title={`${h.name} House`} heading="h1" />
         </div>
       </section>
 
-      <section className="chars-band" aria-labelledby="house-members">
+      <HouseBand aria-labelledby="house-members">
         <div className="wrap">
-          <h2 id="house-members" className="houses-band-title">
+          <h2 id="house-members" className={bandTitle}>
             สมาชิกในบ้าน
           </h2>
-          <div className="chars-grid">
+          <div className={characterGrid}>
             {members.map((c) => (
               <CharacterTile key={c.type} character={c} />
             ))}
           </div>
 
-          <nav className="houses-others" aria-label="บ้านอื่น ๆ">
-            <h2 className="houses-band-title">แวะบ้านอื่นต่อ</h2>
-            <div className="houses-jump">
+          <nav className="mt-14" aria-label="บ้านอื่น ๆ">
+            <h2 className={bandTitle}>แวะบ้านอื่นต่อ</h2>
+            <div className="grid grid-cols-3 gap-3 md:gap-[18px]">
               {others.map((o) => (
-                <Link key={o.id} href={`/houses/${o.id}`} style={houseBandStyle(o)}>
-                  <Image src={crestSrc(o)} alt="" width={96} height={96} />
-                  <span className="houses-jump-name">{o.name}</span>
-                  <span className="houses-jump-thai">{o.thai}</span>
+                <Link
+                  key={o.id}
+                  href={`/houses/${o.id}`}
+                  style={houseVars(o)}
+                  className="group flex flex-col items-center gap-0.5 rounded-3xl bg-(--band) px-2.5 pt-4 pb-3.5 text-center shadow-ledge transition-transform duration-220 ease-spring hover:-translate-y-1 motion-reduce:transition-none"
+                >
+                  <Image
+                    src={crestSrc(o)}
+                    alt=""
+                    width={96}
+                    height={96}
+                    className="mb-2 h-16 w-auto transition-transform duration-350 ease-spring group-hover:-rotate-4 group-hover:scale-106 motion-reduce:transition-none"
+                  />
+                  <span className="text-[16px] font-bold text-(--house-ink)">{o.name}</span>
+                  <span className="text-[12px] text-ink-soft opacity-75">{o.thai}</span>
                 </Link>
               ))}
             </div>
           </nav>
         </div>
-      </section>
+      </HouseBand>
     </div>
   );
 }

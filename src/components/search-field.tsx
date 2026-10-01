@@ -3,11 +3,11 @@
 import { useEffect, useRef, useState, useTransition } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { MagnifyingGlassIcon } from "@phosphor-icons/react";
+import { cn } from "@/lib/utils";
 
 /**
  * Search field that updates `?q=` as the user types, keeping other filters.
  * It is a GET form, so it still works before hydration or without JavaScript.
- * Styles: `.search-pill` in globals.css.
  */
 export function SearchField({
   placeholder,
@@ -45,7 +45,10 @@ export function SearchField({
 
   return (
     <form
-      className={`search-pill${className ? ` ${className}` : ""}`}
+      className={cn(
+        "flex h-[46px] flex-[1_1_200px] items-center gap-2.5 rounded-full bg-[#f4efe1] px-4 text-ink-muted transition-shadow duration-200 focus-within:shadow-[0_0_0_2px_color-mix(in_srgb,var(--color-green)_35%,transparent)] [&_svg]:shrink-0 [&_svg]:transition-opacity data-pending:[&_svg]:opacity-50",
+        className,
+      )}
       role="search"
       action={pathname}
       data-pending={pending || undefined}
@@ -69,6 +72,7 @@ export function SearchField({
         placeholder={placeholder}
         aria-label={label}
         autoComplete="off"
+        className="h-full w-0 min-w-0 flex-1 border-0 bg-transparent text-[15px] text-ink caret-auto outline-none placeholder:text-ink-faint [&::-webkit-search-cancel-button]:cursor-pointer"
         enterKeyHint="search"
         onChange={(event) => {
           const next = event.target.value;

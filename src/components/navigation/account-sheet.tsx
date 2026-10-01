@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -11,8 +11,12 @@ import {
   SignOutIcon,
   SquaresFourIcon,
   XIcon,
+  type Icon,
 } from "@phosphor-icons/react";
+import { GoogleIcon } from "@/components/auth-button";
+import { pillButton } from "@/components/pill-button";
 import { useAuth } from "@/lib/use-auth";
+import { cn } from "@/lib/utils";
 
 interface AccountSheetProps {
   isOpen: boolean;
@@ -121,13 +125,21 @@ export default function AccountSheet({ isOpen, onClose }: AccountSheetProps) {
 
   return (
     <div
-      className={`account-sheet-portal ${isOpen ? "" : "is-closing"}`}
+      className={cn(
+        "fixed inset-0 z-100 md:hidden",
+        !isOpen && "pointer-events-none",
+      )}
       role="region"
       aria-label="Account Menu Portal"
     >
       {/* Backdrop */}
       <div
-        className="account-sheet-backdrop"
+        className={cn(
+          "fixed inset-0 bg-ink/40 backdrop-blur-xs motion-reduce:animate-none motion-reduce:transition-none",
+          isOpen
+            ? "animate-in duration-200 fade-in"
+            : "opacity-0 transition-opacity duration-220 ease-out",
+        )}
         onClick={onClose}
         aria-hidden="true"
       />
@@ -135,7 +147,12 @@ export default function AccountSheet({ isOpen, onClose }: AccountSheetProps) {
       {/* Sheet Container */}
       <div
         ref={sheetRef}
-        className="account-sheet"
+        className={cn(
+          "fixed inset-x-0 bottom-0 z-101 mx-auto flex max-h-[85vh] max-w-[480px] flex-col overflow-y-auto rounded-t-[28px] bg-cream px-5 pt-3 pb-[max(24px,env(safe-area-inset-bottom,24px))] shadow-[0_-10px_40px_rgb(24_24_24/0.16)] motion-reduce:animate-none motion-reduce:transition-none",
+          isOpen
+            ? "animate-in duration-240 ease-spring slide-in-from-bottom"
+            : "translate-y-full transition-[translate] duration-220 ease-[cubic-bezier(0.4,0,1,1)]",
+        )}
         role="dialog"
         aria-modal="true"
         aria-label="เมนูบัญชีผู้ใช้"
@@ -151,16 +168,15 @@ export default function AccountSheet({ isOpen, onClose }: AccountSheetProps) {
         onTouchEnd={handleTouchEnd}
       >
         {/* Drag handle for swipe down affordance */}
-        <div className="account-sheet-drag-handle-wrap" aria-hidden="true">
-          <div className="account-sheet-drag-handle" />
+        <div className="flex w-full cursor-grab justify-center pt-1 pb-2.5" aria-hidden="true">
+          <div className="h-1 w-[38px] rounded-xs bg-ink/18" />
         </div>
 
-        {/* Sheet Header */}
-        <div className="account-sheet-header">
-          <h2 className="account-sheet-title">บัญชีของคุณ</h2>
+        <div className="flex items-center justify-between border-b border-ink/6 pb-3.5">
+          <h2 className="text-[17px] font-semibold">บัญชีของคุณ</h2>
           <button
             type="button"
-            className="account-sheet-close-btn"
+            className="flex size-11 items-center justify-center rounded-full bg-ink/5 text-ink transition-colors hover:bg-ink/10 focus-visible:outline-offset-2"
             onClick={onClose}
             aria-label="ปิดเมนูบัญชี"
           >
@@ -168,152 +184,78 @@ export default function AccountSheet({ isOpen, onClose }: AccountSheetProps) {
           </button>
         </div>
 
-        {/* Sheet Content */}
-        <div className="account-sheet-body">
+        <div className="flex flex-col gap-4 pt-[18px]">
           {user ? (
             <>
-              {/* User Profile Info Card */}
-              <div className="account-sheet-user-card">
-                <div className="account-sheet-avatar-wrap">
+              <div className="flex items-center gap-3.5 rounded-[20px] border border-ink/6 bg-ink/3 px-4 py-3.5">
+                <div className="shrink-0">
                   {avatarUrl ? (
                     <Image
                       src={avatarUrl}
                       alt=""
                       width={52}
                       height={52}
-                      className="account-sheet-avatar-img"
+                      className="size-12 rounded-full object-cover shadow-[0_2px_8px_rgb(24_24_24/0.12)]"
                       referrerPolicy="no-referrer"
                     />
                   ) : (
                     <span
-                      className="account-sheet-avatar-fallback"
+                      className="flex size-12 items-center justify-center rounded-full bg-sun text-[20px] font-bold text-sun-ink shadow-[0_2px_8px_rgb(184_134_11/0.25)]"
                       aria-hidden="true"
                     >
                       {displayName.charAt(0).toUpperCase()}
                     </span>
                   )}
                 </div>
-                <div className="account-sheet-user-meta">
-                  <span className="account-sheet-user-name">{displayName}</span>
-                  <span className="account-sheet-user-email">{user.email}</span>
+                <div className="flex min-w-0 flex-col">
+                  <span className="truncate text-[16px] font-semibold text-ink">{displayName}</span>
+                  <span className="truncate text-[13px] text-ink-muted">{user.email}</span>
                 </div>
               </div>
 
-              {/* Navigation Actions */}
-              <div className="account-sheet-actions">
-                <Link
-                  href="/room"
-                  className="account-sheet-link-btn"
-                  onClick={onClose}
-                >
-                  <span className="account-sheet-link-icon-wrap">
-                    <HouseIcon size={20} aria-hidden="true" />
-                  </span>
-                  <span className="account-sheet-link-text">My Room</span>
-                  <CaretRightIcon
-                    size={20}
-                    className="account-sheet-link-chevron"
-                    aria-hidden="true"
-                  />
-                </Link>
-
-                <Link
-                  href="/shop/orders"
-                  className="account-sheet-link-btn"
-                  onClick={onClose}
-                >
-                  <span className="account-sheet-link-icon-wrap">
-                    <ReceiptIcon size={20} aria-hidden="true" />
-                  </span>
-                  <span className="account-sheet-link-text">คำสั่งซื้อของฉัน</span>
-                  <CaretRightIcon
-                    size={20}
-                    className="account-sheet-link-chevron"
-                    aria-hidden="true"
-                  />
-                </Link>
-
+              <div className="flex flex-col gap-2">
+                <SheetLink href="/room" icon={HouseIcon} onClick={onClose}>
+                  My Room
+                </SheetLink>
+                <SheetLink href="/shop/orders" icon={ReceiptIcon} onClick={onClose}>
+                  คำสั่งซื้อของฉัน
+                </SheetLink>
                 {isAdmin && (
-                  <Link
-                    href="/admin/contents"
-                    className="account-sheet-link-btn account-sheet-admin-btn"
-                    onClick={onClose}
-                  >
-                    <span className="account-sheet-link-icon-wrap admin-badge">
-                      <SquaresFourIcon size={20} aria-hidden="true" />
-                    </span>
-                    <span className="account-sheet-link-text">
-                      Admin
-                    </span>
-                    <CaretRightIcon
-                      size={20}
-                      className="account-sheet-link-chevron"
-                      aria-hidden="true"
-                    />
-                  </Link>
+                  <SheetLink href="/admin/contents" icon={SquaresFourIcon} tone="admin" onClick={onClose}>
+                    Admin
+                  </SheetLink>
                 )}
-
                 <button
                   type="button"
-                  className="account-sheet-link-btn account-sheet-signout-btn"
+                  className={cn(sheetRow, "border-[#dc3545]/15 text-[#dc3545]")}
                   onClick={() => {
                     onClose();
                     signOut();
                   }}
                 >
-                  <span className="account-sheet-link-icon-wrap signout-badge">
+                  <span className={cn(sheetIcon, "bg-[#dc3545]/10 text-[#dc3545]")}>
                     <SignOutIcon size={20} aria-hidden="true" />
                   </span>
-                  <span className="account-sheet-link-text">Sign out</span>
+                  <span className="flex-1">Sign out</span>
                 </button>
               </div>
             </>
           ) : (
-            /* Signed Out State */
-            <div className="account-sheet-guest">
-              <div className="account-sheet-guest-icon-wrap">
-                <PawPrintIcon
-                  size={28}
-                  weight="fill"
-                  aria-hidden="true"
-                />
+            <div className="flex flex-col items-center gap-3 px-2 pt-3 pb-2 text-center">
+              <div className="flex size-[54px] items-center justify-center rounded-full bg-sun text-sun-ink shadow-[0_4px_12px_rgb(184_134_11/0.25)]">
+                <PawPrintIcon size={28} weight="fill" aria-hidden="true" />
               </div>
-              <h3 className="account-sheet-guest-heading">
-                ยินดีต้อนรับสู่ Pawsons
-              </h3>
-              <p className="account-sheet-guest-desc">
+              <h3 className="text-[18px] font-semibold">ยินดีต้อนรับสู่ Pawsons</h3>
+              <p className="max-w-[280px] text-[14px] leading-[1.4]">
                 เข้าสู่ระบบเพื่อบันทึกผลการค้นหา Pawson
                 และตกแต่งห้องส่วนตัวของคุณ
               </p>
               <button
                 type="button"
-                className="button account-sheet-login-btn"
+                className={cn(pillButton(), "mt-2 w-full")}
                 onClick={signInWithGoogle}
               >
-                <svg
-                  className="auth-google-icon"
-                  viewBox="0 0 24 24"
-                  width="18"
-                  height="18"
-                  aria-hidden="true"
-                >
-                  <path
-                    d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"
-                    fill="#4285F4"
-                  />
-                  <path
-                    d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-                    fill="#34A853"
-                  />
-                  <path
-                    d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
-                    fill="#FBBC05"
-                  />
-                  <path
-                    d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
-                    fill="#EA4335"
-                  />
-                </svg>
+                <GoogleIcon size={18} />
                 <span>Sign in with Google</span>
               </button>
             </div>
@@ -321,5 +263,39 @@ export default function AccountSheet({ isOpen, onClose }: AccountSheetProps) {
         </div>
       </div>
     </div>
+  );
+}
+
+const sheetRow =
+  "flex min-h-12 items-center gap-3 rounded-2xl border border-ink/8 bg-cream px-3.5 py-2.5 text-left text-[15px] font-medium text-ink transition-[background-color,scale] duration-180 hover:bg-ink/4 focus-visible:outline-offset-2 active:scale-[0.98]";
+const sheetIcon =
+  "flex size-[34px] shrink-0 items-center justify-center rounded-full bg-ink/5 text-ink";
+
+function SheetLink({
+  href,
+  icon: Icon,
+  tone,
+  onClick,
+  children,
+}: {
+  href: string;
+  icon: Icon;
+  tone?: "admin";
+  onClick: () => void;
+  children: ReactNode;
+}) {
+  const admin = tone === "admin";
+  return (
+    <Link
+      href={href}
+      onClick={onClick}
+      className={cn(sheetRow, admin && "border-green/20 bg-green/5 text-[#255338]")}
+    >
+      <span className={cn(sheetIcon, admin && "bg-green/12 text-[#255338]")}>
+        <Icon size={20} aria-hidden="true" />
+      </span>
+      <span className="flex-1">{children}</span>
+      <CaretRightIcon size={20} className="text-ink-muted" aria-hidden="true" />
+    </Link>
   );
 }

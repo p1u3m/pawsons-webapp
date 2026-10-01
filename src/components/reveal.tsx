@@ -13,23 +13,6 @@ export default function Reveal({ children }: { children: ReactNode }) {
     media.add(
       "(prefers-reduced-motion: no-preference)",
       () => {
-        gsap.from(".hero-copy > *", {
-          y: 18,
-          opacity: 0,
-          stagger: 0.1,
-          duration: 0.8,
-          ease: "power2.out",
-          clearProps: "all",
-        });
-        gsap.from(".hero-friend", {
-          y: 28,
-          opacity: 0,
-          rotation: 3,
-          stagger: 0.12,
-          duration: 1,
-          ease: "power2.out",
-          clearProps: "all",
-        });
         gsap.utils.toArray<HTMLElement>("[data-reveal]").forEach((el) =>
           gsap.from(el, {
             y: 20,

@@ -21,12 +21,13 @@ export default function CharacterGallery({
     `/characters/reference/extra/${type}-${index + 1}.webp`;
   return (
     <>
-      <div className="profile-gallery">
+      <div className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
         {[0, 1, 2, 3].map((index) => (
           <button
             key={index}
             type="button"
             onClick={() => setActive(index)}
+            className="group relative grid aspect-square place-items-center overflow-hidden rounded-[22px] bg-cream p-2.5 shadow-ledge transition-transform duration-220 ease-spring hover:-translate-y-1 motion-reduce:transition-none"
             aria-label={`ขยายภาพ ${name} ภาพที่ ${index + 1}`}
           >
             <Image
@@ -35,8 +36,9 @@ export default function CharacterGallery({
               width={400}
               height={400}
               sizes="(max-width: 767px) 44vw, 240px"
+              className="size-full object-contain transition-transform duration-200 group-hover:scale-104 motion-reduce:transition-none"
             />
-            <span>
+            <span className="absolute right-2 bottom-2 grid size-[30px] place-items-center rounded-full bg-(--band) text-(--house-ink)">
               <ArrowsOutIcon size={18} aria-hidden="true" />
             </span>
           </button>
@@ -49,7 +51,7 @@ export default function CharacterGallery({
         }}
       >
         <DialogContent
-          className="profile-lightbox"
+          className="focus-ink w-[min(600px,calc(100%-32px))] max-w-[600px] bg-paper [--focus-offset:4px] **:tracking-normal sm:max-w-[600px]"
           onKeyDown={(event) => {
             if (event.key === "ArrowLeft") {
               event.preventDefault();
@@ -71,11 +73,13 @@ export default function CharacterGallery({
               width={700}
               height={700}
               sizes="(max-width: 767px) 85vw, 560px"
+              className="h-auto max-h-[65dvh] w-full object-contain"
             />
           )}
-          <div className="profile-lightbox-controls">
+          <div className="flex items-center justify-between">
             <button
               type="button"
+              className={lightboxButton}
               title="ภาพก่อนหน้า"
               aria-label="ภาพก่อนหน้า"
               onClick={() => setActive((value) => ((value ?? 0) + 3) % 4)}
@@ -85,6 +89,7 @@ export default function CharacterGallery({
             <span aria-live="polite">{(active ?? 0) + 1} / 4</span>
             <button
               type="button"
+              className={lightboxButton}
               title="ภาพถัดไป"
               aria-label="ภาพถัดไป"
               onClick={() => setActive((value) => ((value ?? 0) + 1) % 4)}
@@ -97,3 +102,5 @@ export default function CharacterGallery({
     </>
   );
 }
+
+const lightboxButton = "grid size-11 place-items-center rounded-full border border-line bg-white";

@@ -3,7 +3,9 @@ import { houseBackground } from "@/lib/data";
 import { useState } from "react";
 import Link from "next/link";
 import type { Character } from "@/lib/data";
+import { cn } from "@/lib/utils";
 import { CharacterImage } from "./character-ui";
+import { Eyebrow, IconDisc, pillButton, textLink } from "./pill-button";
 
 async function loadImage(src: string) {
   const img = new window.Image();
@@ -113,64 +115,72 @@ export default function ShareCard({ character: c }: { character: Character }) {
   }
 
   return (
-    <div className="share-layout">
+    <div className="mx-auto my-[30px] grid max-w-[920px] grid-cols-2 items-center gap-[70px] max-[67.5rem]:grid-cols-1 max-[67.5rem]:gap-10 max-md:w-full max-md:gap-8 max-md:overflow-hidden">
+      {/* 9:16 preview of the story card */}
       <div
-        className="story-preview"
+        className="flex aspect-[9/16] w-[min(320px,100%)] max-w-full flex-col items-center justify-self-center rounded-[28px] border border-white/60 px-5 pt-10 pb-6 text-center shadow-[0_20px_60px_-15px_rgb(24_24_24/0.15)] max-md:w-full max-md:max-w-[270px] max-md:px-4 max-md:pt-7 max-md:pb-5 tiny:max-w-[240px] tiny:px-3 tiny:pt-5 tiny:pb-4"
         style={{ background: houseBackground(c.house) }}
       >
-        <span>A LITTLE PIECE OF ME</span>
-        <h2>I feel like {c.name}.</h2>
-        <CharacterImage character={c} />
-        <strong style={{ color: c.house.ink }}>{c.type}</strong>
-        <p>{c.house.name} House</p>
-        <div className="story-footer">
-          pawsons<small>A little place to be you.</small>
+        <span className="text-[10px] font-semibold tracking-[2px]">A LITTLE PIECE OF ME</span>
+        <h2 className="mt-3.5 text-[24px] tracking-[-0.5px]">I feel like {c.name}.</h2>
+        <CharacterImage
+          character={c}
+          className="mt-6 mb-4 h-[230px] min-h-0 w-full animate-[float_7s_ease-in-out_infinite] object-contain max-md:mt-3.5 max-md:mb-2.5 max-md:h-[175px] tiny:h-[150px]"
+        />
+        <strong className="text-[28px] tracking-[1.5px]" style={{ color: c.house.ink }}>
+          {c.type}
+        </strong>
+        <p className="mt-1.5 text-[13px]">{c.house.name} House</p>
+        <div className="mt-auto text-[26px] leading-[1.2] font-semibold tracking-[-1.2px]">
+          pawsons
+          <small className="mt-2 block text-[11px] font-normal tracking-[0.3px]">
+            A little place to be you.
+          </small>
         </div>
       </div>
-      <div className="share-copy">
-        <span className="eyebrow">KEEP A LITTLE FRIEND</span>
-        <h1 style={{ marginTop: "16px" }}>
+      <div>
+        <Eyebrow>KEEP A LITTLE FRIEND</Eyebrow>
+        <h1 className="my-4 text-[clamp(34px,4vw,44px)]">
           ส่งต่อมุมเล็ก ๆ<br />
           ที่เป็นคุณ
         </h1>
-        <p>เก็บการ์ดของ {c.name} ไว้ หรือส่งให้เพื่อนรู้จักคุณอีกนิด</p>
-        <p className="muted">
+        <p className="text-[16px] leading-[1.75]">
+          เก็บการ์ดของ {c.name} ไว้ หรือส่งให้เพื่อนรู้จักคุณอีกนิด
+        </p>
+        <p className="mt-3.5 text-[13px] leading-[1.75]">
           ภาพขนาด 1080 × 1920 พร้อมใช้ใน IG Story
           <br />
           บันทึกภาพแล้วอัปโหลดผ่านแอป Instagram
         </p>
-        <div className="stack-actions">
-          <button
-            className="button"
-            disabled={busy}
-            onClick={() => save(false)}
-          >
+        <div className="mt-7 grid gap-3 max-md:w-full">
+          <button className={cn(pillButton(), stackButton)} disabled={busy} onClick={() => save(false)}>
             <span>{busy ? "กำลังสร้างการ์ด…" : "ดาวน์โหลด Story Card"}</span>
-            <span className="icon-disc" aria-hidden="true">↓</span>
+            <IconDisc className="max-md:mr-0">↓</IconDisc>
           </button>
           <button
-            className="button secondary"
+            className={cn(pillButton({ variant: "secondary" }), stackButton)}
             disabled={busy}
             onClick={() => save(true)}
           >
             <span>แชร์การ์ด</span>
-            <span className="icon-disc" aria-hidden="true">↗</span>
+            <IconDisc className="max-md:mr-0">↗</IconDisc>
           </button>
         </div>
-        <p role="status" className="share-status">
+        <p role="status" className="mt-3 min-h-7 text-[13px]">
           {message}
         </p>
-        <Link
-          className="text-link"
-          href={`/characters/${c.type.toLowerCase()}`}
-        >
+        <Link className={textLink} href={`/characters/${c.type.toLowerCase()}`}>
           <span>กลับไปหา {c.name}</span>
           <span aria-hidden="true">↗</span>
         </Link>
-        <div className="coming-note">
-          Stickers & GIFs <span>รอพบกันเร็ว ๆ นี้</span>
+        <div className="mt-7 border-t border-line pt-5 text-[14px]">
+          Stickers & GIFs{" "}
+          <span className="mt-1 block text-[12.5px] text-ink-muted">รอพบกันเร็ว ๆ นี้</span>
         </div>
       </div>
     </div>
   );
 }
+
+// Full-width buttons on phones, text allowed to wrap.
+const stackButton = "max-md:w-full max-md:px-3 max-md:text-[14px] max-md:whitespace-normal";

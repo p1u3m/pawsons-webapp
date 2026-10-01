@@ -1,85 +1,72 @@
-import Image from "next/image";
-import Link from "next/link";
 import { ArrowUpRightIcon } from "@phosphor-icons/react/dist/ssr";
-import { CharacterTile } from "@/components/character-ui";
+import Link from "next/link";
+import {
+  CharacterTile,
+  ChipLink,
+  DoodleLabel,
+  HeroFriends,
+  HouseBand,
+  characterGrid,
+  houseVars,
+} from "@/components/character-ui";
+import { pillButton } from "@/components/pill-button";
 import { characters, houses } from "@/lib/data";
-import titleStyles from "@/components/section-title.module.css";
-
-type House = (typeof houses)[number];
+import { cn } from "@/lib/utils";
 
 export const metadata = { title: "Characters" };
 
 // One friend from each house for the hero: a different four from /contents
 // (Felix, Alfred, Julian, Wendy) with similar proportions, so the same sizes
 // work without them covering each other.
-const heroFriends = [
-  characters[3],
-  characters[6],
-  characters[11],
-  characters[13],
-];
+const heroFriends = [characters[3], characters[6], characters[11], characters[13]];
 
-/** Band colour, doodle tile and accent of one house (tiles from scripts/build-patterns.mjs). */
-function bandStyle(house: House) {
-  return {
-    "--pw-band": house.color,
-    "--pattern": `url("/patterns/house-${house.id}.svg")`,
-    "--house": house.badgeColor,
-  } as React.CSSProperties;
-}
+// A soft halo in the band colour clears the doodles behind the heading.
+const bandHalo =
+  "[text-shadow:0_0_2px_var(--band),0_0_6px_var(--band),0_0_14px_var(--band),0_0_24px_var(--band)]";
 
 export default function Page() {
   return (
-    <div className="chars">
-      <section className="wrap chars-hero">
-        <div className="chars-hero-copy">
-          <h1>
+    <div className="focus-ink min-h-[70vh] overflow-x-clip pt-14 md:pt-10">
+      <section className="wrap grid gap-2 text-center split:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] split:items-center split:gap-12 split:text-left">
+        <div>
+          <h1 className="mb-3.5 text-[32px] leading-[1.3] tracking-[-0.02em] split:mb-4 split:text-[clamp(34px,4.4vw,54px)] split:leading-[1.18]">
             ทุกตัวตน
             <br />
             มีเรื่องราวของตัวเอง
           </h1>
-          <p>16 บุคลิก 4 บ้าน และอีกหลายมุมเล็ก ๆ ที่อยากให้คุณรู้จัก</p>
-          <Link className="button pawson-sign" href="/quiz">
+          <p className="mx-auto max-w-[320px] text-[15px] leading-[1.7] split:m-0 split:max-w-[460px] split:text-[17px] split:leading-[1.75]">
+            16 บุคลิก 4 บ้าน และอีกหลายมุมเล็ก ๆ ที่อยากให้คุณรู้จัก
+          </p>
+          <Link className={cn(pillButton({ variant: "sign" }), "mt-7 split:mt-8")} href="/quiz">
             <span>ค้นหาเพื่อนของคุณ</span>
           </Link>
         </div>
-        <div className="chars-hero-art" aria-hidden="true">
-          {heroFriends.map((friend) => (
-            <Image
-              key={friend.type}
-              src={friend.image}
-              alt=""
-              width={480}
-              height={480}
-              sizes="(max-width: 860px) 45vw, 240px"
-              priority
-            />
-          ))}
-        </div>
+        <HeroFriends friends={heroFriends} />
       </section>
 
       {/* One wavy band per house, in that house's colour and pattern. */}
       {houses.map((item) => (
-        <section
-          key={item.id}
-          className="chars-band"
-          style={bandStyle(item)}
-          aria-labelledby={`house-${item.id}`}
-        >
+        <HouseBand key={item.id} style={houseVars(item)} aria-labelledby={`house-${item.id}`}>
           <div className="wrap">
-            <header className="chars-shelf-head chars-shelf-head--band">
-              <h2 id={`house-${item.id}`}>
-                <span className={titleStyles.label}>
-                  <span className="chars-dot" aria-hidden="true" />
+            <header className="mb-4 flex flex-wrap items-center justify-between gap-x-4 gap-y-3">
+              <h2
+                id={`house-${item.id}`}
+                className={cn(
+                  "flex max-w-full flex-wrap items-center gap-x-2.5 gap-y-1 text-[26px] tracking-normal md:text-[30px]",
+                  bandHalo,
+                )}
+              >
+                <DoodleLabel>
+                  <span className="inline-block size-2.5 shrink-0 rounded-full bg-(--house)" aria-hidden="true" />
                   {item.name}
-                </span>
+                </DoodleLabel>
               </h2>
-              <Link className="chars-link" href={`/houses/${item.id}`}>
+              <ChipLink href={`/houses/${item.id}`}>
                 รู้จักบ้านนี้
                 <ArrowUpRightIcon size={14} weight="bold" aria-hidden="true" />
-              </Link>
+              </ChipLink>
             </header>
-            <div className="chars-grid">
+            <div className={characterGrid}>
               {characters
                 .filter((c) => c.house.id === item.id)
                 .map((c) => (
@@ -87,7 +74,7 @@ export default function Page() {
                 ))}
             </div>
           </div>
-        </section>
+        </HouseBand>
       ))}
     </div>
   );

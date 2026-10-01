@@ -36,10 +36,10 @@ test("mobile navigation, filtering, quiz result, and story download", async ({
     .getByRole("navigation", { name: "Mobile Bottom Navigation" })
     .getByRole("link", { name: "Characters", exact: true })
     .click();
-  await expect(page.locator(".chars-card")).toHaveCount(16);
+  await expect(page.locator('[data-band] a[href^="/characters/"]')).toHaveCount(16);
   // One section per house, four friends each.
   const clover = page.getByRole("region", { name: /Clover/ });
-  await expect(clover.locator(".chars-card")).toHaveCount(4);
+  await expect(clover.locator('a[href^="/characters/"]')).toHaveCount(4);
   await clover.getByRole("link", { name: /Kumo/ }).click();
   // The TYPE heading carries the name in a pill: "INFP Kumo".
   await expect(
@@ -123,9 +123,9 @@ test("routes render at mobile and desktop without horizontal overflow", async ({
 
 test("house sections and invalid character are handled", async ({ page }) => {
   await page.goto("/characters");
-  await expect(page.locator(".chars-band")).toHaveCount(4);
-  for (const band of await page.locator(".chars-band").all()) {
-    await expect(band.locator(".chars-card")).toHaveCount(4);
+  await expect(page.locator("[data-band]")).toHaveCount(4);
+  for (const band of await page.locator("[data-band]").all()) {
+    await expect(band.locator('a[href^="/characters/"]')).toHaveCount(4);
   }
   await page.goto("/characters/missing");
   await expect(
@@ -142,7 +142,7 @@ test("capture desktop and mobile layouts", async ({ page }) => {
     await page.setViewportSize({ width, height });
     await page.goto("/");
     await page.evaluate(() => document.fonts.ready);
-    await expect(page.locator(".hero-chibi-img").first()).toBeVisible();
+    await expect(page.locator("[data-chibi]").first()).toBeVisible();
     await page.screenshot({
       path: `test-results/home-${name}.png`,
       fullPage: true,

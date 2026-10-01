@@ -1,6 +1,5 @@
 "use client";
-import { useState, useEffect, useRef, useMemo } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -9,112 +8,17 @@ import {
   SignOutIcon,
   SquaresFourIcon,
 } from "@phosphor-icons/react";
-import { createClient } from "@/lib/supabase/client";
-import {
-  openGoogleSignInWindow,
-  subscribeToAuthTab,
-} from "@/lib/supabase/oauth-tab";
-import type { User } from "@supabase/supabase-js";
+import { useAuth } from "@/lib/use-auth";
+import { cn } from "@/lib/utils";
 
-interface AuthButtonProps {
-  mobile?: boolean;
-  onNavigate?: () => void;
-}
-
-// Global in-memory cache to prevent flickering when opening mobile drawer
-let globalCachedUser: User | null = null;
-let globalCachedIsAdmin = false;
-let globalHasCheckedAuth = false;
-
-export default function AuthButton({
-  mobile = false,
-  onNavigate,
-}: AuthButtonProps) {
-  const [user, setUser] = useState<User | null>(globalCachedUser);
-  const [isAdmin, setIsAdmin] = useState<boolean>(globalCachedIsAdmin);
-  const [loading, setLoading] = useState(!globalHasCheckedAuth);
+/** Google sign-in button for the desktop header; avatar menu once signed in. */
+export default function AuthButton() {
+  const { supabase, user, isAdmin, loading, displayName, avatarUrl, signInWithGoogle, signOut } =
+    useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
-  const router = useRouter();
 
-  // Memoize the client so it isn't recreated on every render
-  const supabase = useMemo(() => createClient(), []);
-
-  useEffect(() => {
-    if (!supabase) {
-      setLoading(false);
-      globalHasCheckedAuth = true;
-      return;
-    }
-
-    async function evaluateAdmin(u: User | null) {
-      if (!u) {
-        globalCachedIsAdmin = false;
-        setIsAdmin(false);
-        return;
-      }
-      if (u.email === "pitipong544@gmail.com") {
-        globalCachedIsAdmin = true;
-        setIsAdmin(true);
-        return;
-      }
-      try {
-        const { data } = await supabase!
-          .from("profiles")
-          .select("role")
-          .eq("id", u.id)
-          .maybeSingle();
-        const admin = data?.role === "admin";
-        globalCachedIsAdmin = admin;
-        setIsAdmin(admin);
-      } catch {
-        globalCachedIsAdmin = false;
-        setIsAdmin(false);
-      }
-    }
-
-    // If not checked yet, get initial session
-    if (!globalHasCheckedAuth) {
-      supabase.auth.getUser().then(({ data: { user: u } }) => {
-        globalCachedUser = u ?? null;
-        globalHasCheckedAuth = true;
-        setUser(u ?? null);
-        evaluateAdmin(u ?? null);
-        setLoading(false);
-      });
-    }
-
-    // Listen for auth state changes
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      const u = session?.user ?? null;
-      globalCachedUser = u;
-      globalHasCheckedAuth = true;
-      setUser(u);
-      evaluateAdmin(u);
-      setLoading(false);
-    });
-
-    const unsubscribeTab = subscribeToAuthTab(async () => {
-      const {
-        data: { user: u },
-      } = await supabase.auth.getUser();
-      globalCachedUser = u ?? null;
-      globalHasCheckedAuth = true;
-      setUser(u ?? null);
-      await evaluateAdmin(u ?? null);
-      setLoading(false);
-      router.refresh();
-    });
-
-    return () => {
-      subscription.unsubscribe();
-      unsubscribeTab();
-    };
-  }, [supabase, router]);
-
-  // Close menu when clicking outside
+  // Close the menu on an outside click or Escape.
   useEffect(() => {
     if (!menuOpen) return;
     function handleClick(e: MouseEvent) {
@@ -122,54 +26,121 @@ export default function AuthButton({
         setMenuOpen(false);
       }
     }
-    document.addEventListener("mousedown", handleClick);
-    return () => document.removeEventListener("mousedown", handleClick);
-  }, [menuOpen]);
-
-  // Close menu on Escape
-  useEffect(() => {
-    if (!menuOpen) return;
     function handleKey(e: KeyboardEvent) {
       if (e.key === "Escape") setMenuOpen(false);
     }
+    document.addEventListener("mousedown", handleClick);
     document.addEventListener("keydown", handleKey);
-    return () => document.removeEventListener("keydown", handleKey);
+    return () => {
+      document.removeEventListener("mousedown", handleClick);
+      document.removeEventListener("keydown", handleKey);
+    };
   }, [menuOpen]);
-
-  function handleSignIn() {
-    if (!supabase) return;
-    void openGoogleSignInWindow(supabase);
-  }
-
-  async function handleSignOut() {
-    if (!supabase) return;
-    setMenuOpen(false);
-    globalCachedUser = null;
-    setUser(null);
-    await supabase.auth.signOut();
-    router.refresh();
-  }
 
   // Supabase not configured — render nothing
   if (!supabase) return null;
 
   if (loading) {
-    return mobile ? (
-      <div className="mobile-auth-skeleton" aria-hidden="true" />
-    ) : (
-      <div className="auth-skeleton" aria-hidden="true" />
+    return (
+      <div
+        className="size-[34px] shrink-0 rounded-full border border-line bg-ink/3 opacity-60"
+        aria-hidden="true"
+      />
     );
   }
 
-  // Google SVG Icon
-  const googleIcon = (
-    <svg
-      className="auth-google-icon"
-      viewBox="0 0 24 24"
-      width="16"
-      height="16"
-      aria-hidden="true"
-    >
+  if (!user) {
+    return (
+      <button
+        className="flex shrink-0 items-center gap-[7px] rounded-full border border-line bg-ink/4 py-[7px] pr-4 pl-3 text-[13px] font-semibold whitespace-nowrap text-ink transition-all duration-350 ease-spring hover:border-line-strong hover:bg-ink/8"
+        onClick={signInWithGoogle}
+        aria-label="Sign in with Google"
+      >
+        <GoogleIcon size={16} />
+        <span>Sign in</span>
+      </button>
+    );
+  }
+
+  const close = () => setMenuOpen(false);
+
+  return (
+    <div className="relative shrink-0" ref={menuRef}>
+      <button
+        className="flex size-9 items-center justify-center overflow-hidden rounded-full border-2 border-line bg-paper-soft transition-all duration-350 ease-spring hover:border-line-strong hover:shadow-soft"
+        onClick={() => setMenuOpen(!menuOpen)}
+        aria-expanded={menuOpen}
+        aria-haspopup="true"
+        aria-label={`User menu · ${displayName}`}
+      >
+        {avatarUrl ? (
+          <Image
+            src={avatarUrl}
+            alt=""
+            width={32}
+            height={32}
+            className="size-8 rounded-full object-cover"
+            referrerPolicy="no-referrer"
+          />
+        ) : (
+          <span className="text-[14px] leading-none font-bold text-ink-muted" aria-hidden="true">
+            {displayName.charAt(0).toUpperCase()}
+          </span>
+        )}
+      </button>
+
+      {menuOpen && (
+        <div
+          className="absolute top-[calc(100%+10px)] right-0 z-60 min-w-[210px] animate-in rounded-[20px] border border-line bg-cream p-2.5 shadow-float duration-200 ease-spring fade-in zoom-in-97 slide-in-from-top-2"
+          role="menu"
+        >
+          <div className="flex flex-col gap-0.5 px-2.5 pt-1.5 pb-2">
+            <span className="text-[14px] font-semibold text-ink">{displayName}</span>
+            <span className="truncate text-[12px] text-ink-muted">{user.email}</span>
+          </div>
+          <hr className="my-1 border-line" />
+          <Link href="/room" className={menuItem} role="menuitem" onClick={close}>
+            <HouseIcon size={20} aria-hidden="true" />
+            <span>My Room</span>
+          </Link>
+          <Link href="/shop/orders" className={menuItem} role="menuitem" onClick={close}>
+            <ReceiptIcon size={20} aria-hidden="true" />
+            <span>คำสั่งซื้อของฉัน</span>
+          </Link>
+          {isAdmin && (
+            <Link
+              href="/admin/contents"
+              className={cn(menuItem, "font-semibold text-green hover:text-green")}
+              role="menuitem"
+              onClick={close}
+            >
+              <SquaresFourIcon size={20} aria-hidden="true" />
+              <span>Admin</span>
+            </Link>
+          )}
+          <button
+            className={cn(menuItem, "text-[#9e5b5b] hover:bg-[#9e5b5b]/8 hover:text-[#8a4b4b]")}
+            onClick={() => {
+              close();
+              void signOut();
+            }}
+            role="menuitem"
+          >
+            <SignOutIcon size={20} aria-hidden="true" />
+            <span>Sign out</span>
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+const menuItem =
+  "flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-left text-[14px] font-medium text-ink-muted transition-all duration-350 ease-spring hover:bg-ink/5 hover:text-ink [&_svg]:shrink-0 [&_svg]:opacity-85";
+
+export function GoogleIcon({ size }: { size: number }) {
+  return (
+    <svg className="shrink-0" viewBox="0 0 24 24" width={size} height={size} aria-hidden="true">
       <path
         d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"
         fill="#4285F4"
@@ -187,204 +158,5 @@ export default function AuthButton({
         fill="#EA4335"
       />
     </svg>
-  );
-
-  // Signed out — Mobile view
-  if (!user && mobile) {
-    return (
-      <button
-        className="mobile-auth-login-btn"
-        onClick={handleSignIn}
-        aria-label="Sign in with Google"
-      >
-        {googleIcon}
-        <span>Sign in with Google</span>
-      </button>
-    );
-  }
-
-  // Signed out — Desktop view
-  if (!user) {
-    return (
-      <button
-        className="auth-login-btn"
-        onClick={handleSignIn}
-        aria-label="Sign in with Google"
-      >
-        {googleIcon}
-        <span>Sign in</span>
-      </button>
-    );
-  }
-
-  // Signed in user data
-  const displayName =
-    user.user_metadata?.full_name ?? user.email?.split("@")[0] ?? "User";
-  const avatarUrl = user.user_metadata?.avatar_url;
-
-  // Signed in — Mobile view (dedicated user card)
-  if (mobile) {
-    return (
-      <div className="mobile-auth-card">
-        <div className="mobile-auth-user">
-          {avatarUrl ? (
-            <Image
-              src={avatarUrl}
-              alt=""
-              width={42}
-              height={42}
-              className="mobile-auth-avatar"
-              referrerPolicy="no-referrer"
-            />
-          ) : (
-            <span className="mobile-auth-fallback" aria-hidden="true">
-              {displayName.charAt(0).toUpperCase()}
-            </span>
-          )}
-          <div className="mobile-auth-info">
-            <span className="mobile-auth-label">My Account</span>
-            <span className="mobile-auth-name">{displayName}</span>
-            <span className="mobile-auth-email">{user.email}</span>
-          </div>
-        </div>
-
-        <div className="mobile-auth-links">
-          <Link
-            href="/room"
-            className="mobile-auth-room-btn"
-            onClick={() => onNavigate?.()}
-          >
-            <span className="auth-btn-label">
-              <HouseIcon size={20} aria-hidden="true" />
-              <span>My Room</span>
-            </span>
-            <span className="icon-disc" aria-hidden="true">
-              →
-            </span>
-          </Link>
-          <Link
-            href="/shop/orders"
-            className="mobile-auth-room-btn"
-            onClick={() => onNavigate?.()}
-          >
-            <span className="auth-btn-label">
-              <ReceiptIcon size={20} aria-hidden="true" />
-              <span>คำสั่งซื้อของฉัน</span>
-            </span>
-            <span className="icon-disc" aria-hidden="true">
-              →
-            </span>
-          </Link>
-          {isAdmin && (
-            <Link
-              href="/admin/contents"
-              className="mobile-auth-room-btn"
-              onClick={() => onNavigate?.()}
-              style={{
-                background: "rgba(61, 127, 88, 0.08)",
-                borderColor: "rgba(61, 127, 88, 0.25)",
-                color: "#255338",
-                fontWeight: 600,
-              }}
-            >
-              <span className="auth-btn-label">
-                <SquaresFourIcon size={20} aria-hidden="true" />
-                <span>Admin</span>
-              </span>
-              <span className="icon-disc" aria-hidden="true">
-                →
-              </span>
-            </Link>
-          )}
-          <button
-            type="button"
-            className="mobile-auth-signout-btn"
-            onClick={() => {
-              onNavigate?.();
-              handleSignOut();
-            }}
-          >
-            <SignOutIcon size={16} aria-hidden="true" />
-            <span>Sign out</span>
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-  // Signed in — Desktop view (avatar with dropdown)
-  return (
-    <div className="auth-user-wrap" ref={menuRef}>
-      <button
-        className="auth-avatar-btn"
-        onClick={() => setMenuOpen(!menuOpen)}
-        aria-expanded={menuOpen}
-        aria-haspopup="true"
-        aria-label={`User menu · ${displayName}`}
-      >
-        {avatarUrl ? (
-          <Image
-            src={avatarUrl}
-            alt=""
-            width={32}
-            height={32}
-            className="auth-avatar-img"
-            referrerPolicy="no-referrer"
-          />
-        ) : (
-          <span className="auth-avatar-fallback" aria-hidden="true">
-            {displayName.charAt(0).toUpperCase()}
-          </span>
-        )}
-      </button>
-
-      {menuOpen && (
-        <div className="auth-dropdown" role="menu">
-          <div className="auth-dropdown-header">
-            <span className="auth-dropdown-name">{displayName}</span>
-            <span className="auth-dropdown-email">{user.email}</span>
-          </div>
-          <hr className="auth-dropdown-divider" />
-          <Link
-            href="/room"
-            className="auth-dropdown-item"
-            role="menuitem"
-            onClick={() => setMenuOpen(false)}
-          >
-            <HouseIcon size={20} aria-hidden="true" />
-            <span>My Room</span>
-          </Link>
-          <Link
-            href="/shop/orders"
-            className="auth-dropdown-item"
-            role="menuitem"
-            onClick={() => setMenuOpen(false)}
-          >
-            <ReceiptIcon size={20} aria-hidden="true" />
-            <span>คำสั่งซื้อของฉัน</span>
-          </Link>
-          {isAdmin && (
-            <Link
-              href="/admin/contents"
-              className="auth-dropdown-item"
-              role="menuitem"
-              onClick={() => setMenuOpen(false)}
-              style={{ color: "#3d7f58", fontWeight: 600 }}
-            >
-              <SquaresFourIcon size={20} aria-hidden="true" />
-              <span>Admin</span>
-            </Link>
-          )}
-          <button
-            className="auth-dropdown-item auth-dropdown-signout"
-            onClick={handleSignOut}
-            role="menuitem"
-          >
-            <SignOutIcon size={20} aria-hidden="true" />
-            <span>Sign out</span>
-          </button>
-        </div>
-      )}
-    </div>
   );
 }

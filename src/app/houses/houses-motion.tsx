@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import type { ReactNode } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { cn } from "@/lib/utils";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -17,7 +18,13 @@ const EASE = "power3.out";
  * without JS; bands already on screen at mount are left alone so
  * nothing flashes out and back in.
  */
-export default function HousesMotion({ children }: { children: ReactNode }) {
+export default function HousesMotion({
+  className,
+  children,
+}: {
+  className?: string;
+  children: ReactNode;
+}) {
   const root = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -27,7 +34,7 @@ export default function HousesMotion({ children }: { children: ReactNode }) {
     const mm = gsap.matchMedia();
     const bands = () =>
       gsap.utils
-        .toArray<HTMLElement>(".chars-band", el)
+        .toArray<HTMLElement>("[data-band]", el)
         .filter((band) => !ScrollTrigger.isInViewport(band, 0.2));
 
     mm.add(
@@ -39,16 +46,16 @@ export default function HousesMotion({ children }: { children: ReactNode }) {
         const { full } = context.conditions as { full: boolean };
 
         bands().forEach((band) => {
-          const crest = band.querySelector<HTMLElement>(".houses-crest");
+          const crest = band.querySelector<HTMLElement>("[data-crest]");
           const copy = gsap.utils.toArray<HTMLElement>(
-            ".houses-copy > :not(.houses-members)",
+            "[data-copy] > :not([data-members])",
             band,
           );
           const members = gsap.utils.toArray<HTMLElement>(
-            ".houses-members li",
+            "[data-members] li",
             band,
           );
-          const flipped = !!band.querySelector(".houses-row--flip");
+          const flipped = !!band.querySelector("[data-flip]");
 
           const tl = gsap.timeline({
             defaults: { ease: EASE },
@@ -114,7 +121,7 @@ export default function HousesMotion({ children }: { children: ReactNode }) {
   }, []);
 
   return (
-    <div ref={root} className="houses">
+    <div ref={root} className={cn("focus-ink min-h-[70vh] overflow-x-clip", className)}>
       {children}
     </div>
   );

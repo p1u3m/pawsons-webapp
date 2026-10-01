@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeftIcon } from "@phosphor-icons/react/dist/ssr";
@@ -8,8 +7,11 @@ import {
   ProductCard,
   lowStockThreshold,
 } from "@/components/shop/product-card";
+import { Dot, FriendLink, roundButton } from "@/components/paper-ui";
+import { productGrid, shopPage, shopTextLink } from "@/components/shop/shop-ui";
 import { kindLabel } from "@/lib/shop/kinds";
-import { getCharacter, houseBackground } from "@/lib/data";
+import { cn } from "@/lib/utils";
+import { getCharacter } from "@/lib/data";
 import { getProducts, isCheckoutReady } from "@/lib/shop/catalog";
 import { formatPrice } from "@/lib/shop/price";
 
@@ -40,81 +42,67 @@ export default async function ShopProductPage({
     .slice(0, 4);
   const stock =
     product.stock_qty < 1
-      ? { tone: "out", label: "หมดชั่วคราว" }
+      ? { dot: "bg-ink-faint", label: "หมดชั่วคราว" }
       : product.stock_qty <= lowStockThreshold
-        ? { tone: "low", label: `เหลือเพียง ${product.stock_qty} ชิ้น` }
-        : { tone: "ok", label: `มีสินค้า · คงเหลือ ${product.stock_qty} ชิ้น` };
+        ? { dot: "bg-[#e0a52b]", label: `เหลือเพียง ${product.stock_qty} ชิ้น` }
+        : { dot: "bg-green", label: `มีสินค้า · คงเหลือ ${product.stock_qty} ชิ้น` };
 
   return (
-    <div className="wrap store store-detail">
-      <div className="store-detail-top">
-        <Link href="/shop" className="store-back-button" aria-label="กลับไปหน้า Shop">
+    <div className={cn("wrap", shopPage)}>
+      <div className="mb-7 flex items-center justify-between gap-4">
+        <Link href="/shop" className={roundButton} aria-label="กลับไปหน้า Shop">
           <ArrowLeftIcon size={20} weight="bold" aria-hidden="true" />
         </Link>
         <CartButton />
       </div>
 
-      <div className="store-detail-grid">
+      <div className="grid grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] items-start gap-14 max-split:grid-cols-1 max-split:gap-8">
         <ProductArt product={product} size="hero" priority />
-        <div className="store-buy">
-          <p className="store-meta">
-            {character && (
-              <span className="store-dot" style={{ background: character.house.badgeColor }} />
-            )}
+        <div>
+          <p className="flex flex-wrap items-center gap-1.5 text-[12px] max-md:text-[11px]">
+            {character && <Dot color={character.house.badgeColor} />}
             {kindLabel[product.kind]}
             {character && ` · บ้าน ${character.house.name}`}
           </p>
-          <h1>{product.title}</h1>
-          <strong className="store-detail-price">{formatPrice(product.price_satang)}</strong>
-          <p className={`store-stock is-${stock.tone}`}>
-            <span aria-hidden="true" />
+          <h1 className="mt-3 mb-2 text-[clamp(28px,3.2vw,40px)] leading-[1.2] tracking-[-0.02em]">
+            {product.title}
+          </h1>
+          <strong className="block text-[28px] tabular-nums">{formatPrice(product.price_satang)}</strong>
+          <p className="mt-2.5 flex items-center gap-2 text-[14px]">
+            <span aria-hidden="true" className={cn("size-2 rounded-full", stock.dot)} />
             {stock.label}
           </p>
-          {product.description && <p className="store-description">{product.description}</p>}
-          <AddToCartPanel product={product} />
-          <dl className="store-facts">
-            <div>
-              <dt>ประเภท</dt>
-              <dd>{kindLabel[product.kind]}</dd>
-            </div>
-            <div>
-              <dt>ต่อออเดอร์</dt>
-              <dd>สูงสุด 10 ชิ้น</dd>
-            </div>
-            <div>
-              <dt>ชำระเงิน</dt>
-              <dd>PromptPay หรือบัตร ผ่าน Stripe</dd>
-            </div>
-          </dl>
-          {character && (
-            <Link className="store-friend" href={`/characters/${character.type.toLowerCase()}`}>
-              <span
-                className="store-friend-avatar"
-                style={{ background: houseBackground(character.house) }}
-              >
-                <Image src={character.image} alt="" width={96} height={96} sizes="56px" />
-              </span>
-              <span>
-                <strong>รู้จัก {character.name}</strong>
-                <small>{character.tagline}</small>
-              </span>
-              <span aria-hidden="true" className="store-friend-arrow">
-                ↗
-              </span>
-            </Link>
+          {product.description && (
+            <p className="mt-[22px] text-[16px] leading-[1.8]">{product.description}</p>
           )}
+          <AddToCartPanel product={product} />
+          <dl className="mb-6 grid">
+            {[
+              ["ประเภท", kindLabel[product.kind]],
+              ["ต่อออเดอร์", "สูงสุด 10 ชิ้น"],
+              ["ชำระเงิน", "PromptPay หรือบัตร ผ่าน Stripe"],
+            ].map(([term, value]) => (
+              <div key={term} className="grid grid-cols-[110px_1fr] gap-3 border-b border-line py-3 text-[14px]">
+                <dt className="text-ink-muted">{term}</dt>
+                <dd>{value}</dd>
+              </div>
+            ))}
+          </dl>
+          {character && <FriendLink character={character} title={`รู้จัก ${character.name}`} />}
         </div>
       </div>
 
       {related.length > 0 && character && (
-        <section className="store-related" aria-labelledby="related-heading">
-          <div className="store-section-head">
-            <h2 id="related-heading">จากบ้าน {character.house.name}</h2>
-            <Link className="store-text-link" href={`/shop?house=${character.house.id}`}>
+        <section className="mt-20" aria-labelledby="related-heading">
+          <div className="mb-5 flex items-baseline justify-between gap-4">
+            <h2 id="related-heading" className="text-[24px]">
+              จากบ้าน {character.house.name}
+            </h2>
+            <Link className={shopTextLink} href={`/shop?house=${character.house.id}`}>
               ดูทั้งหมด
             </Link>
           </div>
-          <div className="store-grid">
+          <div className={productGrid}>
             {related.map((item) => (
               <ProductCard key={item.slug} product={item} />
             ))}

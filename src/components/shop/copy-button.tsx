@@ -13,7 +13,7 @@ export function CopyButton({ value, label }: { value: string; label: string }) {
   return (
     <button
       type="button"
-      className="store-copy"
+      className="inline-flex min-h-[34px] items-center gap-1.5 rounded-full border border-line-strong bg-white px-3 text-[13px] text-ink-soft hover:border-ink-soft"
       onClick={() => {
         navigator.clipboard?.writeText(value).then(() => setCopied(true), () => {});
       }}
