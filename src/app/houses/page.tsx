@@ -17,7 +17,7 @@ export default function Page() {
       >
         <h1
           id="houses-title"
-          className="text-[28px] leading-[1.4] tracking-[-0.02em] md:text-[36px]"
+          className="text-heading-sm leading-[1.4] tracking-[-0.02em] md:text-heading-lg"
         >
           บ้านไหนที่เป็นคุณ
         </h1>
@@ -32,7 +32,7 @@ export default function Page() {
                 >
                   <span
                     className={cn(
-                      "press relative grid aspect-square w-full max-w-20 place-items-center rounded-[48%_48%_12px_12px] bg-cream [--depth:3px] [--ledge-2:var(--color-ledge-2)] md:max-w-[130px]",
+                      "press-card relative grid aspect-square w-full max-w-20 place-items-center rounded-[48%_48%_12px_12px] bg-cream [--depth:3px] md:max-w-[130px]",
                     )}
                   >
                     <Image
@@ -45,7 +45,7 @@ export default function Page() {
                     />
                   </span>
                   <span
-                    className="min-h-9 text-[12px] leading-[1.5] font-semibold [overflow-wrap:anywhere] md:min-h-6 md:text-[15px]"
+                    className="min-h-9 text-caption leading-[1.5] font-semibold [overflow-wrap:anywhere] md:min-h-6 md:text-body"
                     lang="en"
                   >
                     {house.name}
@@ -86,21 +86,21 @@ export default function Page() {
                   >
                     {house.name}
                   </h2>
-                  <p className="mt-2 text-[17px] leading-[1.6] text-(--house-ink)">{house.thai}</p>
+                  <p className="mt-2 text-body-lg leading-[1.6] text-(--house-ink)">{house.thai}</p>
                   <p
-                    className="mt-2 text-[12px] leading-[1.5] text-(--house-ink)"
+                    className="mt-2 text-caption leading-[1.5] text-(--house-ink)"
                     lang="en"
                   >
                     {house.groupTitle}
                   </p>
                 </header>
                 <p
-                  className="mt-6 text-[19px] leading-[1.6] text-balance text-(--house-ink)"
+                  className="mt-6 text-lead leading-[1.6] text-balance text-(--house-ink)"
                   lang="en"
                 >
                   “{house.motto}”
                 </p>
-                <p className="mx-auto mt-3 max-w-[42ch] text-[16px] leading-[1.8] text-(--house-ink) md:mx-0">{house.description}</p>
+                <p className="mx-auto mt-3 max-w-[42ch] text-body-lg leading-[1.8] text-(--house-ink) md:mx-0">{house.description}</p>
                 <ChipLink
                   href={`/houses/${house.id}`}
                   className="mt-6 h-auto min-h-11 px-4 py-2.5 text-center whitespace-normal"
@@ -116,7 +116,7 @@ export default function Page() {
                     <li key={character.type}>
                       <Link
                         href={`/characters/${character.type.toLowerCase()}`}
-                        className="group/member flex min-h-20 min-w-0 flex-col items-center justify-center gap-2 rounded-tile p-1 text-[13px] leading-[1.4] text-(--house-ink)"
+                        className="group/member flex min-h-20 min-w-0 flex-col items-center justify-center gap-2 rounded-tile p-1 text-small leading-[1.4] text-(--house-ink)"
                       >
                         <Image
                           src={`/characters/faces/${character.type}.png`}

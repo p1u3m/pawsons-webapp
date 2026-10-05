@@ -21,7 +21,7 @@ export default function RoomScene({
         <div className="px-6 pt-10 pb-12">
           <RoomWindow />
           <Eyebrow>YOUR ROOM</Eyebrow>
-          <h1 className="mt-4 mb-2.5 text-[24px]">ห้องนี้กำลังรอเพื่อนตัวน้อยของคุณ</h1>
+          <h1 className="mt-4 mb-2.5 text-title">ห้องนี้กำลังรอเพื่อนตัวน้อยของคุณ</h1>
           <p className="mx-auto mb-6 max-w-[360px] leading-[1.7]">
             ลองทำแบบทดสอบเพื่อพบเพื่อนที่คล้ายคุณ
             <br />
@@ -45,10 +45,10 @@ export default function RoomScene({
 
       <div className="px-7 pt-4 pb-10">
         <Eyebrow>{character.house.name.toUpperCase()} HOUSE</Eyebrow>
-        <h1 className="mt-2 mb-1 text-[26px]">
+        <h1 className="mt-2 mb-1 text-heading-sm">
           {greeting}, {displayName}
         </h1>
-        <p className="mb-6 text-[14.5px]">
+        <p className="mb-6 text-body-sm">
           {character.name} กำลังพักผ่อนอยู่ในห้องของคุณ
         </p>
 
@@ -62,17 +62,17 @@ export default function RoomScene({
 
         <div className="mb-5">
           <span
-            className="mb-1.5 inline-block rounded-full px-3.5 py-1 text-[13px] font-bold tracking-[1px]"
+            className="mb-1.5 inline-block rounded-full px-3.5 py-1 text-small font-bold tracking-[1px]"
             style={{ color: character.house.ink, background: character.house.color }}
           >
             {character.type}
           </span>
-          <h2 className="mt-1 mb-1.5 text-[22px]">{character.name}</h2>
-          <p className="mx-auto max-w-[380px] text-[15px]">{character.tagline}</p>
+          <h2 className="mt-1 mb-1.5 text-title">{character.name}</h2>
+          <p className="mx-auto max-w-[380px] text-body">{character.tagline}</p>
         </div>
 
         {profile.vibe && (
-          <div className="mb-7 inline-flex items-center gap-1.5 rounded-full border border-green/20 bg-clover px-4 py-1.5 text-[13.5px] text-green-ink">
+          <div className="mb-7 inline-flex items-center gap-1.5 rounded-full border border-green/20 bg-clover px-4 py-1.5 text-body-sm text-green-ink">
             <span>🌿 สิ่งที่ขาดไม่ได้ในที่พักใจ:</span>
             <strong>{profile.vibe}</strong>
           </div>

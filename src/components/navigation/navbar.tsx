@@ -47,7 +47,7 @@ export default function Navbar() {
                     active={active}
                     aria-current={active ? "page" : undefined}
                     className={cn(
-                      "min-h-11 flex-row gap-2 rounded-full px-3.5 py-2 text-[14px] font-medium whitespace-nowrap focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green focus-visible:ring-0 max-lg:gap-1.5 max-lg:px-2 max-lg:text-[13px]",
+                      "min-h-11 flex-row gap-2 rounded-full px-3.5 py-2 text-body-sm font-medium whitespace-nowrap focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green focus-visible:ring-0 max-lg:gap-1.5 max-lg:px-2 max-lg:text-small",
                       active
                         ? "bg-sun font-semibold text-sun-ink hover:bg-sun focus:bg-sun data-active:bg-sun data-active:hover:bg-sun data-active:focus:bg-sun"
                         : "text-ink-muted hover:bg-paper-soft hover:text-ink focus:bg-paper-soft",

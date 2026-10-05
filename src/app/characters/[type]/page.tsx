@@ -8,7 +8,7 @@ import {
 } from "@phosphor-icons/react/dist/ssr";
 import CharacterGallery from "@/components/character-gallery";
 import { ChipLink, houseVars } from "@/components/character-ui";
-import { roundButton } from "@/components/paper-ui";
+import { BackButton } from "@/components/paper-ui";
 import {
   profileHero,
   profileIntro,
@@ -42,13 +42,13 @@ export async function generateMetadata({
 }
 
 const secondaryAction =
-  "h-auto min-h-11 justify-center px-3 py-2.5 text-center whitespace-normal max-md:gap-1.5 max-md:text-[13px]";
+  "h-auto min-h-11 justify-center px-3 py-2.5 text-center whitespace-normal max-md:gap-1.5 max-md:text-small";
 const paginationLink =
   "group flex min-w-0 items-center gap-4 py-5 last:justify-end last:text-right max-md:gap-2";
 const paginationName =
-  "text-[20px] group-hover:text-(--house-ink) max-md:text-[18px]";
+  "text-title-sm group-hover:text-(--house-ink) max-md:text-lead";
 const paginationType =
-  "ml-2.5 inline-block text-[12px] text-(--house-ink) not-italic max-md:ml-0 max-md:block";
+  "ml-2.5 inline-block text-caption text-(--house-ink) not-italic max-md:ml-0 max-md:block";
 
 function Keywords({ words, label }: { words: string[]; label: string }) {
   return (
@@ -82,14 +82,7 @@ export default async function Page({
       <div className={profileHero}>
         <div className="wrap">
           <nav className={profileTopNav} aria-label="การนำทางตัวละคร">
-            <Link
-              href="/characters"
-              className={roundButton}
-              aria-label="กลับไปหน้าเพื่อนทั้งหมด"
-              title="ย้อนกลับ"
-            >
-              <ArrowLeftIcon size={20} aria-hidden="true" />
-            </Link>
+            <BackButton href="/characters" label="กลับไปหน้าเพื่อนทั้งหมด" />
           </nav>
           <section className={profileIntro} aria-labelledby="profile-title">
             <div className={profilePortrait}>
@@ -113,7 +106,7 @@ export default async function Page({
                   lang="en"
                 >
                   {c.name}
-                  <span className="rounded-tile border border-[color-mix(in_srgb,var(--house-ink)_35%,transparent)] px-3 py-[9px] text-[15px] leading-none font-medium tracking-normal max-md:px-2.5 max-md:py-2 max-md:text-[13px]">
+                  <span className="rounded-tile border border-[color-mix(in_srgb,var(--house-ink)_35%,transparent)] px-3 py-[9px] text-body leading-none font-medium tracking-normal max-md:px-2.5 max-md:py-2 max-md:text-small">
                     {c.type}
                   </span>
                 </h1>
@@ -163,11 +156,11 @@ export default async function Page({
         >
           <h2
             id="about-title"
-            className="text-[28px] leading-[1.4] tracking-[-0.02em] max-md:text-[24px]"
+            className="text-heading-sm leading-[1.4] tracking-[-0.02em] max-md:text-title"
           >
             รู้จัก {c.name}
           </h2>
-          <p className="max-w-[70ch] text-[16px] leading-[1.85] text-ink-soft">
+          <p className="max-w-[70ch] text-body-lg leading-[1.85] text-ink-soft">
             {detail.desc}
           </p>
         </section>
@@ -187,16 +180,16 @@ export default async function Page({
           </span>
           <blockquote>
             <p
-              className="text-[clamp(23px,2.5vw,32px)] leading-[1.5] text-balance text-(--house-ink) max-md:text-[22px]"
+              className="text-[clamp(23px,2.5vw,32px)] leading-[1.5] text-balance text-(--house-ink) max-md:text-title"
               lang="en"
             >
               {detail.quote_en}
             </p>
-            <p className="mt-4 text-[15px] leading-[1.8] text-ink-soft">
+            <p className="mt-4 text-body leading-[1.8] text-ink-soft">
               {detail.quote_th}
             </p>
           </blockquote>
-          <figcaption className="mt-6 flex flex-wrap justify-center gap-x-3 gap-y-1 text-[13px] text-(--house-ink) max-md:mt-5">
+          <figcaption className="mt-6 flex flex-wrap justify-center gap-x-3 gap-y-1 text-small text-(--house-ink) max-md:mt-5">
             <span lang="en">{detail.author_en}</span>
             <span>{detail.author_th}</span>
           </figcaption>
@@ -223,29 +216,29 @@ export default async function Page({
             <div>
               <h2
                 id="profile-house-title"
-                className="text-[clamp(28px,3.2vw,44px)] tracking-[-0.02em] text-balance text-(--house-ink) max-md:text-[28px]"
+                className="text-[clamp(28px,3.2vw,44px)] tracking-[-0.02em] text-balance text-(--house-ink) max-md:text-heading-sm"
               >
                 {c.house.name} House
               </h2>
-              <p className="mt-2 text-[16px] text-(--house-ink)" lang="en">
+              <p className="mt-2 text-body-lg text-(--house-ink)" lang="en">
                 {house.sub}
               </p>
               <div className="mt-6">
-                <p className="mb-1 text-[20px] leading-[1.8] text-(--house-ink)">
+                <p className="mb-1 text-title-sm leading-[1.8] text-(--house-ink)">
                   “{house.motto_th}”
                 </p>
                 <p
-                  className="text-[14px] leading-[1.8] text-(--house-ink)"
+                  className="text-body-sm leading-[1.8] text-(--house-ink)"
                   lang="en"
                 >
                   {house.motto_en}
                 </p>
-                <p className="mt-1.5 text-[14px] leading-[1.8] text-(--house-ink)">
+                <p className="mt-1.5 text-body-sm leading-[1.8] text-(--house-ink)">
                   {house.latin}
                 </p>
               </div>
               <Keywords words={house.keywords} label="บุคลิกของบ้าน" />
-              <div className="mt-6 mb-2 text-[16px] leading-[1.85]">
+              <div className="mt-6 mb-2 text-body-lg leading-[1.85]">
                 {house.desc.split("\n\n").map((paragraph) => (
                   <p key={paragraph} className="mt-3 text-(--house-ink)">
                     {paragraph}
@@ -262,7 +255,7 @@ export default async function Page({
             </div>
           </div>
           <div className="mt-12 mb-6 flex flex-wrap items-baseline justify-between gap-2 border-t border-[color-mix(in_srgb,var(--house-ink)_20%,transparent)] pt-8 max-md:mt-8 max-md:pt-6">
-            <h3 className="text-[24px] tracking-normal">สมาชิกในบ้าน</h3>
+            <h3 className="text-title tracking-normal">สมาชิกในบ้าน</h3>
           </div>
           <div className="grid grid-cols-4 gap-5 max-md:grid-cols-2 max-md:gap-3">
             {members.map((member) => {
@@ -285,10 +278,10 @@ export default async function Page({
                     />
                   </div>
                   <div className="mt-2 flex items-baseline justify-between gap-2">
-                    <strong className="text-[20px] text-(--house-ink) max-md:text-[18px]">
+                    <strong className="text-title-sm text-(--house-ink) max-md:text-lead">
                       {member.name}
                     </strong>
-                    <span className="text-[12px] text-(--house-ink)">
+                    <span className="text-caption text-(--house-ink)">
                       {member.type}
                     </span>
                   </div>
@@ -314,7 +307,7 @@ export default async function Page({
             />
             <FriendFace type={previous.type} />
             <span className="grid min-w-0 gap-1">
-              <small className="text-[12px] text-ink-muted">
+              <small className="text-caption text-ink-muted">
                 เพื่อนก่อนหน้า
               </small>
               <strong className={paginationName}>
@@ -328,7 +321,7 @@ export default async function Page({
             className={paginationLink}
           >
             <span className="grid min-w-0 gap-1">
-              <small className="text-[12px] text-ink-muted">เพื่อนถัดไป</small>
+              <small className="text-caption text-ink-muted">เพื่อนถัดไป</small>
               <strong className={paginationName}>
                 {next.name}
                 <em className={paginationType}>{next.type}</em>

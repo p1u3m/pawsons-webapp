@@ -37,7 +37,7 @@ export default function Page() {
             <header className="mb-6 flex flex-wrap items-center justify-between gap-3 md:mb-7">
               <h2
                 id={`house-${house.id}`}
-                className="flex min-w-0 items-center gap-2 text-[24px] leading-[1.4] tracking-[-0.015em] text-(--house-ink) md:gap-3 md:text-[30px] tiny:text-[22px]"
+                className="flex min-w-0 items-center gap-2 text-title leading-[1.4] tracking-[-0.015em] text-(--house-ink) md:gap-3 md:text-heading-sm tiny:text-title"
               >
                 <Image
                   src={houseSigilSrc(house)}
@@ -50,7 +50,7 @@ export default function Page() {
               </h2>
               <ChipLink
                 href={`/houses/${house.id}`}
-                className="h-auto min-h-11 text-[13px]"
+                className="h-auto min-h-11 text-small"
               >
                 รู้จักบ้านนี้
                 <ArrowUpRightIcon size={14} aria-hidden="true" />
@@ -74,13 +74,13 @@ export default function Page() {
         <div>
           <h2
             id="invitation-title"
-            className="text-[28px] leading-[1.4] tracking-[-0.02em] md:text-[38px]"
+            className="text-heading-sm leading-[1.4] tracking-[-0.02em] md:text-heading-lg"
           >
             ทุกตัวตน
             <br />
             มีเรื่องราวของตัวเอง
           </h2>
-          <p className="mx-auto mt-4 max-w-[36ch] text-[16px] leading-[1.8] md:mr-auto md:ml-0 md:max-w-[42ch] md:text-[17px]">
+          <p className="mx-auto mt-4 max-w-[36ch] text-body-lg leading-[1.8] md:mr-auto md:ml-0 md:max-w-[42ch] md:text-body-lg">
             {characters.length} บุคลิก {houses.length} บ้าน และอีกหลายมุมเล็ก ๆ
             ที่อยากให้คุณรู้จัก
           </p>

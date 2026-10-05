@@ -152,7 +152,7 @@ export default function AccountSheet({
       <span className="flex items-center justify-between gap-3">
         Letters
         {Boolean(lettersBadge) && (
-          <span className="rounded-full bg-sun px-2 py-0.5 text-[12px] text-sun-ink">
+          <span className="rounded-full bg-sun px-2 py-0.5 text-caption text-sun-ink">
             {typeof lettersBadge === "boolean"
               ? "New"
               : typeof lettersBadge === "number" && lettersBadge > 99
@@ -206,7 +206,7 @@ export default function AccountSheet({
         </div>
 
         <div className="flex items-center justify-between border-b border-ink/6 pb-3.5">
-          <h2 className="text-[17px] font-semibold">Your account</h2>
+          <h2 className="text-body-lg font-semibold">Your account</h2>
           <button
             type="button"
             className="flex size-11 items-center justify-center rounded-full bg-ink/5 text-ink hover:bg-ink/10 focus-visible:outline-offset-2"
@@ -233,7 +233,7 @@ export default function AccountSheet({
                     />
                   ) : (
                     <span
-                      className="flex size-12 items-center justify-center rounded-full bg-sun text-[20px] font-bold text-sun-ink shadow-[0_2px_8px_rgb(184_134_11/0.25)]"
+                      className="flex size-12 items-center justify-center rounded-full bg-sun text-title-sm font-bold text-sun-ink shadow-[0_2px_8px_rgb(184_134_11/0.25)]"
                       aria-hidden="true"
                     >
                       {displayName.charAt(0).toUpperCase()}
@@ -241,10 +241,10 @@ export default function AccountSheet({
                   )}
                 </div>
                 <div className="flex min-w-0 flex-col">
-                  <span className="truncate text-[16px] font-semibold text-ink">
+                  <span className="truncate text-body-lg font-semibold text-ink">
                     {displayName}
                   </span>
-                  <span className="truncate text-[13px] text-ink-muted">
+                  <span className="truncate text-small text-ink-muted">
                     {user.email}
                   </span>
                 </div>
@@ -295,8 +295,8 @@ export default function AccountSheet({
               <div className="flex size-[54px] items-center justify-center rounded-full bg-sun text-sun-ink shadow-[0_4px_12px_rgb(184_134_11/0.25)]">
                 <PawPrintIcon size={28} weight="fill" aria-hidden="true" />
               </div>
-              <h3 className="text-[18px] font-semibold">Welcome to Pawsons</h3>
-              <p className="max-w-[280px] text-[14px] leading-[1.4]">
+              <h3 className="text-lead font-semibold">Welcome to Pawsons</h3>
+              <p className="max-w-[280px] text-body-sm leading-[1.4]">
                 Sign in to save your Pawson result and make your room your own.
               </p>
               <button
@@ -317,7 +317,7 @@ export default function AccountSheet({
 }
 
 const sheetRow =
-  "flex min-h-12 items-center gap-3 rounded-2xl border border-ink/8 bg-cream px-3.5 py-2.5 text-left text-[15px] font-medium text-ink hover:bg-ink/4 focus-visible:outline-offset-2 active:scale-[0.98]";
+  "flex min-h-12 items-center gap-3 rounded-2xl border border-ink/8 bg-cream px-3.5 py-2.5 text-left text-body font-medium text-ink hover:bg-ink/4 focus-visible:outline-offset-2 active:scale-[0.98]";
 const sheetIcon =
   "flex size-[34px] shrink-0 items-center justify-center rounded-full bg-ink/5 text-ink";
 

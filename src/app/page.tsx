@@ -35,7 +35,7 @@ export default function Home() {
             </span>
           </h1>
 
-          <p className="mt-5 max-w-[640px] text-[15px] leading-[1.85] text-pretty md:mt-6 md:text-[17px]">
+          <p className="mt-5 max-w-[640px] text-body leading-[1.85] text-pretty md:mt-6 md:text-body-lg">
             พักเรื่องวุ่นวายไว้สักครู่ แล้วให้เวลากับตัวเอง
             <br />
             ค่อย ๆ รู้จักตัวเอง ผ่านเพื่อนตัวน้อยในโลกของ Pawsons

@@ -8,8 +8,8 @@ const base =
 const lift = "hover:-translate-y-0.5 active:translate-y-0.5";
 
 const sizes = {
-  md: "min-h-12 px-[22px] py-2.5 text-[15px] tiny:px-3.5 tiny:text-[13.5px]",
-  sm: "min-h-12 px-[18px] py-2 text-[14px]",
+  md: "min-h-12 px-[22px] py-2.5 text-body tiny:px-3.5 tiny:text-body-sm",
+  sm: "min-h-12 px-[18px] py-2 text-body-sm",
 };
 
 const tones = {
@@ -24,11 +24,11 @@ const tones = {
 
 /** Soft, slightly uneven yellow sign with a wave pattern (homepage invitation). */
 const sign =
-  "relative isolate min-h-[84px] w-[260px] bg-[url(/pawson-button-art.svg)] bg-size-[100%_100%] bg-center bg-no-repeat px-[38px] py-[15px] text-[17px] font-bold text-gold-ink [filter:drop-shadow(0_4px_0_var(--color-gold))_drop-shadow(0_4px_0_var(--color-ledge-sun))] [text-shadow:0_1px_0_rgb(255_255_255/0.35)] before:pointer-events-none before:absolute before:inset-0 before:bg-[url(/pawson-wave-tile.svg)] before:bg-size-[128px_128px] before:opacity-50 before:mask-[url(/pawson-button-art.svg)] before:mask-size-[100%_100%] before:mask-center before:mask-no-repeat before:content-[''] [&>*]:relative";
+  "relative isolate min-h-[84px] w-[260px] bg-[url(/pawson-button-art.svg)] bg-size-[100%_100%] bg-center bg-no-repeat px-[38px] py-[15px] text-body-lg font-bold text-gold-ink [filter:drop-shadow(0_4px_0_var(--color-gold))_drop-shadow(0_4px_0_var(--color-ledge-sun))] [text-shadow:0_1px_0_rgb(255_255_255/0.35)] before:pointer-events-none before:absolute before:inset-0 before:bg-[url(/pawson-wave-tile.svg)] before:bg-size-[128px_128px] before:opacity-50 before:mask-[url(/pawson-button-art.svg)] before:mask-size-[100%_100%] before:mask-center before:mask-no-repeat before:content-[''] [&>*]:relative";
 
 /** Cream pill standing on a solid ledge (footer). */
 const ledge =
-  "press min-h-14 gap-3.5 rounded-card bg-cream py-2.5 pr-[25px] pl-6 text-[17px] font-bold text-navy [--ledge-2:var(--color-ledge-2)] [&_[data-slot=disc]]:size-[31px] [&_[data-slot=disc]]:bg-navy [&_[data-slot=disc]]:text-[15px] [&_[data-slot=disc]]:text-cream";
+  "press-card min-h-14 gap-3.5 rounded-card bg-cream py-2.5 pr-[25px] pl-6 text-body-lg font-bold text-navy [&_[data-slot=disc]]:size-[31px] [&_[data-slot=disc]]:bg-navy [&_[data-slot=disc]]:text-body [&_[data-slot=disc]]:text-cream";
 
 type PillOptions = {
   variant?: keyof typeof tones | "sign" | "ledge";
@@ -69,7 +69,7 @@ export function IconDisc({
       data-slot="disc"
       aria-hidden="true"
       className={cn(
-        "-my-0.5 -mr-3 inline-flex size-8 shrink-0 items-center justify-center rounded-full bg-white/16 text-[14px] group-hover/pill:translate-x-0.5 group-hover/pill:-translate-y-0.5",
+        "-my-0.5 -mr-3 inline-flex size-8 shrink-0 items-center justify-center rounded-full bg-white/16 text-body-sm group-hover/pill:translate-x-0.5 group-hover/pill:-translate-y-0.5",
         className,
       )}
     >
@@ -89,7 +89,7 @@ export function Eyebrow({
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1.5 rounded-full border border-ink/7 bg-ink/4 px-3 py-1 text-[11px] font-semibold tracking-[1.4px] text-ink-muted uppercase",
+        "inline-flex items-center gap-1.5 rounded-full border border-ink/7 bg-ink/4 px-3 py-1 text-micro font-semibold tracking-[1.4px] text-ink-muted uppercase",
         className,
       )}
     >
@@ -100,4 +100,4 @@ export function Eyebrow({
 
 /** Inline text link; an aria-hidden arrow inside nudges on hover. */
 export const textLink =
-  "inline-flex items-center gap-1.5 py-1 text-[15px] font-medium whitespace-nowrap text-ink hover:[&>[aria-hidden=true]]:translate-x-0.5 hover:[&>[aria-hidden=true]]:-translate-y-0.5";
+  "inline-flex items-center gap-1.5 py-1 text-body font-medium whitespace-nowrap text-ink hover:[&>[aria-hidden=true]]:translate-x-0.5 hover:[&>[aria-hidden=true]]:-translate-y-0.5";

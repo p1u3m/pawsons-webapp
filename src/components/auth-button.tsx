@@ -61,7 +61,7 @@ export default function AuthButton() {
   if (!user) {
     return (
       <button
-        className="flex shrink-0 items-center gap-[7px] rounded-full border border-line bg-ink/4 py-[7px] pr-4 pl-3 text-[13px] font-semibold whitespace-nowrap text-ink hover:border-line-strong hover:bg-ink/8"
+        className="flex shrink-0 items-center gap-[7px] rounded-full border border-line bg-ink/4 py-[7px] pr-4 pl-3 text-small font-semibold whitespace-nowrap text-ink hover:border-line-strong hover:bg-ink/8"
         onClick={signInWithGoogle}
         aria-label="Sign in with Google"
       >
@@ -93,7 +93,7 @@ export default function AuthButton() {
           />
         ) : (
           <span
-            className="text-[14px] leading-none font-bold text-ink-muted"
+            className="text-body-sm leading-none font-bold text-ink-muted"
             aria-hidden="true"
           >
             {displayName.charAt(0).toUpperCase()}
@@ -107,10 +107,10 @@ export default function AuthButton() {
           role="menu"
         >
           <div className="flex flex-col gap-0.5 px-2.5 pt-1.5 pb-2">
-            <span className="text-[14px] font-semibold text-ink">
+            <span className="text-body-sm font-semibold text-ink">
               {displayName}
             </span>
-            <span className="truncate text-[12px] text-ink-muted">
+            <span className="truncate text-caption text-ink-muted">
               {user.email}
             </span>
           </div>
@@ -179,7 +179,7 @@ export default function AuthButton() {
 }
 
 const menuItem =
-  "flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-left text-[14px] font-medium text-ink-muted hover:bg-ink/5 hover:text-ink [&_svg]:shrink-0 [&_svg]:opacity-85";
+  "flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-left text-body-sm font-medium text-ink-muted hover:bg-ink/5 hover:text-ink [&_svg]:shrink-0 [&_svg]:opacity-85";
 
 export function GoogleIcon({ size }: { size: number }) {
   return (

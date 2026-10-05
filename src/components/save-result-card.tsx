@@ -60,7 +60,7 @@ export default function SaveResultCard({
     <div className="mx-auto mt-5 mb-7 max-w-[440px] rounded-card-sm border border-dashed border-line-strong bg-paper-soft px-5 py-4 text-center">
       {isCurrentCompanion ? (
         <div className="flex flex-col items-center gap-2">
-          <p className="mb-1.5 text-[14.5px] font-medium text-green-ink">
+          <p className="mb-1.5 text-body-sm font-medium text-green-ink">
             🌿 <strong>{character.name}</strong> กำลังรอคุณอยู่ในห้องส่วนตัวแล้ว
           </p>
           <Link href="/room" className={pillButton({ variant: "gradient" })}>
@@ -70,7 +70,7 @@ export default function SaveResultCard({
         </div>
       ) : isLoggedIn ? (
         <div>
-          <p className="mb-3 text-[14.5px] text-ink">
+          <p className="mb-3 text-body-sm text-ink">
             พาน้อง <strong>{character.name}</strong> ไปเป็นเพื่อนร่วมห้องพักใจของคุณไหม?
           </p>
           <button
@@ -88,7 +88,7 @@ export default function SaveResultCard({
           </button>
         </div>
       ) : (
-        <p className="text-[13.5px]">
+        <p className="text-body-sm">
           เข้าสู่ระบบเพื่อเลือก <strong>{character.name}</strong> เป็นเพื่อนร่วมห้องของคุณ
         </p>
       )}

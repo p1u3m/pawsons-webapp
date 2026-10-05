@@ -129,10 +129,10 @@ export function ExploreDestinations() {
             >
               <span aria-hidden="true">{item.art}</span>
               <span className="flex flex-col items-center gap-1">
-                <span className="text-[16px] leading-[1.25] font-bold tracking-[-0.3px] max-[33.75rem]:text-[14.5px]">
+                <span className="text-body-lg leading-[1.25] font-bold tracking-[-0.3px] max-[33.75rem]:text-body-sm">
                   {item.title}
                 </span>
-                <span className="text-[13px] leading-[1.5] text-ink-muted max-[33.75rem]:text-[13px]">
+                <span className="text-small leading-[1.5] text-ink-muted max-[33.75rem]:text-small">
                   {item.desc}
                 </span>
               </span>

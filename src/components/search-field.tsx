@@ -72,7 +72,7 @@ export function SearchField({
         placeholder={placeholder}
         aria-label={label}
         autoComplete="off"
-        className="h-full w-0 min-w-0 flex-1 border-0 bg-transparent text-[15px] text-ink caret-auto outline-none placeholder:text-ink-faint [&::-webkit-search-cancel-button]:cursor-pointer"
+        className="h-full w-0 min-w-0 flex-1 border-0 bg-transparent text-body text-ink caret-auto outline-none placeholder:text-ink-faint [&::-webkit-search-cancel-button]:cursor-pointer"
         enterKeyHint="search"
         onChange={(event) => {
           const next = event.target.value;

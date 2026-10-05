@@ -36,7 +36,7 @@ export const storiesWave = "[--wave:120px] max-md:[--wave:64px]";
 export const sectionHead =
   "mb-5 flex flex-wrap items-center justify-between gap-x-4 gap-y-2";
 export const sectionTitle =
-  "flex max-w-full flex-wrap items-baseline gap-2.5 text-[30px] tracking-normal max-md:text-[26px]";
+  "flex max-w-full flex-wrap items-baseline gap-2.5 text-heading-sm tracking-normal max-md:text-heading-sm";
 
 /** Paper chip link with an arrow that slides right on hover. */
 export function StoriesLink({
@@ -180,7 +180,7 @@ export function MagazineBands({
               <Link
                 key={house.id}
                 href={`/contents?house=${house.id}`}
-                className="group grid grid-cols-[minmax(0,1fr)_auto] content-center gap-x-3 gap-y-0.5 rounded-card px-5 pt-[18px] pb-4 press [--depth:3px] [--ledge-2:var(--color-ledge-2)] max-md:rounded-card-sm max-md:p-3.5"
+                className="group grid grid-cols-[minmax(0,1fr)_auto] content-center gap-x-3 gap-y-0.5 rounded-card px-5 pt-[18px] pb-4 press-card [--depth:3px] max-md:rounded-card-sm max-md:p-3.5"
                 style={{ background: houseBackground(house), color: house.ink }}
               >
                 <Image
@@ -191,13 +191,13 @@ export function MagazineBands({
                   height={196}
                   sizes="48px"
                 />
-                <strong className="col-start-1 text-[18px]">
+                <strong className="col-start-1 text-lead">
                   {house.name}
                 </strong>
-                <small className="col-start-1 text-[13px] opacity-80 max-md:hidden">
+                <small className="col-start-1 text-small opacity-80 max-md:hidden">
                   {house.thai}
                 </small>
-                <span className="col-start-1 mt-3 flex items-center gap-1.5 text-[13px] font-semibold">
+                <span className="col-start-1 mt-3 flex items-center gap-1.5 text-small font-semibold">
                   {count} โพสต์
                   <ArrowRightIcon size={14} weight="bold" aria-hidden="true" />
                 </span>

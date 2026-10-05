@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeftIcon, ArrowRightIcon } from "@phosphor-icons/react/dist/ssr";
-import { Dot, FriendLink, roundButton, signButton } from "@/components/paper-ui";
+import { ArrowRightIcon } from "@phosphor-icons/react/dist/ssr";
+import { BackButton, Dot, FriendLink, signButton } from "@/components/paper-ui";
 import { PostCard, PostFrame, postGrid } from "@/components/post-card";
 import { StoriesLink, sectionHead, sectionTitle } from "@/components/stories-magazine";
 import { cn } from "@/lib/utils";
@@ -53,13 +53,11 @@ export default async function Page({
     .slice(0, 4);
 
   return (
-    <article className="wrap focus-ink min-h-[70vh] overflow-x-clip pt-10 pb-[110px] max-md:pt-6">
+    <article className="wrap focus-ink min-h-[70vh] overflow-x-clip page-top pb-[110px]">
       <div className="mb-7 flex items-center justify-between gap-4">
-        <Link href="/contents" className={roundButton} aria-label="กลับไปหน้าเรื่องราว">
-          <ArrowLeftIcon size={20} weight="bold" aria-hidden="true" />
-        </Link>
+        <BackButton href="/contents" label="กลับไปหน้าเรื่องราว" />
         <Link
-          className="rounded-full bg-cream px-4 py-2 text-[13px] font-semibold tabular-nums shadow-ledge-sm"
+          className="rounded-full bg-cream px-4 py-2 text-small font-semibold tabular-nums shadow-ledge-sm"
           href={`/contents?category=${post.category.slug}`}
         >
           {post.category.label}
@@ -79,7 +77,7 @@ export default async function Page({
         </div>
 
         <div>
-          <p className="flex flex-wrap items-center gap-1.5 text-[13px] text-ink-muted">
+          <p className="flex flex-wrap items-center gap-1.5 text-small text-ink-muted">
             <Dot color={c.house.badgeColor} />
             {c.name} · {c.type} · บ้าน {c.house.name}
           </p>
@@ -88,7 +86,7 @@ export default async function Page({
               <p className="mb-4 text-[clamp(24px,2.8vw,34px)] leading-[1.45] font-semibold">
                 “{post.title}”
               </p>
-              {post.author && <footer className="text-[16px] text-ink-muted">— {post.author}</footer>}
+              {post.author && <footer className="text-body-lg text-ink-muted">— {post.author}</footer>}
             </blockquote>
           ) : (
             <>
@@ -100,7 +98,7 @@ export default async function Page({
                   {post.lines.map((line) => (
                     <p
                       key={line}
-                      className="mb-3.5 text-[18px] leading-[1.8] first:font-medium first:text-ink max-md:text-[16px]"
+                      className="mb-3.5 text-lead leading-[1.8] first:font-medium first:text-ink max-md:text-body-lg"
                     >
                       {line}
                     </p>

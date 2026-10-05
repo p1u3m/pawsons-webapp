@@ -1,29 +1,14 @@
 import Link from "next/link";
-import { CaretRightIcon, ReceiptIcon } from "@phosphor-icons/react/dist/ssr";
-import { BackLink, PageIntro } from "@/components/character-ui";
+import { ReceiptIcon } from "@phosphor-icons/react/dist/ssr";
+import { PageIntro } from "@/components/character-ui";
+import { BackButton } from "@/components/paper-ui";
+import { OrderListItem, type OrderSummary } from "@/components/shop/order-ui";
 import { OrdersSignInPrompt } from "@/components/shop/sign-in-prompt";
 import { ShopEmpty, shopAlert, shopButton, shopPage } from "@/components/shop/shop-ui";
 import { cn } from "@/lib/utils";
 import { createClient } from "@/lib/supabase/server";
-import { formatPrice } from "@/lib/shop/price";
-import {
-  customerStatus,
-  orderDate,
-  orderNumber,
-  type FulfillmentStatus,
-  type OrderStatus,
-} from "@/lib/shop/orders";
 
 export const metadata = { title: "คำสั่งซื้อของฉัน" };
-
-type OrderRow = {
-  id: string;
-  status: OrderStatus;
-  fulfillment_status: FulfillmentStatus;
-  total_satang: number;
-  created_at: string;
-  shop_order_items: { title: string; quantity: number }[] | null;
-};
 
 export default async function OrdersPage() {
   const supabase = await createClient();
@@ -39,12 +24,14 @@ export default async function OrdersPage() {
           .order("created_at", { ascending: false })
           .limit(100)
       : { data: null, error: null };
-  const orders = (data ?? []) as OrderRow[];
+  const orders = (data ?? []) as OrderSummary[];
 
   return (
     <div className={cn("wrap", shopPage, "pb-24")}>
-      <BackLink className="text-ink" href="/shop">กลับไปหน้า Shop</BackLink>
-      <PageIntro label="MY ORDERS" title="คำสั่งซื้อของฉัน" className="mt-7">
+      <div className="mb-7">
+        <BackButton href="/shop" label="กลับไปหน้า Shop" />
+      </div>
+      <PageIntro label="MY ORDERS" title="คำสั่งซื้อของฉัน">
         ดูสินค้าที่สั่งไป สถานะการจัดส่ง และเลขพัสดุ
       </PageIntro>
       {!user ? (
@@ -54,40 +41,18 @@ export default async function OrdersPage() {
           โหลดคำสั่งซื้อไม่สำเร็จ กรุณาลองใหม่อีกครั้ง
         </p>
       ) : orders.length ? (
-        <ul className="flex flex-col gap-3.5">
-          {orders.map((order) => (
-            <li key={order.id}>
-              <Link
-                href={`/shop/orders/${order.id}`}
-                className="grid grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-4 rounded-card-sm bg-cream px-[22px] py-5 press [--depth:3px] [--ledge-2:var(--color-ledge-2)] max-md:grid-cols-[minmax(0,1fr)_auto] max-md:px-[18px] max-md:py-4"
-              >
-                <span className="flex min-w-0 flex-col gap-1">
-                  <span className="flex flex-wrap items-center gap-2.5">
-                    <strong>{orderNumber(order.id)}</strong>
-                    <span
-                      className={cn(
-                        "inline-flex rounded-full px-2.5 py-[3px] text-[12px] font-semibold",
-                        statusTone[order.fulfillment_status],
-                      )}
-                    >
-                      {customerStatus(order)}
-                    </span>
-                  </span>
-                  <span className="truncate text-[14px] text-ink-soft">
-                    {order.shop_order_items
-                      ?.map((item) => `${item.title} × ${item.quantity}`)
-                      .join(", ")}
-                  </span>
-                  <time dateTime={order.created_at} className="text-[13px] text-ink-muted">
-                    {orderDate.format(new Date(order.created_at))}
-                  </time>
-                </span>
-                <strong className="tabular-nums">{formatPrice(order.total_satang)}</strong>
-                <CaretRightIcon size={18} aria-hidden="true" className="text-ink-muted max-md:hidden" />
-              </Link>
-            </li>
-          ))}
-        </ul>
+        <>
+          <p className="mb-4 text-small text-ink-muted">
+            {orders.length} คำสั่งซื้อ
+          </p>
+          <ul className="flex flex-col gap-3.5">
+            {orders.map((order) => (
+              <li key={order.id}>
+                <OrderListItem order={order} />
+              </li>
+            ))}
+          </ul>
+        </>
       ) : (
         <ShopEmpty
           icon={<ReceiptIcon size={32} aria-hidden="true" />}
@@ -104,9 +69,3 @@ export default async function OrdersPage() {
     </div>
   );
 }
-
-const statusTone: Record<FulfillmentStatus, string> = {
-  unfulfilled: "bg-dandelion text-amber-ink",
-  preparing: "bg-forget text-blue-ink",
-  shipped: "bg-clover text-green",
-};

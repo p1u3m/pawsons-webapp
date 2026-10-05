@@ -65,28 +65,28 @@ export function HouseIntro({
         className,
       )}
     >
-      <p className="mb-2 text-[12px] font-bold tracking-[0.14em] text-(--house)">
+      <p className="mb-2 text-caption font-bold tracking-[0.14em] text-(--house)">
         {house.groupTitle}
       </p>
       <Heading
         id={id}
-        className="flex flex-col gap-1 text-[36px] leading-[1.15] tracking-[-0.02em] text-(--house-ink) md:text-[48px]"
+        className="flex flex-col gap-1 text-heading-lg leading-[1.15] tracking-[-0.02em] text-(--house-ink) md:text-[48px]"
       >
         {/* Shifted back by the label padding on desktop so the name lines up with the copy. */}
         <DoodleLabel className="self-center [overflow-wrap:normal] md:-left-[0.8em] md:self-start">
           {title}
         </DoodleLabel>
-        <small className="text-[16px] font-semibold tracking-normal text-ink-soft">
+        <small className="text-body-lg font-semibold tracking-normal text-ink-soft">
           {house.thai}
         </small>
       </Heading>
       <p
-        className="mt-4 text-[17px] font-semibold text-(--house-ink) italic"
+        className="mt-4 text-body-lg font-semibold text-(--house-ink) italic"
         lang="en"
       >
         “{house.motto}”
       </p>
-      <p className="mt-2 text-[15px] leading-[1.75] text-ink-soft">
+      <p className="mt-2 text-body leading-[1.75] text-ink-soft">
         {house.description}
       </p>
       {children}

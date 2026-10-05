@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { BackLink } from "@/components/character-ui";
+import { BackButton } from "@/components/paper-ui";
 import { ShopPaymentStatus } from "@/components/shop/payment-status";
 import { shopPage } from "@/components/shop/shop-ui";
 import { cn } from "@/lib/utils";
@@ -28,7 +28,9 @@ export default async function OrderResult({
   }
   return (
     <div className={cn("wrap", shopPage)}>
-      <BackLink className="text-ink" href="/shop">กลับไปหน้า Shop</BackLink>
+      <div className="mb-7">
+        <BackButton href="/shop" label="กลับไปหน้า Shop" />
+      </div>
       <ShopPaymentStatus
         sessionId={sessionId ?? ""}
         orderId={orderId}

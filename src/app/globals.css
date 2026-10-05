@@ -117,6 +117,21 @@
   --radius-card: 28px;
   --radius-panel: 36px;
 
+  /* Type scale for fixed-size text. None of these set a line-height; the
+     page's inherited one stays. Fluid headlines keep clamp() values. */
+  --text-micro: 11px;
+  --text-caption: 12px;
+  --text-small: 13px;
+  --text-body-sm: 14px;
+  --text-body: 15px;
+  --text-body-lg: 16px;
+  --text-lead: 18px;
+  --text-title-sm: 20px;
+  --text-title: 24px;
+  --text-heading-sm: 28px;
+  --text-heading: 32px;
+  --text-heading-lg: 36px;
+
   /* House tints */
   --color-clover: #eef6ec;
   --color-lavender: #f3eef9;
@@ -556,6 +571,50 @@ body:has(.admin-theme) {
     box-shadow:
       0 0 0 var(--ledge, var(--color-ledge)),
       0 calc(var(--depth) * 0.5) 0 var(--ledge-2, transparent);
+  }
+}
+
+/* `press` with the second, lighter ledge band by default: cards and chips.
+   Keep its body in step with `press` above. */
+@utility press-card {
+  --depth: 4px;
+  box-shadow:
+    0 var(--depth) 0 var(--ledge, var(--color-ledge)),
+    0 calc(var(--depth) * 1.75) 0 var(--ledge-2, var(--color-ledge-2));
+  transition:
+    translate var(--default-transition-duration) ease-out,
+    box-shadow var(--default-transition-duration) ease-out,
+    color var(--default-transition-duration) ease-out,
+    background-color var(--default-transition-duration) ease-out,
+    border-color var(--default-transition-duration) ease-out;
+  &:not(:disabled, [aria-disabled="true"]):focus-visible {
+    translate: 0 -2px;
+    box-shadow:
+      0 calc(var(--depth) + 2px) 0 var(--ledge, var(--color-ledge)),
+      0 calc(var(--depth) * 1.75 + 2px) 0 var(--ledge-2, var(--color-ledge-2));
+  }
+  @media (hover: hover) {
+    &:not(:disabled, [aria-disabled="true"]):hover {
+      translate: 0 -2px;
+      box-shadow:
+        0 calc(var(--depth) + 2px) 0 var(--ledge, var(--color-ledge)),
+        0 calc(var(--depth) * 1.75 + 2px) 0 var(--ledge-2, var(--color-ledge-2));
+    }
+  }
+  &:not(:disabled, [aria-disabled="true"]):active {
+    translate: 0 var(--depth);
+    box-shadow:
+      0 0 0 var(--ledge, var(--color-ledge)),
+      0 calc(var(--depth) * 0.5) 0 var(--ledge-2, var(--color-ledge-2));
+  }
+}
+
+/* Space between the navbar and the first thing on a page (usually the back
+   button), the same on every page. */
+@utility page-top {
+  padding-top: 40px;
+  @variant max-md {
+    padding-top: 24px;
   }
 }
 

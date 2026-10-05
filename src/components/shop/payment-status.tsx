@@ -90,10 +90,10 @@ export function ShopPaymentStatus({
         <Icon size={34} weight="fill" aria-hidden="true" />
       </span>
       <Eyebrow>STRIPE SANDBOX</Eyebrow>
-      <h1 className="mt-3.5 mb-2.5 text-[28px] leading-[1.3]">{title}</h1>
+      <h1 className="mt-3.5 mb-2.5 text-heading-sm leading-[1.3]">{title}</h1>
       <p className="leading-[1.75]">{body}</p>
       {status === "pending" && (
-        <span className="mt-4 inline-flex items-center gap-2 text-[13px] text-ink-muted before:size-2 before:rounded-full before:bg-amber before:content-['']">
+        <span className="mt-4 inline-flex items-center gap-2 text-small text-ink-muted before:size-2 before:rounded-full before:bg-amber before:content-['']">
           กำลังตรวจสอบทุก 5 วินาที
         </span>
       )}

@@ -65,7 +65,7 @@ export function PostCard({
       data-post
       className={cn(
         card,
-        "group press [--ledge-2:var(--color-ledge-2)]",
+        "group press-card",
         lead && leadCard,
       )}
     >
@@ -83,8 +83,8 @@ export function PostCard({
       >
         <span
           className={cn(
-            "flex flex-wrap items-center gap-1.5 text-[12px] text-ink-muted",
-            lead && "text-[13px]",
+            "flex flex-wrap items-center gap-1.5 text-caption text-ink-muted",
+            lead && "text-small",
           )}
         >
           <Dot color={c.house.badgeColor} />
@@ -92,9 +92,9 @@ export function PostCard({
         </span>
         <span
           className={cn(
-            "line-clamp-2 text-[15px] leading-[1.45] font-semibold max-md:text-[13px]",
+            "line-clamp-2 text-body leading-[1.45] font-semibold max-md:text-small",
             lead &&
-              "text-[clamp(20px,2vw,26px)] leading-[1.35] max-md:text-[17px]",
+              "text-[clamp(20px,2vw,26px)] leading-[1.35] max-md:text-body-lg",
           )}
         >
           {post.category.layout === "quote" ? `“${post.title}”` : post.title}

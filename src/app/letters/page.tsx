@@ -26,7 +26,7 @@ export default function Page() {
       <h1 className="mt-1 mb-3 text-[clamp(28px,4vw,40px)] leading-[1.35] text-balance">
         หน้านี้กำลังสร้างอยู่
       </h1>
-      <p className="mx-auto max-w-[36ch] text-[16px] leading-[1.8] text-pretty md:text-[17px]">
+      <p className="mx-auto max-w-[36ch] text-body-lg leading-[1.8] text-pretty md:text-body-lg">
         Jax กำลังขันน็อตตัวสุดท้ายให้เข้าที่
         <br />
         ข้ามไปก่อนได้เลย แล้วค่อยแวะกลับมาใหม่นะ

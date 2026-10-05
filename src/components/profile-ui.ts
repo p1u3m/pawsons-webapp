@@ -7,7 +7,7 @@ export const profilePage =
 export const profileHero =
   "relative -mt-14 bg-(--band) pt-14 md:-mt-16 md:pt-16";
 export const profileTopNav =
-  "flex justify-between gap-5 pt-7 pb-9 max-md:gap-3 max-md:pt-8 max-md:pb-6 tiny:gap-2";
+  "page-top flex justify-between gap-5 pb-9 max-md:gap-3 max-md:pb-6 tiny:gap-2";
 export const profileIntro =
   "grid grid-cols-[0.95fr_1fr] items-center gap-[clamp(32px,5vw,72px)] pb-12 max-md:flex max-md:flex-col max-md:gap-5 max-md:pb-7";
 export const profilePortrait =

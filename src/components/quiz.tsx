@@ -283,7 +283,7 @@ export default function Quiz() {
           <br />
           คล้ายคุณอยู่บ้างนะ?
         </h1>
-        <p className="text-[16.5px] leading-[1.8]">
+        <p className="text-body-lg leading-[1.8]">
           12 คำถามสบาย ๆ พร้อมเรื่องราวระหว่างทาง
           <br />
           เลือกสิ่งที่เป็นคุณ แล้วมาพบเพื่อนตัวน้อยกัน
@@ -292,10 +292,10 @@ export default function Quiz() {
           <span>เริ่มทำแบบทดสอบ</span>
           <IconDisc>↗</IconDisc>
         </button>
-        <span className="mt-4 block text-[12.5px] text-ink-muted">
+        <span className="mt-4 block text-caption text-ink-muted">
           ใช้เวลาประมาณ 3 นาที · ไม่เก็บคำตอบของคุณ
         </span>
-        <p className="mt-12 text-center text-[16.5px] leading-[1.8] text-ink-faint">
+        <p className="mt-12 text-center text-body-lg leading-[1.8] text-ink-faint">
           แบบทดสอบเพื่อความสนุกและการผ่อนคลายใจ ไม่ใช่การประเมินทางจิตวิทยา
         </p>
       </div>
@@ -322,9 +322,9 @@ export default function Quiz() {
       {/* Persistent audio element continues playing seamlessly */}
       <audio ref={audioRef} src="/audio/quiz-bgm.mp3" loop preload="auto" />
 
-      <div className="flex items-center justify-between text-[13.5px] font-medium text-ink-muted">
+      <div className="flex items-center justify-between text-body-sm font-medium text-ink-muted">
         <button
-          className="rounded-full bg-ink/4 px-3.5 py-1.5 text-[13.5px] font-medium text-ink hover:bg-ink/8"
+          className="rounded-full bg-ink/4 px-3.5 py-1.5 text-body-sm font-medium text-ink hover:bg-ink/8"
           onClick={handleBack}
         >
           ← ย้อนกลับ
@@ -377,7 +377,7 @@ export default function Quiz() {
               {currentStep.text}
             </h2>
             {currentStep.subtext && (
-              <p className="mb-5 text-[14.5px] leading-[1.6]">
+              <p className="mb-5 text-body-sm leading-[1.6]">
                 {currentStep.subtext}
               </p>
             )}
@@ -417,7 +417,7 @@ export default function Quiz() {
               {currentStep.text}
             </h1>
             {currentStep.subtext && (
-              <p className="mb-6 text-center text-[15px]">
+              <p className="mb-6 text-center text-body">
                 {currentStep.subtext}
               </p>
             )}
@@ -431,7 +431,7 @@ export default function Quiz() {
                   key={option}
                   type="button"
                   className={cn(
-                    "flex items-center justify-center rounded-full border-[1.5px] px-5 py-4 text-center text-[16px] text-ink select-none hover:-translate-y-0.5 max-xs:px-2.5 max-xs:py-3.5 max-xs:text-[15px]",
+                    "flex items-center justify-center rounded-full border-[1.5px] px-5 py-4 text-center text-body-lg text-ink select-none hover:-translate-y-0.5 max-xs:px-2.5 max-xs:py-3.5 max-xs:text-body",
                     selectedVibe === option
                       ? cn(
                           SELECTED,
@@ -455,7 +455,7 @@ export default function Quiz() {
               <IconDisc>↗</IconDisc>
             </button>
 
-            <p className="mt-6 text-center text-[12.5px]">
+            <p className="mt-6 text-center text-caption">
               เลือกคำที่ตรงกับความรู้สึกในใจคุณที่สุด
             </p>
           </div>
@@ -475,7 +475,7 @@ export default function Quiz() {
                 <label
                   key={option}
                   className={cn(
-                    "flex cursor-pointer items-center gap-4 rounded-card-sm border-[1.5px] px-6 py-[18px] text-[16px] hover:translate-x-[3px]",
+                    "flex cursor-pointer items-center gap-4 rounded-card-sm border-[1.5px] px-6 py-[18px] text-body-lg hover:translate-x-[3px]",
                     answers[questionIndex] === i
                       ? cn(
                           SELECTED,
@@ -511,7 +511,7 @@ export default function Quiz() {
               <IconDisc>↗</IconDisc>
             </button>
 
-            <p className="mt-6 text-center text-[12.5px]">
+            <p className="mt-6 text-center text-caption">
               ไม่ต้องคิดมาก เลือกแบบที่รู้สึกเป็นคุณก็พอ
             </p>
           </div>

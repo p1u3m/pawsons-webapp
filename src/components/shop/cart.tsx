@@ -291,10 +291,10 @@ export function CartButton({
       </span>
       <span
         className={cn(
-          "grid h-8 min-w-8 place-items-center rounded-full bg-navy px-2 text-[13px] font-bold tabular-nums",
+          "grid h-8 min-w-8 place-items-center rounded-full bg-navy px-2 text-small font-bold tabular-nums",
           count === 0 ? "text-cream/60" : "text-cream",
           toolbar &&
-            "max-md:absolute max-md:-top-0.5 max-md:-right-0.5 max-md:h-5 max-md:min-w-5 max-md:bg-amber-soft max-md:text-[11px] max-md:text-ink max-md:shadow-[0_0_0_2px_var(--color-paper)]",
+            "max-md:absolute max-md:-top-0.5 max-md:-right-0.5 max-md:h-5 max-md:min-w-5 max-md:bg-amber-soft max-md:text-micro max-md:text-ink max-md:shadow-[0_0_0_2px_var(--color-paper)]",
           toolbar && count === 0 && "max-md:hidden",
         )}
       >
@@ -364,11 +364,11 @@ function CartLines({
               <Link
                 href={`/shop/${slug}`}
                 onClick={onNavigate}
-                className="text-[15px] leading-[1.4] font-semibold hover:underline"
+                className="text-body leading-[1.4] font-semibold hover:underline"
               >
                 {product.title}
               </Link>
-              <span className="text-[13px] text-ink-muted">
+              <span className="text-small text-ink-muted">
                 {formatPrice(product.price_satang)} / ชิ้น
               </span>
               <div className="mt-2 flex items-center gap-1.5">
@@ -388,7 +388,7 @@ function CartLines({
                 </button>
               </div>
             </div>
-            <strong className="text-[15px] whitespace-nowrap tabular-nums max-[26.25rem]:col-start-2">
+            <strong className="text-body whitespace-nowrap tabular-nums max-[26.25rem]:col-start-2">
               {formatPrice(product.price_satang * quantity)}
             </strong>
           </li>
@@ -439,13 +439,13 @@ function CheckoutBlock({
   return (
     <div className="w-full">
       <dl className="mb-[18px]">
-        <div className="flex justify-between gap-4 py-1.5 text-[14px]">
+        <div className="flex justify-between gap-4 py-1.5 text-body-sm">
           <dt className="text-ink-muted">ยอดสินค้า</dt>
           <dd className="text-right tabular-nums">{formatPrice(total)}</dd>
         </div>
         <div
           data-testid="checkout-total"
-          className="mt-2 flex justify-between gap-4 border-t border-line py-1.5 pt-3.5 text-[18px]"
+          className="mt-2 flex justify-between gap-4 border-t border-line py-1.5 pt-3.5 text-lead"
         >
           <dt className="font-semibold text-ink">รวม</dt>
           <dd className="text-right font-bold tabular-nums">
@@ -531,9 +531,9 @@ export function CartDrawer({
     >
       <div className="flex h-full flex-col rounded-l-card bg-paper shadow-[-24px_0_60px_-20px_rgb(24_24_24/0.25)]">
         <header className="flex items-center justify-between gap-4 border-b border-line pt-5 pr-5 pb-4 pl-6">
-          <h2 id="store-drawer-title" className="text-[20px]">
+          <h2 id="store-drawer-title" className="text-title-sm">
             ตะกร้า{" "}
-            <span className="ml-1.5 text-[14px] font-normal text-ink-muted">
+            <span className="ml-1.5 text-body-sm font-normal text-ink-muted">
               {count} ชิ้น
             </span>
           </h2>

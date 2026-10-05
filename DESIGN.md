@@ -20,6 +20,11 @@ disagree, `globals.css` wins.
 - `wrap` (utility in `globals.css`) is the page column: `min(1040px, 100% - 40px)`,
   `100% - 20px` at ≤360px. The navbar matches it. Narrower pages cap it with
   `max-w-*` (results 720px, room 600px). Do not set page widths any other way.
+- Detail pages open the same way: `page-top` (40px, 24px on phones) under the
+  navbar, then the icon-only `BackButton` (46px round, bold arrow) at the left
+  edge of `wrap`, with any page-level action on the right of the same row. Never
+  use a text back link or a different top padding; the back button must land at
+  the same spot on every page.
 - Breakpoints: `md` 768px is the main split. Extras: `xs` 480px (`max-xs`),
   `split` 861px (two-column heroes), `tiny` ≤360px. Any other breakpoint is
   written in rem (`max-[62.5rem]`).
@@ -59,7 +64,7 @@ Variants for coloured buttons: `--color-ledge-sun`, `-warm`, `-navy`, `-ink`,
 - Components: `pillButton({ variant })` (`primary`, `secondary`, `gradient`,
   `ledge`, `sign`), `signButton` (yellow), `roundButton`, `ChipLink`, and the
   shop's `shopButton` / `shopPillButton`.
-- Cards on a ledge (character, post, product, house, order cards) use `press` too, so they rise and sink exactly like buttons. Flat chips and tabs only change colour.
+- Cards on a ledge (character, post, product, house, order cards) use `press-card` (`press` with the second, lighter band), so they rise and sink exactly like buttons. Flat chips and tabs only change colour.
 - The wave-art `sign` pill has no box-shadow to grow, so it just lifts.
 
 ## Patterns and bands
@@ -71,8 +76,12 @@ doodle tile from `public/patterns/`. Tile strength is the single
 ## Typography
 
 Fredoka (headings and body, via `next/font`), Itim and LINE Seed (Thai).
-Write sizes as `text-[14px]`; named sizes also set line-height and the site
-relies on the inherited one. Headings use tight tracking (`-0.02em`).
+Fixed sizes come from one scale, none of which sets a line-height (the page's
+inherited one stays): `text-micro` 11, `caption` 12, `small` 13, `body-sm` 14,
+`body` 15, `body-lg` 16, `lead` 18, `title-sm` 20, `title` 24, `heading-sm` 28,
+`heading` 32, `heading-lg` 36. Fluid headlines keep `clamp()`; display sizes
+(48px and up) stay arbitrary. Headings use tight tracking (`-0.02em`).
+New size tokens must also be listed in `src/lib/utils.ts` so `cn()` knows them.
 
 ## Motion
 

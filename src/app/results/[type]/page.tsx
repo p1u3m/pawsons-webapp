@@ -30,7 +30,7 @@ export default async function Page({
         <p>{c.tagline}</p>
 
         {vibe && (
-          <div className="mx-auto mt-3 mb-5 inline-flex items-center gap-1.5 rounded-full border border-green/22 bg-clover px-[18px] py-1.5 text-[14px] font-medium text-green-ink">
+          <div className="mx-auto mt-3 mb-5 inline-flex items-center gap-1.5 rounded-full border border-green/22 bg-clover px-[18px] py-1.5 text-body-sm font-medium text-green-ink">
             <span>🌿 สิ่งที่ขาดไม่ได้ในที่พักใจ: <strong>{vibe}</strong></span>
           </div>
         )}
@@ -45,17 +45,17 @@ export default async function Page({
             className="size-full object-contain"
           />
           <span
-            className="absolute right-2 bottom-4 rounded-full border border-line bg-cream px-[18px] py-1.5 text-[18px] font-semibold tracking-[1px] shadow-soft"
+            className="absolute right-2 bottom-4 rounded-full border border-line bg-cream px-[18px] py-1.5 text-lead font-semibold tracking-[1px] shadow-soft"
             style={{ color: c.house.ink }}
           >
             {c.type}
           </span>
         </div>
 
-        <p className="mx-auto mb-6 max-w-[480px] text-[16.5px] leading-[1.8]">{c.description}</p>
+        <p className="mx-auto mb-6 max-w-[480px] text-body-lg leading-[1.8]">{c.description}</p>
         <Link
           href={`/houses/${c.house.id}`}
-          className="mb-3 inline-block rounded-full bg-ink/5 px-3.5 py-1 text-[13.5px] font-medium"
+          className="mb-3 inline-block rounded-full bg-ink/5 px-3.5 py-1 text-body-sm font-medium"
         >
           {c.house.name} House ↗
         </Link>
@@ -83,7 +83,7 @@ export default async function Page({
           </Link>
         </div>
 
-        <p className="mt-12 text-[12px] leading-[1.7] text-ink-faint">
+        <p className="mt-12 text-caption leading-[1.7] text-ink-faint">
           ผลจากแบบทดสอบตัวอย่างเพื่อความสนุก
           <br />
           คุณเป็นได้มากกว่าบุคลิกเพียงแบบเดียวเสมอ

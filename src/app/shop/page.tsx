@@ -132,7 +132,7 @@ export default async function Page({
               aria-current={active ? "page" : undefined}
               scroll={false}
               className={cn(
-                "inline-flex h-9 shrink-0 items-center gap-2 rounded-full pr-2 pl-4 text-[14px] font-semibold whitespace-nowrap",
+                "inline-flex h-9 shrink-0 items-center gap-2 rounded-full pr-2 pl-4 text-body-sm font-semibold whitespace-nowrap",
                 !inSheet && "h-auto min-h-10",
                 active
                   ? "bg-sun text-gold-ink shadow-[0_2px_0_var(--color-gold)]"
@@ -140,7 +140,7 @@ export default async function Page({
               )}
             >
               {label}
-              <span className="grid h-[22px] min-w-[22px] place-items-center rounded-full bg-cream px-1.5 text-[12px] tabular-nums">
+              <span className="grid h-[22px] min-w-[22px] place-items-center rounded-full bg-cream px-1.5 text-caption tabular-nums">
                 {count}
               </span>
             </Link>
@@ -169,12 +169,12 @@ export default async function Page({
               }
               scroll={false}
               className={cn(
-                "inline-flex h-9 items-center gap-[7px] rounded-full px-3.5 text-[13px] font-semibold",
+                "inline-flex h-9 items-center gap-[7px] rounded-full px-3.5 text-small font-semibold",
                 !inSheet && "h-auto min-h-10 whitespace-nowrap",
                 active
                   ? "bg-(--house-bg) text-ink shadow-[inset_0_0_0_1.5px_color-mix(in_srgb,var(--house)_55%,transparent)]"
                   : "bg-cream text-ink-muted shadow-[inset_0_0_0_1.5px_var(--color-outline)] hover:text-ink",
-                inSheet && "text-[14px]",
+                inSheet && "text-body-sm",
               )}
             >
               <Dot className="bg-(--house)" />
@@ -232,7 +232,7 @@ export default async function Page({
 
           {selectedCharacter && (
             <div className="-mt-3 mb-7 flex items-center justify-between gap-4 rounded-card-sm bg-cream px-5 py-3.5 shadow-ledge-sm">
-              <p className="text-[14px]">
+              <p className="text-body-sm">
                 ของจาก <strong>{selectedCharacter.name}</strong> ·{" "}
                 {selectedCharacter.type}
               </p>

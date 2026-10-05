@@ -1,13 +1,12 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeftIcon } from "@phosphor-icons/react/dist/ssr";
 import { AddToCartPanel, CartButton, CartDrawer } from "@/components/shop/cart";
 import {
   ProductArt,
   ProductCard,
   lowStockThreshold,
 } from "@/components/shop/product-card";
-import { Dot, FriendLink, roundButton } from "@/components/paper-ui";
+import { BackButton, Dot, FriendLink } from "@/components/paper-ui";
 import { productGrid, shopPage, shopTextLink } from "@/components/shop/shop-ui";
 import { kindLabel } from "@/lib/shop/kinds";
 import { cn } from "@/lib/utils";
@@ -50,16 +49,14 @@ export default async function ShopProductPage({
   return (
     <div className={cn("wrap", shopPage)}>
       <div className="mb-7 flex items-center justify-between gap-4">
-        <Link href="/shop" className={roundButton} aria-label="กลับไปหน้า Shop">
-          <ArrowLeftIcon size={20} weight="bold" aria-hidden="true" />
-        </Link>
+        <BackButton href="/shop" label="กลับไปหน้า Shop" />
         <CartButton />
       </div>
 
       <div className="grid grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] items-start gap-14 max-split:grid-cols-1 max-split:gap-8">
         <ProductArt product={product} size="hero" priority />
         <div>
-          <p className="flex flex-wrap items-center gap-1.5 text-[12px] max-md:text-[11px]">
+          <p className="flex flex-wrap items-center gap-1.5 text-caption max-md:text-micro">
             {character && <Dot color={character.house.badgeColor} />}
             {kindLabel[product.kind]}
             {character && ` · บ้าน ${character.house.name}`}
@@ -67,13 +64,13 @@ export default async function ShopProductPage({
           <h1 className="mt-3 mb-2 text-[clamp(28px,3.2vw,40px)] leading-[1.2] tracking-[-0.02em]">
             {product.title}
           </h1>
-          <strong className="block text-[28px] tabular-nums">{formatPrice(product.price_satang)}</strong>
-          <p className="mt-2.5 flex items-center gap-2 text-[14px]">
+          <strong className="block text-heading-sm tabular-nums">{formatPrice(product.price_satang)}</strong>
+          <p className="mt-2.5 flex items-center gap-2 text-body-sm">
             <span aria-hidden="true" className={cn("size-2 rounded-full", stock.dot)} />
             {stock.label}
           </p>
           {product.description && (
-            <p className="mt-[22px] text-[16px] leading-[1.8]">{product.description}</p>
+            <p className="mt-[22px] text-body-lg leading-[1.8]">{product.description}</p>
           )}
           <AddToCartPanel product={product} />
           <dl className="mb-6 grid">
@@ -82,7 +79,7 @@ export default async function ShopProductPage({
               ["ต่อออเดอร์", "สูงสุด 10 ชิ้น"],
               ["ชำระเงิน", "PromptPay หรือบัตร ผ่าน Stripe"],
             ].map(([term, value]) => (
-              <div key={term} className="grid grid-cols-[110px_1fr] gap-3 border-b border-line py-3 text-[14px]">
+              <div key={term} className="grid grid-cols-[110px_1fr] gap-3 border-b border-line py-3 text-body-sm">
                 <dt className="text-ink-muted">{term}</dt>
                 <dd>{value}</dd>
               </div>
@@ -95,7 +92,7 @@ export default async function ShopProductPage({
       {related.length > 0 && character && (
         <section className="mt-20" aria-labelledby="related-heading">
           <div className="mb-5 flex items-baseline justify-between gap-4">
-            <h2 id="related-heading" className="text-[24px]">
+            <h2 id="related-heading" className="text-title">
               จากบ้าน {character.house.name}
             </h2>
             <Link className={shopTextLink} href={`/shop?house=${character.house.id}`}>

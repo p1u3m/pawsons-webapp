@@ -66,7 +66,7 @@ export function CharacterTile({ character: c }: { character: Character }) {
   const art = characterArt[c.type];
   return (
     <Link
-      className="group flex min-w-0 flex-col rounded-card-sm bg-cream p-1.5 press [--ledge-2:var(--color-ledge-2)] md:p-2.5"
+      className="group flex min-w-0 flex-col rounded-card-sm bg-cream p-1.5 press-card md:p-2.5"
       href={`/characters/${c.type.toLowerCase()}`}
       style={{ "--house": c.house.badgeColor } as CSSProperties}
     >
@@ -89,13 +89,13 @@ export function CharacterTile({ character: c }: { character: Character }) {
         </span>
       </span>
       <span className="grid gap-1 px-1.5 pt-2.5 pb-1.5 md:px-2 md:pt-3.5 md:pb-2">
-        <span className="flex items-center justify-between gap-2 text-[16px] font-bold md:text-[18px]">
+        <span className="flex items-center justify-between gap-2 text-body-lg font-bold md:text-lead">
           {c.name}
-          <span className="shrink-0 rounded-full bg-[color-mix(in_srgb,var(--house)_12%,transparent)] px-2 py-0.5 text-[11px] font-bold tracking-[0.04em] text-(--house)">
+          <span className="shrink-0 rounded-full bg-[color-mix(in_srgb,var(--house)_12%,transparent)] px-2 py-0.5 text-micro font-bold tracking-[0.04em] text-(--house)">
             {c.type}
           </span>
         </span>
-        <span className="line-clamp-2 text-[13px] leading-[1.6] text-ink-muted">
+        <span className="line-clamp-2 text-small leading-[1.6] text-ink-muted">
           {c.tagline}
         </span>
       </span>
@@ -108,7 +108,7 @@ export function ChipLink({ className, ...props }: ComponentProps<typeof Link>) {
   return (
     <Link
       className={cn(
-        "inline-flex h-9 shrink-0 items-center gap-1.5 rounded-full bg-cream pr-3 pl-4 text-[14px] font-semibold whitespace-nowrap press [--depth:3px] [--ledge-2:var(--color-ledge-2)] [&_svg]:text-ink-muted hover:[&_svg]:translate-x-0.5 hover:[&_svg]:-translate-y-0.5 hover:[&_svg]:text-ink",
+        "inline-flex h-9 shrink-0 items-center gap-1.5 rounded-full bg-cream pr-3 pl-4 text-body-sm font-semibold whitespace-nowrap press-card [--depth:3px] [&_svg]:text-ink-muted hover:[&_svg]:translate-x-0.5 hover:[&_svg]:-translate-y-0.5 hover:[&_svg]:text-ink",
         className,
       )}
       {...props}
@@ -145,32 +145,9 @@ export function PageIntro({
       <Eyebrow className="mb-4">{label}</Eyebrow>
       <h1 className="text-[clamp(32px,3.8vw,46px)] leading-[1.25]">{title}</h1>
       {children && (
-        <p className="mt-3.5 text-[17px] leading-[1.75]">{children}</p>
+        <p className="mt-3.5 text-body-lg leading-[1.75]">{children}</p>
       )}
     </header>
-  );
-}
-
-export function BackLink({
-  href = "/characters",
-  className,
-  children = "กลับไปหาเพื่อน ๆ",
-}: {
-  href?: string;
-  className?: string;
-  children?: ReactNode;
-}) {
-  return (
-    <Link
-      className={cn(
-        "mb-8 inline-flex items-center gap-2 rounded-full bg-ink/4 px-3.5 py-1.5 text-[13.5px] font-medium text-ink-muted hover:bg-ink/8 hover:text-ink",
-        className,
-      )}
-      href={href}
-    >
-      <span aria-hidden="true">←</span>
-      <span>{children}</span>
-    </Link>
   );
 }
 

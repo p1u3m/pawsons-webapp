@@ -1,12 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
 import {
-  ArrowLeftIcon,
   ArrowRightIcon,
   ArrowUpRightIcon,
 } from "@phosphor-icons/react/dist/ssr";
 import { ChipLink, HouseBand, houseVars } from "@/components/character-ui";
-import { roundButton } from "@/components/paper-ui";
+import { BackButton } from "@/components/paper-ui";
 import {
   profileHero,
   profileIntro,
@@ -33,13 +32,13 @@ import {
 import { houseDetails } from "./house-details";
 
 const sectionTitle =
-  "text-[28px] leading-[1.4] tracking-[-0.02em] text-balance max-md:text-[24px]";
+  "text-heading-sm leading-[1.4] tracking-[-0.02em] text-balance max-md:text-title";
 const sectionHeading =
   "mb-6 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-3 max-md:gap-2";
-const sectionHeadingNote = "mt-2 text-[14px] text-(--house-ink)";
-const smallNote = "text-[12px] leading-[1.8] text-(--house-ink)";
+const sectionHeadingNote = "mt-2 text-body-sm text-(--house-ink)";
+const smallNote = "text-caption leading-[1.8] text-(--house-ink)";
 const textLink =
-  "inline-flex min-h-11 items-center gap-2 text-[14px] text-(--house-ink) underline-offset-4 hover:underline";
+  "inline-flex min-h-11 items-center gap-2 text-body-sm text-(--house-ink) underline-offset-4 hover:underline";
 
 export default function HouseDetail({ house }: { house: House }) {
   const mock = houseDetails[house.id];
@@ -49,14 +48,7 @@ export default function HouseDetail({ house }: { house: House }) {
       <header className={profileHero}>
         <div className="wrap">
           <nav className={profileTopNav} aria-label="การนำทางบ้าน">
-            <Link
-              href="/houses"
-              className={roundButton}
-              aria-label="กลับไปบ้านทั้งสี่"
-              title="กลับไปบ้านทั้งสี่"
-            >
-              <ArrowLeftIcon size={20} aria-hidden="true" />
-            </Link>
+            <BackButton href="/houses" label="กลับไปบ้านทั้งสี่" />
           </nav>
           <div className={profileIntro}>
             <div className={profilePortrait}>
@@ -79,10 +71,10 @@ export default function HouseDetail({ house }: { house: House }) {
                 {house.name}{" "}
                 <span className="text-[0.62em] font-medium">House</span>
               </h1>
-              <h2 className="mt-3 text-[28px] leading-[1.4] tracking-[-0.02em] text-balance max-md:mt-2 max-md:text-[24px]">
+              <h2 className="mt-3 text-heading-sm leading-[1.4] tracking-[-0.02em] text-balance max-md:mt-2 max-md:text-title">
                 {house.thai}
               </h2>
-              <p className="mt-3 text-[12px] text-(--house-ink)" lang="en">
+              <p className="mt-3 text-caption text-(--house-ink)" lang="en">
                 {house.groupTitle}
               </p>
               <ul className={profileKeywords} aria-label="บรรยากาศของบ้าน">
@@ -106,7 +98,7 @@ export default function HouseDetail({ house }: { house: House }) {
                   <li key={c.type}>
                     <Link
                       href={`/characters/${c.type.toLowerCase()}`}
-                      className="flex min-h-20 flex-col items-center gap-2 rounded-tile p-1 text-[13px] text-(--house-ink)"
+                      className="flex min-h-20 flex-col items-center gap-2 rounded-tile p-1 text-small text-(--house-ink)"
                     >
                       <Image
                         src={`/characters/faces/${c.type}.png`}
@@ -141,7 +133,7 @@ export default function HouseDetail({ house }: { house: House }) {
             </p>
           </div>
           <div>
-            <p className="max-w-[70ch] text-[16px] leading-[1.85] text-ink-soft">
+            <p className="max-w-[70ch] text-body-lg leading-[1.85] text-ink-soft">
               {mock.story}
             </p>
             <ChipLink
@@ -169,7 +161,7 @@ export default function HouseDetail({ house }: { house: House }) {
                   ต่างคนต่างคิด แต่ทุกคนมีที่ของตัวเอง
                 </p>
               </div>
-              <span className="text-[12px] text-(--house-ink) max-md:text-[11px]">
+              <span className="text-caption text-(--house-ink) max-md:text-micro">
                 สมาชิกทั้ง 4 ตัว
               </span>
             </div>
@@ -181,7 +173,7 @@ export default function HouseDetail({ house }: { house: House }) {
                   <Link
                     key={c.type}
                     href={`/characters/${c.type.toLowerCase()}`}
-                    className="group/member flex min-w-0 flex-col rounded-card-sm bg-cream p-2.5 press [--ledge-2:var(--color-ledge-2)] max-md:p-1.5"
+                    className="group/member flex min-w-0 flex-col rounded-card-sm bg-cream p-2.5 press-card max-md:p-1.5"
                   >
                     <div
                       className="grid aspect-square place-items-center overflow-hidden rounded-tile"
@@ -197,19 +189,19 @@ export default function HouseDetail({ house }: { house: House }) {
                       />
                     </div>
                     <div className="flex flex-1 flex-col px-2 pt-3.5 pb-2 max-md:px-1.5 max-md:pt-2.5 max-md:pb-1.5">
-                      <h3 className="flex flex-wrap items-center justify-between gap-x-2 gap-y-1.5 text-[18px] text-ink max-md:text-[16px]">
+                      <h3 className="flex flex-wrap items-center justify-between gap-x-2 gap-y-1.5 text-lead text-ink max-md:text-body-lg">
                         {c.name}
-                        <span className="shrink-0 rounded-full bg-[color-mix(in_srgb,var(--house)_12%,transparent)] px-2 py-0.5 text-[11px] leading-[1.5] font-bold tracking-[0.04em] text-(--house)">
+                        <span className="shrink-0 rounded-full bg-[color-mix(in_srgb,var(--house)_12%,transparent)] px-2 py-0.5 text-micro leading-[1.5] font-bold tracking-[0.04em] text-(--house)">
                           {c.type}
                         </span>
                       </h3>
-                      <p className="mt-2 text-[13px] leading-[1.8] font-semibold text-(--house-ink) max-md:text-[12px]">
+                      <p className="mt-2 text-small leading-[1.8] font-semibold text-(--house-ink) max-md:text-caption">
                         {detail.role}
                       </p>
-                      <p className="mt-2.5 flex-1 text-[13px] leading-[1.8] text-ink-soft">
+                      <p className="mt-2.5 flex-1 text-small leading-[1.8] text-ink-soft">
                         {detail.note}
                       </p>
-                      <span className="mt-4 inline-flex min-h-7 items-center gap-2 text-[12px] text-(--house-ink) underline-offset-4 group-hover/member:underline">
+                      <span className="mt-4 inline-flex min-h-7 items-center gap-2 text-caption text-(--house-ink) underline-offset-4 group-hover/member:underline">
                         ทำความรู้จัก{" "}
                         <ArrowRightIcon size={15} aria-hidden="true" />
                       </span>
@@ -231,7 +223,7 @@ export default function HouseDetail({ house }: { house: House }) {
               มุมเล็ก ๆ<br className="max-md:hidden" />
               ที่เราเรียกว่าบ้าน
             </h2>
-            <p className="mt-4 text-[14px] leading-[1.85] text-ink-soft">
+            <p className="mt-4 text-body-sm leading-[1.85] text-ink-soft">
               ไม่ว่าจะอยากอยู่กับตัวเอง
               <br />
               หรือแบ่งปันไอเดียกับใครสักคน
@@ -243,13 +235,13 @@ export default function HouseDetail({ house }: { house: House }) {
                 key={corner.title}
                 className="border-b border-line-strong py-6 first:pt-0 last:border-b-0 last:pb-0"
               >
-                <h3 className="text-[21px] text-(--house-ink)">
+                <h3 className="text-title-sm text-(--house-ink)">
                   {corner.title}
                 </h3>
-                <p className="mt-2.5 text-[15px] leading-[1.85] text-ink-soft">
+                <p className="mt-2.5 text-body leading-[1.85] text-ink-soft">
                   {corner.text}
                 </p>
-                <span className="mt-2 block text-[12px] text-(--house-ink)">
+                <span className="mt-2 block text-caption text-(--house-ink)">
                   {corner.time}
                 </span>
               </div>
@@ -269,7 +261,7 @@ export default function HouseDetail({ house }: { house: House }) {
                 ความคิดเล็ก ๆ จากเพื่อนของเรา
               </p>
             </div>
-            <span className="text-[12px] leading-[1.8] text-(--house-ink) max-md:text-[11px]">
+            <span className="text-caption leading-[1.8] text-(--house-ink) max-md:text-micro">
               บันทึกตัวอย่าง
             </span>
           </div>
@@ -288,21 +280,21 @@ export default function HouseDetail({ house }: { house: House }) {
                     className="size-14 shrink-0 object-contain"
                   />
                   <span>
-                    <strong className="block text-[20px] font-semibold">
+                    <strong className="block text-title-sm font-semibold">
                       {c.name}
                     </strong>
-                    <small className="mt-1 block text-[12px] leading-[1.6]">
+                    <small className="mt-1 block text-caption leading-[1.6]">
                       {mock.members[c.type as keyof typeof mock.members].role}
                     </small>
                   </span>
-                  <span className="ml-auto text-[12px]">{c.type}</span>
+                  <span className="ml-auto text-caption">{c.type}</span>
                 </figcaption>
-                <blockquote className="max-w-[36ch] flex-1 text-[21px] leading-[1.8] text-pretty text-(--house-ink) max-md:text-[19px]">
+                <blockquote className="max-w-[36ch] flex-1 text-title-sm leading-[1.8] text-pretty text-(--house-ink) max-md:text-lead">
                   {mock.members[c.type as keyof typeof mock.members].quote}
                 </blockquote>
                 <Link
                   href={`/characters/${c.type.toLowerCase()}`}
-                  className="inline-flex min-h-11 items-center gap-2 text-[13px] text-(--house-ink) underline-offset-4 hover:underline"
+                  className="inline-flex min-h-11 items-center gap-2 text-small text-(--house-ink) underline-offset-4 hover:underline"
                 >
                   รู้จัก {c.name} ให้มากขึ้น{" "}
                   <ArrowUpRightIcon size={16} aria-hidden="true" />
@@ -319,7 +311,7 @@ export default function HouseDetail({ house }: { house: House }) {
             <h2 id="invite-title" className={sectionTitle}>
               รู้สึกเหมือนอยู่บ้านแล้วหรือยัง?
             </h2>
-            <p className="mt-2 text-[14px] text-ink-soft">
+            <p className="mt-2 text-body-sm text-ink-soft">
               ลองทำความรู้จักตัวเอง แล้วค้นหาบ้านที่เข้ากับคุณ
             </p>
           </div>
@@ -352,10 +344,10 @@ export default function HouseDetail({ house }: { house: House }) {
                     className="size-[110px] rounded-[48%_48%_12px_12px] bg-cream object-contain p-[18px] group-hover:-translate-y-0.5 max-md:aspect-square max-md:h-auto max-md:w-[min(100%,80px)] max-md:p-3"
                   />
                   <div>
-                    <h3 className="text-[18px] [overflow-wrap:anywhere] text-(--house-ink) max-md:text-[13px]">
+                    <h3 className="text-lead [overflow-wrap:anywhere] text-(--house-ink) max-md:text-small">
                       {h.name}
                     </h3>
-                    <p className="mt-1.5 text-[13px] max-md:text-[11px]">
+                    <p className="mt-1.5 text-small max-md:text-micro">
                       {h.thai}
                     </p>
                   </div>

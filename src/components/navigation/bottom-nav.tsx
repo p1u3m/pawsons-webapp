@@ -112,7 +112,7 @@ export default function BottomNav({
               />
             ) : user ? (
               <span
-                className="grid size-8 place-items-center rounded-full bg-paper-soft text-[15px] font-semibold text-ink"
+                className="grid size-8 place-items-center rounded-full bg-paper-soft text-body font-semibold text-ink"
                 aria-hidden="true"
               >
                 {displayName.charAt(0).toUpperCase()}

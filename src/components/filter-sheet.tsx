@@ -29,7 +29,7 @@ export function FilterSheet({
         <SlidersHorizontalIcon size={22} weight="bold" aria-hidden="true" />
         {activeCount > 0 && (
           <span
-            className="absolute -top-0.5 -right-0.5 grid h-5 min-w-5 place-items-center rounded-full bg-amber-soft px-[5px] text-[11px] font-bold text-ink shadow-[0_0_0_2px_var(--color-paper)]"
+            className="absolute -top-0.5 -right-0.5 grid h-5 min-w-5 place-items-center rounded-full bg-amber-soft px-[5px] text-micro font-bold text-ink shadow-[0_0_0_2px_var(--color-paper)]"
             aria-hidden="true"
           >
             {activeCount}
@@ -48,7 +48,7 @@ export function FilterSheet({
       >
         <div className="flex flex-col gap-[18px] rounded-t-3xl bg-paper px-5 pt-[18px] pb-[calc(24px+env(safe-area-inset-bottom))]">
           <header className="flex items-center justify-between">
-            <h2 id={titleId} className="text-[18px]">
+            <h2 id={titleId} className="text-lead">
               {title}
             </h2>
             <button

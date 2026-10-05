@@ -53,7 +53,7 @@ export default function RootLayout({
       </head>
       <body>
         <a
-          className="fixed top-3 left-3 z-100 -translate-y-[160%] rounded-full bg-ink px-[18px] py-2.5 text-[13px] text-white focus:translate-y-0"
+          className="fixed top-3 left-3 z-100 -translate-y-[160%] rounded-full bg-ink px-[18px] py-2.5 text-small text-white focus:translate-y-0"
           href="#main"
         >
           ข้ามไปเนื้อหา

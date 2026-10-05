@@ -12,7 +12,7 @@ export const lowStockThreshold = 5;
 
 export function StockBadge({ stock }: { stock: number }) {
   const badge =
-    "absolute top-3 left-3 rounded-full bg-cream/92 px-2.5 py-1 text-[12px] font-semibold backdrop-blur-[6px]";
+    "absolute top-3 left-3 rounded-full bg-cream/92 px-2.5 py-1 text-caption font-semibold backdrop-blur-[6px]";
   if (stock < 1)
     return <span className={cn(badge, "text-ink-muted")}>หมดชั่วคราว</span>;
   if (stock <= lowStockThreshold)
@@ -67,7 +67,7 @@ export function ProductCard({ product }: { product: ShopProduct }) {
   return (
     <article
       data-product
-      className="group relative flex flex-col rounded-card bg-cream p-2.5 press [--ledge-2:var(--color-ledge-2)] max-md:rounded-card-sm max-md:p-1.5"
+      className="group relative flex flex-col rounded-card bg-cream p-2.5 press-card max-md:rounded-card-sm max-md:p-1.5"
     >
       <Link
         href={`/shop/${product.slug}`}
@@ -82,7 +82,7 @@ export function ProductCard({ product }: { product: ShopProduct }) {
         <StockBadge stock={product.stock_qty} />
       </Link>
       <div className="flex flex-1 flex-col gap-1 px-2 pt-3.5 pb-1.5 max-md:px-1.5 max-md:pt-2.5 max-md:pb-1">
-        <p className="flex flex-wrap items-center gap-1.5 text-[12px] max-md:text-[11px]">
+        <p className="flex flex-wrap items-center gap-1.5 text-caption max-md:text-micro">
           {character && <Dot color={character.house.badgeColor} />}
           {character
             ? `${character.name} · ${character.type}`
@@ -90,7 +90,7 @@ export function ProductCard({ product }: { product: ShopProduct }) {
           <span aria-hidden="true">·</span>
           {kindLabel[product.kind]}
         </p>
-        <h3 className="text-[16px] leading-[1.4] font-semibold max-md:text-[14px]">
+        <h3 className="text-body-lg leading-[1.4] font-semibold max-md:text-body-sm">
           {/* The whole card is clickable while the add button stays on top. */}
           <Link
             href={`/shop/${product.slug}`}
@@ -100,7 +100,7 @@ export function ProductCard({ product }: { product: ShopProduct }) {
           </Link>
         </h3>
         <div className="mt-auto flex items-center justify-between gap-3 pt-2.5">
-          <strong className="text-[18px] tabular-nums max-md:text-[16px]">
+          <strong className="text-lead tabular-nums max-md:text-body-lg">
             {formatPrice(product.price_satang)}
           </strong>
           <AddToCartIcon product={product} />

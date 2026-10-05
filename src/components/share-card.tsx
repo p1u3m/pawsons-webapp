@@ -121,19 +121,19 @@ export default function ShareCard({ character: c }: { character: Character }) {
         className="flex aspect-[9/16] w-[min(320px,100%)] max-w-full flex-col items-center justify-self-center rounded-card border border-white/60 px-5 pt-10 pb-6 text-center shadow-[0_20px_60px_-15px_rgb(24_24_24/0.15)] max-md:w-full max-md:max-w-[270px] max-md:px-4 max-md:pt-7 max-md:pb-5 tiny:max-w-[240px] tiny:px-3 tiny:pt-5 tiny:pb-4"
         style={{ background: houseBackground(c.house) }}
       >
-        <span className="text-[10px] font-semibold tracking-[2px]">A LITTLE PIECE OF ME</span>
-        <h2 className="mt-3.5 text-[24px] tracking-[-0.5px]">I feel like {c.name}.</h2>
+        <span className="text-micro font-semibold tracking-[2px]">A LITTLE PIECE OF ME</span>
+        <h2 className="mt-3.5 text-title tracking-[-0.5px]">I feel like {c.name}.</h2>
         <CharacterImage
           character={c}
           className="mt-6 mb-4 h-[230px] min-h-0 w-full object-contain max-md:mt-3.5 max-md:mb-2.5 max-md:h-[175px] tiny:h-[150px]"
         />
-        <strong className="text-[28px] tracking-[1.5px]" style={{ color: c.house.ink }}>
+        <strong className="text-heading-sm tracking-[1.5px]" style={{ color: c.house.ink }}>
           {c.type}
         </strong>
-        <p className="mt-1.5 text-[13px]">{c.house.name} House</p>
-        <div className="mt-auto text-[26px] leading-[1.2] font-semibold tracking-[-1.2px]">
+        <p className="mt-1.5 text-small">{c.house.name} House</p>
+        <div className="mt-auto text-heading-sm leading-[1.2] font-semibold tracking-[-1.2px]">
           pawsons
-          <small className="mt-2 block text-[11px] font-normal tracking-[0.3px]">
+          <small className="mt-2 block text-micro font-normal tracking-[0.3px]">
             A little place to be you.
           </small>
         </div>
@@ -144,10 +144,10 @@ export default function ShareCard({ character: c }: { character: Character }) {
           ส่งต่อมุมเล็ก ๆ<br />
           ที่เป็นคุณ
         </h1>
-        <p className="text-[16px] leading-[1.75]">
+        <p className="text-body-lg leading-[1.75]">
           เก็บการ์ดของ {c.name} ไว้ หรือส่งให้เพื่อนรู้จักคุณอีกนิด
         </p>
-        <p className="mt-3.5 text-[13px] leading-[1.75]">
+        <p className="mt-3.5 text-small leading-[1.75]">
           ภาพขนาด 1080 × 1920 พร้อมใช้ใน IG Story
           <br />
           บันทึกภาพแล้วอัปโหลดผ่านแอป Instagram
@@ -166,16 +166,16 @@ export default function ShareCard({ character: c }: { character: Character }) {
             <IconDisc className="max-md:mr-0">↗</IconDisc>
           </button>
         </div>
-        <p role="status" className="mt-3 min-h-7 text-[13px]">
+        <p role="status" className="mt-3 min-h-7 text-small">
           {message}
         </p>
         <Link className={textLink} href={`/characters/${c.type.toLowerCase()}`}>
           <span>กลับไปหา {c.name}</span>
           <span aria-hidden="true">↗</span>
         </Link>
-        <div className="mt-7 border-t border-line pt-5 text-[14px]">
+        <div className="mt-7 border-t border-line pt-5 text-body-sm">
           Stickers & GIFs{" "}
-          <span className="mt-1 block text-[12.5px] text-ink-muted">รอพบกันเร็ว ๆ นี้</span>
+          <span className="mt-1 block text-caption text-ink-muted">รอพบกันเร็ว ๆ นี้</span>
         </div>
       </div>
     </div>
@@ -183,4 +183,4 @@ export default function ShareCard({ character: c }: { character: Character }) {
 }
 
 // Full-width buttons on phones, text allowed to wrap.
-const stackButton = "max-md:w-full max-md:px-3 max-md:text-[14px] max-md:whitespace-normal";
+const stackButton = "max-md:w-full max-md:px-3 max-md:text-body-sm max-md:whitespace-normal";

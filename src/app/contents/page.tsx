@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Suspense } from "react";
-import { ArrowLeftIcon, ArrowRightIcon } from "@phosphor-icons/react/dist/ssr";
+import { ArrowRightIcon } from "@phosphor-icons/react/dist/ssr";
 import { characters, getCharacter, houses } from "@/lib/data";
 import { getAllContents, getCategories } from "@/lib/supabase/contents";
 import { featuredPosts, toPost } from "@/lib/posts";
@@ -9,6 +9,7 @@ import { FilterSheet } from "@/components/filter-sheet";
 import { SearchField } from "@/components/search-field";
 import { HeroFriends } from "@/components/character-ui";
 import {
+  BackButton,
   Dot,
   listFilters,
   listingPage,
@@ -20,7 +21,6 @@ import {
   pageHero,
   pageHeroText,
   pageHeroTitle,
-  roundButton,
   signButton,
 } from "@/components/paper-ui";
 import {
@@ -142,7 +142,7 @@ export default async function Page({
             aria-current={currentCategory === slug ? "page" : undefined}
           >
             {label}
-            <small className="grid h-[22px] min-w-[22px] place-items-center rounded-full bg-cream px-1.5 text-[12px] tabular-nums">
+            <small className="grid h-[22px] min-w-[22px] place-items-center rounded-full bg-cream px-1.5 text-caption tabular-nums">
               {posts.filter((post) => post.category.slug === slug).length}
             </small>
           </Link>
@@ -163,10 +163,10 @@ export default async function Page({
                 key={item.id}
                 className={cn(
                   tab(false, inSheet),
-                  "gap-[7px] bg-cream px-3.5 text-[13px] shadow-[inset_0_0_0_1.5px_var(--color-outline)]",
+                  "gap-[7px] bg-cream px-3.5 text-small shadow-[inset_0_0_0_1.5px_var(--color-outline)]",
                   active &&
                     "bg-(--house-bg) text-ink shadow-[inset_0_0_0_1.5px_color-mix(in_srgb,var(--house)_55%,transparent)]",
-                  inSheet && "h-10 text-[14px]",
+                  inSheet && "h-10 text-body-sm",
                 )}
                 href={filterHref({ house: active ? null : item.id })}
                 aria-current={active ? "page" : undefined}
@@ -191,20 +191,16 @@ export default async function Page({
     <div
       className={cn(
         listingPage,
-        "focus-ink min-h-[70vh] overflow-x-clip pt-8 max-md:pt-6",
+        "focus-ink min-h-[70vh] overflow-x-clip page-top",
       )}
     >
+      {selected && (
+        <div className="wrap mb-2">
+          <BackButton href="/contents" label="ดูเรื่องราวของทุกคน" />
+        </div>
+      )}
       <section className={pageHero}>
         <div>
-          {selected && (
-            <Link
-              href="/contents"
-              className={cn(roundButton, "mb-6")}
-              aria-label="ดูเรื่องราวของทุกคน"
-            >
-              <ArrowLeftIcon size={20} weight="bold" aria-hidden="true" />
-            </Link>
-          )}
           <h1 className={pageHeroTitle}>
             {selected ? (
               <>
@@ -269,7 +265,7 @@ export default async function Page({
           </div>
 
           {selected && (
-            <div className="-mt-4 mb-7 flex flex-wrap items-center justify-between gap-3 rounded-card-sm bg-cream py-3 pr-3 pl-5 text-[14px] shadow-ledge-sm">
+            <div className="-mt-4 mb-7 flex flex-wrap items-center justify-between gap-3 rounded-card-sm bg-cream py-3 pr-3 pl-5 text-body-sm shadow-ledge-sm">
               <p className="flex items-center gap-2">
                 <Dot color={selected.house.badgeColor} />
                 โพสต์ของ <strong>{selected.name}</strong> · {selected.type}
@@ -305,12 +301,12 @@ export default async function Page({
             <ContentsGrid posts={visible} />
           ) : (
             <div className="flex flex-col items-center gap-2 rounded-card bg-cream px-6 py-14 text-center shadow-ledge">
-              <p className="text-[18px] font-semibold">
+              <p className="text-lead font-semibold">
                 {query
                   ? `ไม่พบเรื่องที่ตรงกับ “${q!.trim()}”`
                   : "ยังไม่มีโพสต์ในหมวดนี้"}
               </p>
-              <span className="mb-4 text-[14px] text-ink-muted">
+              <span className="mb-4 text-body-sm text-ink-muted">
                 {query
                   ? "ลองค้นหาด้วยคำอื่น หรือกลับไปดูเรื่องแนะนำ"
                   : "รอติดตามเร็ว ๆ นี้ หรือกลับไปดูเรื่องแนะนำ"}
@@ -337,7 +333,7 @@ export default async function Page({
 /** Filter tab; the active one is a yellow sign chip. */
 function tab(active: boolean, inSheet: boolean) {
   return cn(
-    "inline-flex h-9 shrink-0 items-center gap-2 rounded-full px-4 text-[14px] font-semibold whitespace-nowrap",
+    "inline-flex h-9 shrink-0 items-center gap-2 rounded-full px-4 text-body-sm font-semibold whitespace-nowrap",
     !inSheet && "h-auto min-h-10",
     active
       ? "bg-sun text-gold-ink shadow-[0_2px_0_var(--color-gold)]"

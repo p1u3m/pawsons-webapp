@@ -26,10 +26,10 @@ export default function SiteFooter() {
         />
       </Link>
       <div className="flex flex-col gap-0.5">
-        <p className="text-[14.5px] font-medium text-ink">
+        <p className="text-body-sm font-medium text-ink">
           A little place to be you.
         </p>
-        <span className="text-[13px] text-ink-muted">
+        <span className="text-small text-ink-muted">
           ค่อย ๆ รู้จักกัน ในจังหวะของคุณ
         </span>
       </div>
@@ -41,7 +41,7 @@ export default function SiteFooter() {
           <span>Learn more</span>
           <IconDisc>↗</IconDisc>
         </Link>
-        <small className="text-[12px] text-ink-muted">
+        <small className="text-caption text-ink-muted">
           © {new Date().getFullYear()} Pawsons · Made with a little warmth
         </small>
       </div>
