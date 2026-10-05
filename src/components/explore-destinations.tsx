@@ -73,7 +73,7 @@ const destinations = [
     art: (
       <span className={cn(artBox, "w-[110px]")}>
         {/* A lined page behind the friend. */}
-        <span className="absolute inset-[6px_22px_4px_8px] -rotate-6 rounded-[10px] px-3 pt-4 pb-2.5 shadow-[0_3px_0_rgb(24_24_24/0.08)] [background:repeating-linear-gradient(to_bottom,transparent_0_13px,rgb(24_24_24/0.12)_13px_15px)_content-box,var(--color-cream)]" />
+        <span className="absolute inset-[6px_22px_4px_8px] -rotate-6 rounded-tile px-3 pt-4 pb-2.5 shadow-[0_3px_0_rgb(24_24_24/0.08)] [background:repeating-linear-gradient(to_bottom,transparent_0_13px,rgb(24_24_24/0.12)_13px_15px)_content-box,var(--color-cream)]" />
         <Image
           src={art("INFP")}
           alt=""
@@ -98,7 +98,7 @@ const destinations = [
           height={74}
           className="w-[84px]"
         />
-        <span className="absolute top-1.5 -right-2.5 grid size-[30px] rotate-12 place-items-center rounded-full bg-[#e8577d] text-white shadow-[0_2px_0_rgb(24_24_24/0.14)]">
+        <span className="absolute top-1.5 -right-2.5 grid size-[30px] rotate-12 place-items-center rounded-full bg-heart text-white shadow-[0_2px_0_rgb(24_24_24/0.14)]">
           <HeartIcon size={14} weight="fill" />
         </span>
       </span>
@@ -108,11 +108,11 @@ const destinations = [
 
 // Card on a solid ledge (--ledge) that rises on hover and sinks when pressed.
 const card =
-  "group relative flex flex-col items-center gap-3 rounded-card-sm px-4 pt-[22px] pb-5 text-center text-ink shadow-[0_3px_0_var(--ledge)] [--ledge:var(--color-ledge-warm)] hover:-translate-y-[2px] hover:shadow-[0_5px_0_var(--ledge)] focus-visible:outline-3 focus-visible:outline-offset-3 focus-visible:outline-ink active:translate-y-px active:scale-[0.98] active:shadow-[0_3px_0_var(--ledge)] max-[33.75rem]:rounded-card-sm max-[33.75rem]:px-2.5 max-[33.75rem]:pt-[18px] max-[33.75rem]:pb-4";
+  "group relative flex flex-col items-center gap-3 rounded-card-sm px-4 pt-[22px] pb-5 text-center text-ink press [--depth:3px] [--ledge:var(--color-ledge-warm)] focus-visible:outline-3 focus-visible:outline-offset-3 focus-visible:outline-ink max-[33.75rem]:rounded-card-sm max-[33.75rem]:px-2.5 max-[33.75rem]:pt-[18px] max-[33.75rem]:pb-4";
 
 export function ExploreDestinations() {
   return (
-    <section className="band band-wave-top band-pattern pt-[60px] pb-24 [--band:#fff0bd] [--fade-from:40%] [--fade-to:85%] [--pattern:url(/patterns/home.svg)] [--wave:120px] max-md:[--wave:64px] max-[33.75rem]:pt-10 max-[33.75rem]:pb-16">
+    <section className="band band-wave-top band-pattern pt-[60px] pb-24 [--band:var(--color-band-sun)] [--fade-from:40%] [--fade-to:85%] [--pattern:url(/patterns/home.svg)] [--wave:120px] max-md:[--wave:64px] max-[33.75rem]:pt-10 max-[33.75rem]:pb-16">
       <div className="wrap">
         <h2 className="mb-[22px] text-center text-[clamp(22px,3vw,28px)] tracking-[-0.4px]">
           ไปเที่ยวต่อที่ไหนดี?

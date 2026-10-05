@@ -12,7 +12,7 @@ See README.md for the stack, routes, and folder layout. Rules below are what kee
 
 ## Styling
 
-The design system is written up in `docs/DESIGN.md` (tokens in `globals.css` win). Keep it current when you add a token or pattern.
+The design system is written up in `DESIGN.md` (tokens in `globals.css` win). Keep it current when you add a token or pattern.
 
 - **Tailwind v4 (with Preflight) is the only styling system.** Style in JSX with utilities. `src/app/globals.css` is the one CSS file and holds only: design tokens (`@theme`), base element styles (`@layer base`), the admin theme swap, and a few `@utility` effects utilities can't express (`wrap`, `band*`, `doodle-bg`, `focus-ink`). Do not add route CSS files or class-name CSS.
 - Tokens: `bg-paper`, `bg-cream`, `bg-paper-soft`, `text-ink`, `text-ink-soft`, `text-ink-muted`, `text-ink-faint`, `border-line`, `border-line-strong`, `bg-sun` / `text-sun-ink`, `text-gold-ink`, `bg-navy`, `text-green`, house tints `bg-clover|lavender|forget|dandelion`, `shadow-soft|card|float|ledge|ledge-sm`, radii `rounded-tile|card-sm|card|panel` (14/22/28/36px; pills and circles are `rounded-full`), ledge colours `--color-ledge*`. Use the tokens; arbitrary values are for deliberate one-off shapes.

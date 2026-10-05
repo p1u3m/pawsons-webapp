@@ -14,7 +14,7 @@ const sizes = {
 
 const tones = {
   primary:
-    "press border-ink/12 bg-ink text-cream [--ledge:var(--color-ledge-ink)] hover:bg-[#282828]",
+    "press border-ink/12 bg-ink text-cream [--ledge:var(--color-ledge-ink)] hover:bg-ink-soft",
   secondary:
     "press border-ink/10 bg-cream text-ink hover:border-ink/18 [&_[data-slot=disc]]:bg-ink/5 hover:[&_[data-slot=disc]]:bg-ink/8",
   /** Rainbow wash for "keep it in my room" actions. */
@@ -24,7 +24,7 @@ const tones = {
 
 /** Soft, slightly uneven yellow sign with a wave pattern (homepage invitation). */
 const sign =
-  "relative isolate min-h-[84px] w-[260px] bg-[url(/pawson-button-art.svg)] bg-size-[100%_100%] bg-center bg-no-repeat px-[38px] py-[15px] text-[17px] font-bold text-gold-ink [filter:drop-shadow(0_4px_0_#d6a027)_drop-shadow(0_4px_0_#efe0b7)] [text-shadow:0_1px_0_rgb(255_255_255/0.35)] before:pointer-events-none before:absolute before:inset-0 before:bg-[url(/pawson-wave-tile.svg)] before:bg-size-[128px_128px] before:opacity-50 before:mask-[url(/pawson-button-art.svg)] before:mask-size-[100%_100%] before:mask-center before:mask-no-repeat before:content-[''] [&>*]:relative";
+  "relative isolate min-h-[84px] w-[260px] bg-[url(/pawson-button-art.svg)] bg-size-[100%_100%] bg-center bg-no-repeat px-[38px] py-[15px] text-[17px] font-bold text-gold-ink [filter:drop-shadow(0_4px_0_var(--color-gold))_drop-shadow(0_4px_0_var(--color-ledge-sun))] [text-shadow:0_1px_0_rgb(255_255_255/0.35)] before:pointer-events-none before:absolute before:inset-0 before:bg-[url(/pawson-wave-tile.svg)] before:bg-size-[128px_128px] before:opacity-50 before:mask-[url(/pawson-button-art.svg)] before:mask-size-[100%_100%] before:mask-center before:mask-no-repeat before:content-[''] [&>*]:relative";
 
 /** Cream pill standing on a solid ledge (footer). */
 const ledge =

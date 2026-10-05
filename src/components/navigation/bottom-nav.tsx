@@ -128,7 +128,7 @@ export default function BottomNav({
             {hasBadge && (
               <span
                 className={cn(
-                  "absolute top-0.5 right-0.5 size-2.5 rounded-full border-2 bg-[#e53935]",
+                  "absolute top-0.5 right-0.5 size-2.5 rounded-full border-2 bg-danger",
                   accountActive ? "border-sun" : "border-cream",
                 )}
               >

@@ -30,7 +30,7 @@ export default async function Page({
         <p>{c.tagline}</p>
 
         {vibe && (
-          <div className="mx-auto mt-3 mb-5 inline-flex items-center gap-1.5 rounded-full border border-green/22 bg-clover px-[18px] py-1.5 text-[14px] font-medium text-[#2f5d3e]">
+          <div className="mx-auto mt-3 mb-5 inline-flex items-center gap-1.5 rounded-full border border-green/22 bg-clover px-[18px] py-1.5 text-[14px] font-medium text-green-ink">
             <span>🌿 สิ่งที่ขาดไม่ได้ในที่พักใจ: <strong>{vibe}</strong></span>
           </div>
         )}

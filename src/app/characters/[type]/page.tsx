@@ -113,7 +113,7 @@ export default async function Page({
                   lang="en"
                 >
                   {c.name}
-                  <span className="rounded-[8px] border border-[color-mix(in_srgb,var(--house-ink)_35%,transparent)] px-3 py-[9px] text-[15px] leading-none font-medium tracking-normal max-md:px-2.5 max-md:py-2 max-md:text-[13px]">
+                  <span className="rounded-tile border border-[color-mix(in_srgb,var(--house-ink)_35%,transparent)] px-3 py-[9px] text-[15px] leading-none font-medium tracking-normal max-md:px-2.5 max-md:py-2 max-md:text-[13px]">
                     {c.type}
                   </span>
                 </h1>

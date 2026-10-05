@@ -136,7 +136,7 @@ export default async function Page({
                 !inSheet && "h-auto min-h-10",
                 active
                   ? "bg-sun text-gold-ink shadow-[0_2px_0_var(--color-gold)]"
-                  : "bg-[#f4efe1] text-ink-muted hover:text-ink",
+                  : "bg-field text-ink-muted hover:text-ink",
               )}
             >
               {label}
@@ -169,11 +169,11 @@ export default async function Page({
               }
               scroll={false}
               className={cn(
-                "inline-flex h-9 items-center gap-[7px] rounded-full px-3.5 text-[13px] font-semibold hover:-translate-y-px",
+                "inline-flex h-9 items-center gap-[7px] rounded-full px-3.5 text-[13px] font-semibold",
                 !inSheet && "h-auto min-h-10 whitespace-nowrap",
                 active
                   ? "bg-(--house-bg) text-ink shadow-[inset_0_0_0_1.5px_color-mix(in_srgb,var(--house)_55%,transparent)]"
-                  : "bg-cream text-ink-muted shadow-[inset_0_0_0_1.5px_#ebe4d3] hover:text-ink",
+                  : "bg-cream text-ink-muted shadow-[inset_0_0_0_1.5px_var(--color-outline)] hover:text-ink",
                 inSheet && "text-[14px]",
               )}
             >

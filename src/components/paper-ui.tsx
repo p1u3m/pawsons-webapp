@@ -30,7 +30,7 @@ export function Dot({ color, className }: { color?: string; className?: string }
 export function FriendLink({ character: c, title }: { character: Character; title: string }) {
   return (
     <Link
-      className="group flex items-center gap-3.5 rounded-card-sm bg-cream py-3 pr-[18px] pl-3 shadow-ledge-sm hover:-translate-y-[3px]"
+      className="group flex items-center gap-3.5 rounded-card-sm bg-cream py-3 pr-[18px] pl-3 press [--depth:3px] [--ledge-2:var(--color-ledge-2)]"
       href={`/characters/${c.type.toLowerCase()}`}
     >
       <span

@@ -72,7 +72,7 @@ export default function RoomScene({
         </div>
 
         {profile.vibe && (
-          <div className="mb-7 inline-flex items-center gap-1.5 rounded-full border border-green/20 bg-clover px-4 py-1.5 text-[13.5px] text-[#2f5d3e]">
+          <div className="mb-7 inline-flex items-center gap-1.5 rounded-full border border-green/20 bg-clover px-4 py-1.5 text-[13.5px] text-green-ink">
             <span>🌿 สิ่งที่ขาดไม่ได้ในที่พักใจ:</span>
             <strong>{profile.vibe}</strong>
           </div>

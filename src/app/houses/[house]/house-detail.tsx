@@ -181,7 +181,7 @@ export default function HouseDetail({ house }: { house: House }) {
                   <Link
                     key={c.type}
                     href={`/characters/${c.type.toLowerCase()}`}
-                    className="group/member flex min-w-0 flex-col rounded-card-sm bg-cream p-2.5 shadow-ledge hover:-translate-y-0.5 max-md:p-1.5"
+                    className="group/member flex min-w-0 flex-col rounded-card-sm bg-cream p-2.5 press [--ledge-2:var(--color-ledge-2)] max-md:p-1.5"
                   >
                     <div
                       className="grid aspect-square place-items-center overflow-hidden rounded-tile"

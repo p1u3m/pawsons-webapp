@@ -59,7 +59,7 @@ export default async function OrdersPage() {
             <li key={order.id}>
               <Link
                 href={`/shop/orders/${order.id}`}
-                className="grid grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-4 rounded-card-sm bg-cream px-[22px] py-5 shadow-ledge-sm hover:-translate-y-0.5 max-md:grid-cols-[minmax(0,1fr)_auto] max-md:px-[18px] max-md:py-4"
+                className="grid grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-4 rounded-card-sm bg-cream px-[22px] py-5 press [--depth:3px] [--ledge-2:var(--color-ledge-2)] max-md:grid-cols-[minmax(0,1fr)_auto] max-md:px-[18px] max-md:py-4"
               >
                 <span className="flex min-w-0 flex-col gap-1">
                   <span className="flex flex-wrap items-center gap-2.5">
@@ -106,7 +106,7 @@ export default async function OrdersPage() {
 }
 
 const statusTone: Record<FulfillmentStatus, string> = {
-  unfulfilled: "bg-dandelion text-[#8a600a]",
-  preparing: "bg-forget text-[#2f5f8a]",
+  unfulfilled: "bg-dandelion text-amber-ink",
+  preparing: "bg-forget text-blue-ink",
   shipped: "bg-clover text-green",
 };

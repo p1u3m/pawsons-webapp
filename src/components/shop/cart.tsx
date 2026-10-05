@@ -149,7 +149,7 @@ export function AddToCartIcon({ product }: { product: ShopProduct }) {
     <button
       type="button"
       className={cn(
-        "press relative z-1 grid size-[42px] place-items-center rounded-full border-[1.5px] border-[#e3dccb] bg-cream text-navy [--depth:3px] disabled:opacity-35 max-md:size-9",
+        "press relative z-1 grid size-[42px] place-items-center rounded-full border-[1.5px] border-outline bg-cream text-navy [--depth:3px] disabled:opacity-35 max-md:size-9",
         added && "bg-green text-cream",
         "not-disabled:hover:bg-sun not-disabled:hover:text-gold-ink not-disabled:hover:[--ledge:var(--color-gold)]",
       )}
@@ -191,7 +191,7 @@ export function QuantityStepper({
     "grid h-[46px] w-11 place-items-center rounded-full text-ink not-disabled:hover:bg-ink/5 disabled:opacity-30";
   return (
     <div
-      className="inline-flex items-center rounded-full bg-cream shadow-[inset_0_0_0_1.5px_#e3dccb,0_3px_0_var(--color-ledge)]"
+      className="inline-flex items-center rounded-full bg-cream shadow-[inset_0_0_0_1.5px_var(--color-outline),0_3px_0_var(--color-ledge)]"
       role="group"
       aria-label={label}
     >
@@ -294,7 +294,7 @@ export function CartButton({
           "grid h-8 min-w-8 place-items-center rounded-full bg-navy px-2 text-[13px] font-bold tabular-nums",
           count === 0 ? "text-cream/60" : "text-cream",
           toolbar &&
-            "max-md:absolute max-md:-top-0.5 max-md:-right-0.5 max-md:h-5 max-md:min-w-5 max-md:bg-[#f5c64b] max-md:text-[11px] max-md:text-ink max-md:shadow-[0_0_0_2px_var(--color-paper)]",
+            "max-md:absolute max-md:-top-0.5 max-md:-right-0.5 max-md:h-5 max-md:min-w-5 max-md:bg-amber-soft max-md:text-[11px] max-md:text-ink max-md:shadow-[0_0_0_2px_var(--color-paper)]",
           toolbar && count === 0 && "max-md:hidden",
         )}
       >
@@ -380,7 +380,7 @@ function CartLines({
                 />
                 <button
                   type="button"
-                  className="grid size-8 place-items-center rounded-full text-ink-muted hover:bg-[#fbefec] hover:text-[#8e3431]"
+                  className="grid size-8 place-items-center rounded-full text-ink-muted hover:bg-danger-tint hover:text-danger-ink"
                   onClick={() => setLineQuantity(slug, 0)}
                   aria-label={`ลบ ${product.title} ออกจากตะกร้า`}
                 >

@@ -17,7 +17,7 @@ export function StockBadge({ stock }: { stock: number }) {
     return <span className={cn(badge, "text-ink-muted")}>หมดชั่วคราว</span>;
   if (stock <= lowStockThreshold)
     return (
-      <span className={cn(badge, "text-[#9b5a10]")}>เหลือ {stock} ชิ้น</span>
+      <span className={cn(badge, "text-amber-ink")}>เหลือ {stock} ชิ้น</span>
     );
   return null;
 }
@@ -38,7 +38,7 @@ export function ProductArt({
   return (
     <div
       className={cn(
-        "relative grid aspect-square place-items-center overflow-hidden rounded-card-sm bg-[#f4efe1] max-md:rounded-tile",
+        "relative grid aspect-square place-items-center overflow-hidden rounded-card-sm bg-field max-md:rounded-tile",
         className,
       )}
     >
@@ -67,7 +67,7 @@ export function ProductCard({ product }: { product: ShopProduct }) {
   return (
     <article
       data-product
-      className="group relative flex flex-col rounded-card bg-cream p-2.5 shadow-ledge hover:-translate-y-[5px] max-md:rounded-card-sm max-md:p-1.5"
+      className="group relative flex flex-col rounded-card bg-cream p-2.5 press [--ledge-2:var(--color-ledge-2)] max-md:rounded-card-sm max-md:p-1.5"
     >
       <Link
         href={`/shop/${product.slug}`}

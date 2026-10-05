@@ -32,13 +32,16 @@ disagree, `globals.css` wins.
 | Text | `text-ink`, `text-ink-soft`, `text-ink-muted`, `text-ink-faint` |
 | Lines | `border-line`, `border-line-strong` |
 | Brand | `bg-sun` + `text-gold-ink`, `text-green`, `bg-navy` |
+| Fields | `bg-field` (search pill, chips, picture placeholders), `border-outline` / `--color-outline` (thin ring on cream chips), `bg-paper-lift` (hover surface) |
+| Status | `text-green-ink` (success), `text-danger` / `text-danger-ink` / `bg-danger-tint` (errors, sign out), `bg-amber` / `bg-amber-soft` / `text-amber-ink` (stock, pending), `text-blue-ink`, `bg-heart` |
+| Bands | `--color-band-sky`, `-sun`, `-lilac`, `-mint` (stories shelves, home) |
 | Houses | tints `bg-clover`, `bg-lavender`, `bg-forget`, `bg-dandelion`; per-house `--house`, `--house-ink`, `--band` set by `houseVars()` |
 
 ## Shape
 
 Radius scale (`rounded-*`): `tile` 14px for pictures and inner tiles,
 `card-sm` 22px for regular cards, `card` 28px for large cards, `panel` 36px
-for big panels. Pills and circles use `rounded-full`. New values are arbitrary
+for big panels. Pills and circles use `rounded-full`. Small badges use `rounded-tile`. New values are arbitrary
 only for deliberate shapes (the cream arch is `rounded-[48%_48%_16px_16px]`).
 
 ## Ledges and shadows
@@ -56,6 +59,7 @@ Variants for coloured buttons: `--color-ledge-sun`, `-warm`, `-navy`, `-ink`,
 - Components: `pillButton({ variant })` (`primary`, `secondary`, `gradient`,
   `ledge`, `sign`), `signButton` (yellow), `roundButton`, `ChipLink`, and the
   shop's `shopButton` / `shopPillButton`.
+- Cards on a ledge (character, post, product, house, order cards) use `press` too, so they rise and sink exactly like buttons. Flat chips and tabs only change colour.
 - The wave-art `sign` pill has no box-shadow to grow, so it just lifts.
 
 ## Patterns and bands

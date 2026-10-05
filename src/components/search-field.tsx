@@ -46,7 +46,7 @@ export function SearchField({
   return (
     <form
       className={cn(
-        "flex h-[46px] flex-[1_1_200px] items-center gap-2.5 rounded-full bg-[#f4efe1] px-4 text-ink-muted transition-shadow focus-within:shadow-[0_0_0_2px_color-mix(in_srgb,var(--color-green)_35%,transparent)] [&_svg]:shrink-0 data-pending:[&_svg]:opacity-50",
+        "flex h-[46px] flex-[1_1_200px] items-center gap-2.5 rounded-full bg-field px-4 text-ink-muted transition-shadow focus-within:shadow-[0_0_0_2px_color-mix(in_srgb,var(--color-green)_35%,transparent)] [&_svg]:shrink-0 data-pending:[&_svg]:opacity-50",
         className,
       )}
       role="search"

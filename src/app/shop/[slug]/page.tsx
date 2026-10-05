@@ -44,7 +44,7 @@ export default async function ShopProductPage({
     product.stock_qty < 1
       ? { dot: "bg-ink-faint", label: "หมดชั่วคราว" }
       : product.stock_qty <= lowStockThreshold
-        ? { dot: "bg-[#e0a52b]", label: `เหลือเพียง ${product.stock_qty} ชิ้น` }
+        ? { dot: "bg-amber", label: `เหลือเพียง ${product.stock_qty} ชิ้น` }
         : { dot: "bg-green", label: `มีสินค้า · คงเหลือ ${product.stock_qty} ชิ้น` };
 
   return (

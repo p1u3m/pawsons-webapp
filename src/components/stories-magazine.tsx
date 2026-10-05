@@ -15,10 +15,10 @@ const shelfSize = 4;
 // Band colours for the shelves below the first band, in turn, each with its
 // matching doodle tile from scripts/build-patterns.mjs.
 const bandPalette = [
-  ["#dcefff", "shop"],
-  ["#fff0bd", "home"],
-  ["#eee9f5", "house-lavender"],
-  ["#e4f3dc", "contents"],
+  ["var(--color-band-sky)", "shop"],
+  ["var(--color-band-sun)", "home"],
+  ["var(--color-band-lilac)", "house-lavender"],
+  ["var(--color-band-mint)", "contents"],
 ] as const;
 
 function bandVars(i: number) {
@@ -180,7 +180,7 @@ export function MagazineBands({
               <Link
                 key={house.id}
                 href={`/contents?house=${house.id}`}
-                className="group grid grid-cols-[minmax(0,1fr)_auto] content-center gap-x-3 gap-y-0.5 rounded-card px-5 pt-[18px] pb-4 shadow-ledge-sm hover:-translate-y-1 max-md:rounded-card-sm max-md:p-3.5"
+                className="group grid grid-cols-[minmax(0,1fr)_auto] content-center gap-x-3 gap-y-0.5 rounded-card px-5 pt-[18px] pb-4 press [--depth:3px] [--ledge-2:var(--color-ledge-2)] max-md:rounded-card-sm max-md:p-3.5"
                 style={{ background: houseBackground(house), color: house.ink }}
               >
                 <Image

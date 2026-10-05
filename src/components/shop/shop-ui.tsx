@@ -22,7 +22,7 @@ export const shopTextLink =
   "text-[14px] font-medium text-ink underline decoration-line-strong underline-offset-4 hover:decoration-current";
 
 export const shopAlert =
-  "mb-5 rounded-tile border border-[#b54744]/22 bg-[#fbefec] px-4 py-3 text-[14px] text-[#8e3431]";
+  "mb-5 rounded-tile border border-danger/22 bg-danger-tint px-4 py-3 text-[14px] text-danger-ink";
 export const shopNote =
   "rounded-tile bg-paper-soft px-3.5 py-3 text-[13px] leading-[1.6] text-ink-muted";
 export const shopFineprint = "mt-2.5 text-center text-[12px] text-ink-faint";

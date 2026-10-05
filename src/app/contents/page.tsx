@@ -163,7 +163,7 @@ export default async function Page({
                 key={item.id}
                 className={cn(
                   tab(false, inSheet),
-                  "gap-[7px] bg-cream px-3.5 text-[13px] shadow-[inset_0_0_0_1.5px_#ebe4d3]",
+                  "gap-[7px] bg-cream px-3.5 text-[13px] shadow-[inset_0_0_0_1.5px_var(--color-outline)]",
                   active &&
                     "bg-(--house-bg) text-ink shadow-[inset_0_0_0_1.5px_color-mix(in_srgb,var(--house)_55%,transparent)]",
                   inSheet && "h-10 text-[14px]",
@@ -250,7 +250,7 @@ export default async function Page({
           >
             <Suspense>
               <SearchField
-                className="h-[52px] min-w-0 flex-1 bg-cream shadow-ledge-sm max-md:flex-[1_1_calc(100%-64px)] md:h-[46px] md:bg-[#f4efe1] md:shadow-none"
+                className="h-[52px] min-w-0 flex-1 bg-cream shadow-ledge-sm max-md:flex-[1_1_calc(100%-64px)] md:h-[46px] md:bg-field md:shadow-none"
                 placeholder="ค้นหาเรื่องหรือตัวละคร"
                 label="ค้นหาเรื่องราว"
               />
@@ -341,6 +341,6 @@ function tab(active: boolean, inSheet: boolean) {
     !inSheet && "h-auto min-h-10",
     active
       ? "bg-sun text-gold-ink shadow-[0_2px_0_var(--color-gold)]"
-      : "bg-[#f4efe1] text-ink",
+      : "bg-field text-ink",
   );
 }

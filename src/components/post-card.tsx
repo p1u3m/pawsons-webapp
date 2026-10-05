@@ -28,7 +28,7 @@ export function PostFrame({
   className?: string;
 }) {
   return (
-    <span className={cn(frame, "bg-[#f4efe1]", className)}>
+    <span className={cn(frame, "bg-field", className)}>
       {post.image ? (
         <Image
           src={post.image}
@@ -65,7 +65,7 @@ export function PostCard({
       data-post
       className={cn(
         card,
-        "group shadow-ledge hover:-translate-y-[5px]",
+        "group press [--ledge-2:var(--color-ledge-2)]",
         lead && leadCard,
       )}
     >
@@ -116,7 +116,7 @@ export function EmptySlot({ lead }: { lead?: boolean }) {
       aria-hidden="true"
     >
       <span className={cn(frame, lead && leadFrame)}>
-        <ImageIcon className="size-12 text-[#c9c4b8]" />
+        <ImageIcon className="size-12 text-ink-faint" />
       </span>
     </div>
   );

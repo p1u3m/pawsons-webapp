@@ -229,8 +229,8 @@ export default function Quiz() {
           className={cn(
             "absolute top-[26px] right-[26px] z-10 flex size-11 items-center justify-center rounded-full border-[1.5px] shadow-soft hover:scale-108 max-xs:top-[18px] max-xs:right-[18px] max-xs:size-[38px]",
             playing
-              ? "border-green/35 bg-clover text-[#2d6b46]"
-              : "border-line bg-white text-ink hover:border-green/40 hover:bg-[#faf8f2]",
+              ? "border-green/35 bg-clover text-green-ink"
+              : "border-line bg-white text-ink hover:border-green/40 hover:bg-paper-lift",
           )}
           onClick={toggleAudio}
           aria-label={playing ? "ปิดเพลงคลอ" : "เปิดเพลงคลอ"}
@@ -357,7 +357,7 @@ export default function Quiz() {
           <span
             key={i}
             className={cn(
-              "h-1 flex-1 rounded-[4px]",
+              "h-1 flex-1 rounded-full",
               i < progress ? "bg-green" : "bg-ink/7",
             )}
           />
@@ -435,9 +435,9 @@ export default function Quiz() {
                     selectedVibe === option
                       ? cn(
                           SELECTED,
-                          "font-semibold text-[#1f4b30] shadow-[0_4px_16px_-3px_rgb(61_127_88/0.2)]",
+                          "font-semibold text-green-ink shadow-[0_4px_16px_-3px_rgb(61_127_88/0.2)]",
                         )
-                      : "border-line bg-paper font-medium hover:border-green/40 hover:bg-[#faf8f2]",
+                      : "border-line bg-paper font-medium hover:border-green/40 hover:bg-paper-lift",
                   )}
                   onClick={() => setSelectedVibe(option)}
                 >
@@ -481,7 +481,7 @@ export default function Quiz() {
                           SELECTED,
                           "shadow-[0_4px_16px_-3px_rgb(61_127_88/0.15)]",
                         )
-                      : "border-line bg-paper hover:border-green/30 hover:bg-[#faf8f2]",
+                      : "border-line bg-paper hover:border-green/30 hover:bg-paper-lift",
                   )}
                 >
                   <input

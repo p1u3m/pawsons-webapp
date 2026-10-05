@@ -77,6 +77,30 @@
   --color-gold-ink: #60420d;
   --color-navy: #142d3b;
 
+  /* Fields and outlines: search pill, chips and picture placeholders, the thin
+     ring around cream chips, and the lighter hover surface. */
+  --color-field: #f4efe1;
+  --color-outline: #ebe4d3;
+  --color-paper-lift: #faf8f2;
+
+  /* Status: success text, warm amber (stock, pending), blue (preparing),
+     danger (errors, sign out), and the heart on the shop card. */
+  --color-green-ink: #2f5d3e;
+  --color-amber: #e0a52b;
+  --color-amber-soft: #f5c64b;
+  --color-amber-ink: #8a600a;
+  --color-blue-ink: #2f5f8a;
+  --color-danger: #b54744;
+  --color-danger-ink: #8e3431;
+  --color-danger-tint: #fbefec;
+  --color-heart: #e8577d;
+
+  /* Page band colours (stories shelves, home destinations). */
+  --color-band-sky: #dcefff;
+  --color-band-sun: #fff0bd;
+  --color-band-lilac: #eee9f5;
+  --color-band-mint: #e4f3dc;
+
   /* Ledges: the solid bands under cards and buttons (see `press`). */
   --color-ledge: #d7d3cc;
   --color-ledge-2: #e6e1d8;

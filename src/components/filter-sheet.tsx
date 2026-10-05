@@ -29,7 +29,7 @@ export function FilterSheet({
         <SlidersHorizontalIcon size={22} weight="bold" aria-hidden="true" />
         {activeCount > 0 && (
           <span
-            className="absolute -top-0.5 -right-0.5 grid h-5 min-w-5 place-items-center rounded-full bg-[#f5c64b] px-[5px] text-[11px] font-bold text-ink shadow-[0_0_0_2px_var(--color-paper)]"
+            className="absolute -top-0.5 -right-0.5 grid h-5 min-w-5 place-items-center rounded-full bg-amber-soft px-[5px] text-[11px] font-bold text-ink shadow-[0_0_0_2px_var(--color-paper)]"
             aria-hidden="true"
           >
             {activeCount}

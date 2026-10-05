@@ -161,7 +161,7 @@ export default function AuthButton() {
           <button
             className={cn(
               menuItem,
-              "text-[#9e5b5b] hover:bg-[#9e5b5b]/8 hover:text-[#8a4b4b]",
+              "text-danger hover:bg-danger/8 hover:text-danger-ink",
             )}
             onClick={() => {
               close();

@@ -66,7 +66,7 @@ export function CharacterTile({ character: c }: { character: Character }) {
   const art = characterArt[c.type];
   return (
     <Link
-      className="group flex min-w-0 flex-col rounded-card-sm bg-cream p-1.5 shadow-ledge hover:-translate-y-[5px] md:p-2.5"
+      className="group flex min-w-0 flex-col rounded-card-sm bg-cream p-1.5 press [--ledge-2:var(--color-ledge-2)] md:p-2.5"
       href={`/characters/${c.type.toLowerCase()}`}
       style={{ "--house": c.house.badgeColor } as CSSProperties}
     >

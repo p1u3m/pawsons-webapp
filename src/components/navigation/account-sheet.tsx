@@ -275,14 +275,14 @@ export default function AccountSheet({
                 )}
                 <button
                   type="button"
-                  className={cn(sheetRow, "border-[#dc3545]/15 text-[#dc3545]")}
+                  className={cn(sheetRow, "border-danger/15 text-danger")}
                   onClick={() => {
                     onClose();
                     signOut();
                   }}
                 >
                   <span
-                    className={cn(sheetIcon, "bg-[#dc3545]/10 text-[#dc3545]")}
+                    className={cn(sheetIcon, "bg-danger/10 text-danger")}
                   >
                     <SignOutIcon size={20} aria-hidden="true" />
                   </span>
@@ -345,10 +345,10 @@ function SheetLink({
       onClick={onClick}
       className={cn(
         sheetRow,
-        admin && "border-green/20 bg-green/5 text-[#255338]",
+        admin && "border-green/20 bg-green/5 text-green-ink",
       )}
     >
-      <span className={cn(sheetIcon, admin && "bg-green/12 text-[#255338]")}>
+      <span className={cn(sheetIcon, admin && "bg-green/12 text-green-ink")}>
         <Icon size={20} aria-hidden="true" />
       </span>
       <span className="flex-1">{children}</span>
