@@ -1,3 +1,4 @@
+import styles from "@/components/listing-page.module.css";
 import Link from "next/link";
 import { Suspense } from "react";
 import { ArrowLeftIcon, ArrowRightIcon } from "@phosphor-icons/react/dist/ssr";
@@ -103,11 +104,18 @@ export default async function Page({
   const filters = (inSheet: boolean) => (
     <>
       <nav
-        className={cn("flex flex-wrap gap-x-1.5 gap-y-2 pb-0.5", !inSheet && "min-w-0 flex-1")}
+        className={cn(
+          "flex flex-wrap gap-x-1.5 gap-y-2 pb-0.5",
+          !inSheet && "min-w-0 flex-1",
+        )}
         aria-label="เลือกดูเรื่องราว"
       >
         {!selected && (
-          <Link className={tab(magazine)} href="/contents" aria-current={magazine ? "page" : undefined}>
+          <Link
+            className={tab(magazine)}
+            href="/contents"
+            aria-current={magazine ? "page" : undefined}
+          >
             เรื่องแนะนำ
           </Link>
         )}
@@ -138,7 +146,8 @@ export default async function Page({
         <nav
           className={cn(
             "flex flex-wrap gap-2",
-            !inSheet && "shrink-0 flex-nowrap gap-1.5 border-l-[1.5px] border-[#ebe4d3] pl-3.5",
+            !inSheet &&
+              "shrink-0 flex-nowrap gap-1.5 border-l-[1.5px] border-[#ebe4d3] pl-3.5",
           )}
           aria-label="บ้าน"
         >
@@ -174,8 +183,13 @@ export default async function Page({
   );
 
   return (
-    <div className="focus-ink min-h-[70vh] overflow-x-clip pt-10 max-md:pt-14">
-      <section className={pageHero}>
+    <div
+      className={cn(
+        styles.page,
+        "focus-ink min-h-[70vh] overflow-x-clip pt-8 max-md:pt-6",
+      )}
+    >
+      <section className={cn(pageHero, styles.hero)}>
         <div>
           {selected && (
             <Link
@@ -223,7 +237,12 @@ export default async function Page({
         <div className="wrap">
           {/* Mobile: search + filter button (filters in the sheet). From 768px:
               one cream bar, search on top and the filters below a dashed line. */}
-          <div className="mb-7 flex flex-wrap items-center gap-2.5 md:mb-9 md:gap-3 md:rounded-[28px] md:bg-cream md:px-3 md:pt-3 md:pb-3.5 md:shadow-ledge">
+          <div
+            className={cn(
+              styles.toolbar,
+              "mb-7 flex flex-wrap items-center md:bg-cream md:shadow-ledge",
+            )}
+          >
             <Suspense>
               <SearchField
                 className="h-[52px] min-w-0 flex-1 bg-cream shadow-ledge-sm md:h-[46px] md:bg-[#f4efe1] md:shadow-none"
@@ -231,8 +250,15 @@ export default async function Page({
                 label="ค้นหาเรื่องราว"
               />
             </Suspense>
-            <FilterSheet activeCount={activeFilters}>{filters(true)}</FilterSheet>
-            <div className="hidden md:flex md:basis-full md:items-start md:gap-3.5 md:border-t-[1.5px] md:border-dashed md:border-[#ebe4d3] md:px-1 md:pt-3.5">
+            <FilterSheet activeCount={activeFilters}>
+              {filters(true)}
+            </FilterSheet>
+            <div
+              className={cn(
+                styles.filters,
+                "hidden md:flex md:basis-full md:border-t md:border-line-strong md:pt-4",
+              )}
+            >
               {filters(false)}
             </div>
           </div>
@@ -250,6 +276,21 @@ export default async function Page({
             </div>
           )}
 
+          <div className={styles.results}>
+            <div>
+              <h2>{magazine ? "เรื่องแนะนำสำหรับคุณ" : "เรื่องราวทั้งหมด"}</h2>
+              <p>
+                {magazine
+                  ? "เรื่องเล็ก ๆ ที่อยากชวนคุณอ่าน"
+                  : `${visible.length} เรื่อง${currentHouse ? ` · ${currentHouse.name}` : ""}${selected ? ` · ${selected.name}` : ""}`}
+              </p>
+            </div>
+            {(query || selected || currentHouse || currentCategory) && (
+              <Link className={styles.reset} href="/contents?view=all">
+                ล้างตัวกรอง
+              </Link>
+            )}
+          </div>
           {magazine ? (
             <MagazineSpread featured={featured} />
           ) : visible.length ? (

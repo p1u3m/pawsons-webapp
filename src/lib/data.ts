@@ -9,7 +9,7 @@ export const houses = [
     gradientEnd: "#EAE0FC",
     ink: "#674277",
     badgeColor: "#74549E",
-    sigil: "บ้านม่วง.png",
+    sigil: "sigils/purple.svg",
     description: "พื้นที่ให้ความสงสัยได้เติบโต และทุกความคิดได้เป็นตัวเอง",
     motto: "A little wonder goes a long way.",
   },
@@ -23,7 +23,7 @@ export const houses = [
     gradientEnd: "#DBEED5",
     ink: "#173E2C",
     badgeColor: "#459273",
-    sigil: "บ้านเขียว.png",
+    sigil: "sigils/green.svg",
     description: "โอบกอดความรู้สึก ความฝัน และสิ่งเล็ก ๆ ที่มีความหมาย",
     motto: "Soft hearts make a lovely world.",
   },
@@ -37,7 +37,7 @@ export const houses = [
     gradientEnd: "#DCECFB",
     ink: "#183B64",
     badgeColor: "#447EB9",
-    sigil: "บ้านฟ้า.png",
+    sigil: "sigils/blue.svg",
     description: "ความอบอุ่นจากคนที่อยู่ข้าง ๆ และรายละเอียดที่ไม่เคยถูกลืม",
     motto: "It’s the little things that matter.",
   },
@@ -51,12 +51,13 @@ export const houses = [
     gradientEnd: "#F9EBBB",
     ink: "#493A0E",
     badgeColor: "#BD7A38",
-    sigil: "บ้านเหลือง.png",
+    sigil: "sigils/yellow.svg",
     description: "เปิดประตูให้วันธรรมดาได้พาเราไปพบเรื่องใหม่ ๆ",
     motto: "Let the day surprise you.",
   },
 ] as const;
 export type House = (typeof houses)[number];
+export const houseSigilSrc = (house: House) => `/houses/${house.sigil}`;
 export function houseBackground(house: House) {
   return `linear-gradient(145deg, ${house.gradientStart} 0%, ${house.color} 55%, ${house.gradientEnd} 100%)`;
 }

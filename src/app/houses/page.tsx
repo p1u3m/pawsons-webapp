@@ -3,82 +3,115 @@ import Link from "next/link";
 import { ArrowUpRightIcon } from "@phosphor-icons/react/dist/ssr";
 import { ChipLink, HouseBand, houseVars } from "@/components/character-ui";
 import { characters, houses } from "@/lib/data";
-import { cn } from "@/lib/utils";
-import { HouseCrest, HouseIntro, bandHalo } from "./house-ui";
-import HousesMotion from "./houses-motion";
+import { HouseCrest, crestSrc } from "./house-ui";
+import styles from "./houses.module.css";
 
 export const metadata = { title: "Four houses" };
 
 export default function Page() {
   return (
-    <HousesMotion className="pt-12 md:pt-10">
-      <section className="wrap pt-8 pb-4 text-center md:pt-16 md:pb-8">
-        {/* Thai stacks marks above and below the line: give it room. */}
-        <h1 className="mb-[18px] text-[32px] leading-[1.45] tracking-[-0.02em] md:mb-[22px] md:text-[clamp(34px,4.4vw,52px)] md:leading-[1.4]">
-          บ้านทั้งสี่
-          <br />
-          ในโลกใบเล็ก
-        </h1>
-        <p className="mx-auto max-w-[340px] text-[15px] leading-[1.7] md:max-w-[460px] md:text-[17px]">
-          แต่ละบ้านมีเสน่ห์ต่างกัน แต่ทุกบ้านอบอุ่นในแบบของตัวเอง
-        </p>
+    <div
+      className={`${styles.page} focus-ink motion-reduce:[&_a]:translate-none! motion-reduce:[&_svg]:translate-none!`}
+    >
+      <section className={styles.intro} aria-labelledby="houses-title">
+        <h1 id="houses-title">บ้านไหนที่เป็นคุณ</h1>
+        <nav aria-label="เลือกบ้าน" className={styles.selector}>
+          <ul>
+            {houses.map((house) => (
+              <li key={house.id} style={houseVars(house)}>
+                <a
+                  href={`#${house.id}`}
+                  className={styles.houseChoice}
+                  aria-label={`ไปยังบ้าน ${house.name}`}
+                >
+                  <span className={styles.choiceArt}>
+                    <Image
+                      src={crestSrc(house)}
+                      alt=""
+                      width={160}
+                      height={160}
+                      sizes="(min-width: 768px) 104px, 64px"
+                    />
+                  </span>
+                  <span className={styles.choiceName} lang="en">
+                    {house.name}
+                  </span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
       </section>
-
-      {houses.map((h, i) => {
-        const members = characters.filter((c) => c.house.id === h.id);
-        const flip = i % 2 === 1;
+      {houses.map((house, index) => {
+        const members = characters.filter(
+          (character) => character.house.id === house.id,
+        );
         return (
-          <HouseBand key={h.id} id={h.id} style={houseVars(h)} aria-labelledby={`house-${h.id}`}>
+          <HouseBand
+            key={house.id}
+            id={house.id}
+            style={houseVars(house)}
+            className={styles.band}
+            aria-labelledby={`house-${house.id}`}
+          >
             <div
-              data-flip={flip || undefined}
-              className={cn(
-                "wrap grid justify-items-center gap-7 md:items-center md:gap-14",
-                flip
-                  ? "md:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]"
-                  : "md:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]",
-              )}
+              className={styles.houseLayout}
+              data-flip={index % 2 === 1 || undefined}
             >
               <HouseCrest
-                house={h}
-                priority={i === 0}
-                className={cn("w-[min(62vw,240px)] md:w-[min(100%,340px)]", flip && "md:order-2")}
+                house={house}
+                priority={index === 0}
+                className={styles.crest}
               />
-
-              <HouseIntro house={h} title={h.name} heading="h2" id={`house-${h.id}`} className={bandHalo}>
-                <ul
-                  data-members
-                  className="mt-[22px] flex flex-wrap justify-center gap-2.5 [text-shadow:none] md:justify-start"
-                  aria-label={`สมาชิกบ้าน ${h.name}`}
+              <div className={styles.copy}>
+                <header>
+                  <h2 id={`house-${house.id}`} lang="en">
+                    {house.name}
+                  </h2>
+                  <p className={styles.thai}>{house.thai}</p>
+                  <p className={styles.group} lang="en">
+                    {house.groupTitle}
+                  </p>
+                </header>
+                <p className={styles.motto} lang="en">
+                  “{house.motto}”
+                </p>
+                <p className={styles.description}>{house.description}</p>
+                <ChipLink
+                  href={`/houses/${house.id}`}
+                  className={styles.houseButton}
                 >
-                  {members.map((c) => (
-                    <li key={c.type}>
+                  รู้จักบ้าน {house.name}
+                  <ArrowUpRightIcon size={16} aria-hidden="true" />
+                </ChipLink>
+                <ul
+                  className={styles.members}
+                  aria-label={`สมาชิกบ้าน ${house.name}`}
+                >
+                  {members.map((character) => (
+                    <li key={character.type}>
                       <Link
-                        href={`/characters/${c.type.toLowerCase()}`}
-                        className="group flex w-[76px] flex-col items-center gap-1.5 text-[13px] font-semibold"
+                        href={`/characters/${character.type.toLowerCase()}`}
+                        className={styles.member}
                       >
-                        {/* Faces are 162×124: keep that ratio. */}
                         <Image
-                          src={`/characters/faces/${c.type}.png`}
+                          src={`/characters/faces/${character.type}.png`}
                           alt=""
-                          width={81}
-                          height={62}
-                          className="h-auto w-[68px] rounded-2xl shadow-ledge-sm transition-transform duration-300 ease-spring group-hover:-translate-y-[3px] group-hover:-rotate-4 motion-reduce:transition-none"
+                          width={162}
+                          height={124}
+                          sizes="(max-width: 767px) 18vw, 76px"
+                          className={styles.face}
                         />
-                        <span>{c.name}</span>
+                        <span>{character.name}</span>
                       </Link>
                     </li>
                   ))}
                 </ul>
-
-                <ChipLink className="mt-6 [text-shadow:none]" href={`/houses/${h.id}`}>
-                  แวะเข้าบ้าน {h.name}
-                  <ArrowUpRightIcon size={14} weight="bold" aria-hidden="true" />
-                </ChipLink>
-              </HouseIntro>
+              </div>
             </div>
           </HouseBand>
         );
       })}
-    </HousesMotion>
+    </div>
   );
 }

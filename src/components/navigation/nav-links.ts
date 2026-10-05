@@ -1,6 +1,5 @@
 import {
   BookOpenTextIcon,
-  EnvelopeSimpleIcon,
   HouseLineIcon,
   PawPrintIcon,
   StorefrontIcon,
@@ -19,5 +18,8 @@ export const NAV_LINKS: NavItem[] = [
   { href: "/houses", label: "Houses", icon: HouseLineIcon },
   { href: "/contents", label: "Contents", icon: BookOpenTextIcon },
   { href: "/shop", label: "Shop", icon: StorefrontIcon },
-  { href: "/letters", label: "Letters", icon: EnvelopeSimpleIcon, badgeKey: "letters" },
 ];
+
+export function isNavActive(pathname: string, href: string) {
+  return pathname === href || pathname.startsWith(`${href}/`);
+}

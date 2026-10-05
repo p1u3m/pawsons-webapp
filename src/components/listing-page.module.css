@@ -1,0 +1,156 @@
+.page {
+  --focus-ring: var(--color-green);
+  --focus-offset: 4px;
+  --pattern-opacity: 0.1;
+}
+.page :global(.wrap) {
+  width: min(1040px, calc(100% - 40px));
+  margin-inline: auto;
+}
+.page ::selection {
+  background: var(--color-navy);
+  color: var(--color-cream);
+}
+.hero {
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  padding-block: 20px 12px;
+}
+.hero h1 {
+  font-size: clamp(34px, 3.8vw, 48px);
+  line-height: 1.35;
+  text-wrap: balance;
+}
+.hero p {
+  color: var(--color-ink-soft);
+}
+.hero > div:last-child {
+  background: var(--color-cream);
+  border-radius: 48% 48% 16px 16px;
+  width: min(100%, 380px);
+  padding: 20px;
+  justify-self: center;
+}
+.toolbar {
+  gap: 16px;
+  border-radius: 22px;
+  padding: 16px;
+}
+.toolbar form {
+  min-width: 0;
+}
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px 24px;
+  align-items: flex-start;
+}
+.filters nav {
+  border: 0;
+  overflow: visible;
+  mask-image: none;
+  padding-left: 0;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.filters nav:last-child {
+  margin-left: 0;
+}
+.filters nav a {
+  min-height: 40px;
+  height: auto;
+  white-space: nowrap;
+}
+.results {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-block: 28px 24px;
+}
+.results h2 {
+  font-size: 26px;
+  line-height: 1.4;
+  letter-spacing: -0.02em;
+}
+.results p {
+  margin-top: 6px;
+  font-size: 13px;
+  color: var(--color-ink-muted);
+}
+.reset {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  gap: 8px;
+  color: var(--color-ink-soft);
+  font-size: 13px;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+@media (max-width: 1000px) {
+  .hero {
+    gap: 32px;
+  }
+  .filters nav {
+    flex: 1 1 100%;
+  }
+}
+@media (max-width: 767px) {
+  .hero {
+    grid-template-columns: 1fr;
+    gap: 24px;
+    padding-block: 0;
+    text-align: left;
+  }
+  .hero h1 {
+    font-size: 30px;
+    line-height: 1.4;
+  }
+  .hero p {
+    margin-left: 0;
+    max-width: 38ch;
+  }
+  .hero > div:last-child {
+    width: min(80%, 280px);
+  }
+  .filters {
+    display: none;
+  }
+  .toolbar {
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 0;
+    background: transparent;
+  }
+  .toolbar form {
+    flex: 1 1 calc(100% - 64px);
+  }
+  .toolbar > div:last-child > :is(a, button) {
+    width: auto;
+    height: 46px;
+    padding: 0 16px;
+    gap: 8px;
+  }
+  .toolbar > div:last-child > a > span,
+  .toolbar > div:last-child > button > span:first-of-type {
+    display: inline;
+  }
+  .results {
+    margin-block: 24px 20px;
+  }
+  .results h2 {
+    font-size: 23px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .page a,
+  .page img {
+    transition: none !important;
+  }
+  .page a:hover,
+  .page img:hover {
+    transform: none;
+  }
+}

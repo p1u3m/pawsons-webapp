@@ -27,8 +27,9 @@ export const shopNote =
   "rounded-[14px] bg-paper-soft px-3.5 py-3 text-[13px] leading-[1.6] text-ink-muted";
 export const shopFineprint = "mt-2.5 text-center text-[12px] text-ink-faint";
 
-/** Product grid: three per row, two on phones. */
-export const productGrid = "grid grid-cols-3 gap-5 max-md:grid-cols-2 max-md:gap-3";
+/** Product grid: four per row, two on phones, matching /characters. */
+export const productGrid =
+  "grid grid-cols-4 gap-5 max-md:grid-cols-2 max-md:gap-3";
 
 /** Empty state card: icon, title, hint and an action. */
 export function ShopEmpty({
@@ -58,4 +59,3 @@ export function ShopEmpty({
     </div>
   );
 }
-

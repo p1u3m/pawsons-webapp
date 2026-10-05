@@ -1,9 +1,9 @@
-import Image from "next/image";
+import styles from "@/components/listing-page.module.css";
 import Link from "next/link";
 import { Suspense } from "react";
 import { ReceiptIcon } from "@phosphor-icons/react/dist/ssr";
 import { CartButton, CartDrawer } from "@/components/shop/cart";
-import { Dot, pageHero, pageHeroText, pageHeroTitle } from "@/components/paper-ui";
+import { Dot } from "@/components/paper-ui";
 import {
   ShopEmpty,
   shopButton,
@@ -141,7 +141,9 @@ export default async function Page({
       <nav
         className={cn(
           "flex gap-1.5",
-          inSheet ? "flex-wrap" : "ml-auto flex-nowrap border-l-[1.5px] border-[#ebe4d3] pl-3.5",
+          inSheet
+            ? "flex-wrap"
+            : "ml-auto flex-nowrap border-l-[1.5px] border-[#ebe4d3] pl-3.5",
         )}
         aria-label="บ้าน"
       >
@@ -177,42 +179,24 @@ export default async function Page({
   );
 
   return (
-    <div className={cn(shopPage, "pb-0 max-md:pt-14")}>
-      <section className={pageHero}>
-        <div>
-          <h1 className={pageHeroTitle}>
-            พาเพื่อนตัวน้อย
-            <br />
-            กลับไปอยู่ใกล้ ๆ
-          </h1>
-          <p className={pageHeroText}>
-            สติกเกอร์และโปสการ์ดของชาว Pawsons ของเล็ก ๆ
-            ที่อยากให้วันธรรมดาของคุณอบอุ่นขึ้น
-          </p>
-        </div>
-        <div className="w-[min(100%,400px)] justify-self-center max-split:w-[min(72%,300px)]" aria-hidden="true">
-          {/* Always animates, even with reduced motion; unoptimized keeps the WebP frames intact. */}
-          <Image
-            src="/shop/hero-character-drive.webp"
-            alt=""
-            width={500}
-            height={500}
-            unoptimized
-            priority
-            className="block h-auto w-full"
-          />
-        </div>
-      </section>
-
-      <section
-        className="band band-wave-top band-pattern mt-24 pt-6 pb-[120px] [--band:#dcefff] [--pattern:url(/patterns/shop.svg)] [--wave:120px] max-md:mt-[72px] max-md:[--wave:64px]"
-        aria-label="สินค้า"
-      >
+    <div className={cn(shopPage, styles.page, "pb-0 max-md:pt-6")}>
+      <h1 className="sr-only">ร้าน Pawsons</h1>
+      <section className="pt-2 pb-20 max-md:pb-16" aria-label="สินค้า">
         <div className="wrap">
           {/* Desktop: search + orders/cart on top; kind chips | houses below.
               Mobile: search, filter button and cart; filters in the sheet. */}
-          <div className="mb-9 flex flex-wrap items-center gap-3 rounded-[28px] bg-cream px-3 pt-3 pb-3.5 shadow-ledge max-md:flex-nowrap max-md:gap-2.5 max-md:bg-transparent max-md:p-0 max-md:shadow-none">
-            <div className="order-2 flex basis-full flex-wrap items-center gap-x-3.5 gap-y-2.5 border-t-[1.5px] border-dashed border-[#ebe4d3] px-1 pt-3.5 max-md:hidden">
+          <div
+            className={cn(
+              styles.toolbar,
+              "mb-8 flex flex-wrap items-center bg-cream shadow-ledge max-md:shadow-none",
+            )}
+          >
+            <div
+              className={cn(
+                styles.filters,
+                "order-2 basis-full border-t border-line-strong pt-4 max-md:hidden",
+              )}
+            >
               {filters(false)}
             </div>
             <Suspense>
@@ -222,8 +206,10 @@ export default async function Page({
                 label="ค้นหาสินค้า"
               />
             </Suspense>
-            <FilterSheet activeCount={activeFilters}>{filters(true)}</FilterSheet>
-            <div className="ml-auto flex items-center gap-3.5 max-md:ml-0">
+            <FilterSheet activeCount={activeFilters}>
+              {filters(true)}
+            </FilterSheet>
+            <div className="ml-auto flex items-center gap-3 max-md:w-full max-md:justify-end">
               <Link
                 href="/shop/orders"
                 className={cn(shopPillButton, "px-[18px]", toolbarPillButton)}
@@ -248,6 +234,29 @@ export default async function Page({
             </div>
           )}
 
+          <div className={styles.results}>
+            <div>
+              <h2>
+                {currentKind === "all"
+                  ? "ของเล็ก ๆ จากเพื่อนตัวน้อย"
+                  : kindLabel[currentKind]}
+              </h2>
+              <p>
+                {visible.length} สินค้า
+                {currentHouse
+                  ? ` · ${houses.find((h) => h.id === currentHouse)?.name}`
+                  : ""}
+              </p>
+            </div>
+            {(query ||
+              selectedCharacter ||
+              currentHouse ||
+              currentKind !== "all") && (
+              <Link className={styles.reset} href="/shop">
+                ล้างตัวกรอง
+              </Link>
+            )}
+          </div>
           {visible.length ? (
             <ProductGrid>
               {visible.map((product) => (
@@ -256,7 +265,11 @@ export default async function Page({
             </ProductGrid>
           ) : (
             <ShopEmpty
-              title={query ? `ไม่พบสินค้าที่ตรงกับ “${q!.trim()}”` : "ยังไม่มีสินค้าในหมวดนี้"}
+              title={
+                query
+                  ? `ไม่พบสินค้าที่ตรงกับ “${q!.trim()}”`
+                  : "ยังไม่มีสินค้าในหมวดนี้"
+              }
               action={
                 <Link className={shopButton} href="/shop">
                   ดูสินค้าทั้งหมด

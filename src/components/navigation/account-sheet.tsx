@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import {
   CaretRightIcon,
+  EnvelopeSimpleIcon,
   HouseIcon,
   PawPrintIcon,
   ReceiptIcon,
@@ -20,10 +21,15 @@ import { cn } from "@/lib/utils";
 
 interface AccountSheetProps {
   isOpen: boolean;
+  lettersBadge?: number | boolean | string;
   onClose: () => void;
 }
 
-export default function AccountSheet({ isOpen, onClose }: AccountSheetProps) {
+export default function AccountSheet({
+  isOpen,
+  onClose,
+  lettersBadge,
+}: AccountSheetProps) {
   const { user, isAdmin, displayName, avatarUrl, signInWithGoogle, signOut } =
     useAuth();
   const [dragOffset, setDragOffset] = useState(0);
@@ -32,6 +38,45 @@ export default function AccountSheet({ isOpen, onClose }: AccountSheetProps) {
   const dragFrame = useRef<number | null>(null);
   const touchStartY = useRef<number | null>(null);
   const sheetRef = useRef<HTMLDivElement>(null);
+
+  // Keep keyboard focus in the menu and return it to the bottom-nav trigger.
+  useEffect(() => {
+    if (!isOpen) return;
+    const previousFocus =
+      document.activeElement instanceof HTMLElement
+        ? document.activeElement
+        : null;
+    const focusable = () =>
+      Array.from(
+        sheetRef.current?.querySelectorAll<HTMLElement>(
+          'button:not(:disabled), a[href], [tabindex="0"]',
+        ) ?? [],
+      ).filter((element) => element.getClientRects().length > 0);
+    const frame = requestAnimationFrame(() => focusable()[0]?.focus());
+    function trapFocus(event: KeyboardEvent) {
+      if (event.key !== "Tab") return;
+      const controls = focusable();
+      const first = controls[0];
+      const last = controls[controls.length - 1];
+      if (!first || !last) return;
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      } else if (!sheetRef.current?.contains(document.activeElement)) {
+        event.preventDefault();
+        first.focus();
+      }
+    }
+    document.addEventListener("keydown", trapFocus);
+    return () => {
+      cancelAnimationFrame(frame);
+      document.removeEventListener("keydown", trapFocus);
+      if (previousFocus?.isConnected) previousFocus.focus();
+    };
+  }, [isOpen]);
 
   // Close on Escape key
   useEffect(() => {
@@ -121,6 +166,23 @@ export default function AccountSheet({ isOpen, onClose }: AccountSheetProps) {
     touchStartY.current = null;
   }
 
+  const lettersEntry = (
+    <SheetLink href="/letters" icon={EnvelopeSimpleIcon} onClick={onClose}>
+      <span className="flex items-center justify-between gap-3">
+        Letters
+        {Boolean(lettersBadge) && (
+          <span className="rounded-full bg-sun px-2 py-0.5 text-[12px] text-sun-ink">
+            {typeof lettersBadge === "boolean"
+              ? "New"
+              : typeof lettersBadge === "number" && lettersBadge > 99
+                ? "99+"
+                : lettersBadge}
+          </span>
+        )}
+      </span>
+    </SheetLink>
+  );
+
   if (!isOpen && !mounted) return null;
 
   return (
@@ -153,9 +215,10 @@ export default function AccountSheet({ isOpen, onClose }: AccountSheetProps) {
             ? "animate-in duration-240 ease-spring slide-in-from-bottom"
             : "translate-y-full transition-[translate] duration-220 ease-[cubic-bezier(0.4,0,1,1)]",
         )}
+        id="mobile-account-menu"
         role="dialog"
         aria-modal="true"
-        aria-label="เมนูบัญชีผู้ใช้"
+        aria-label="Account menu"
         style={{
           transform:
             isOpen && dragOffset > 0
@@ -168,17 +231,20 @@ export default function AccountSheet({ isOpen, onClose }: AccountSheetProps) {
         onTouchEnd={handleTouchEnd}
       >
         {/* Drag handle for swipe down affordance */}
-        <div className="flex w-full cursor-grab justify-center pt-1 pb-2.5" aria-hidden="true">
+        <div
+          className="flex w-full cursor-grab justify-center pt-1 pb-2.5"
+          aria-hidden="true"
+        >
           <div className="h-1 w-[38px] rounded-xs bg-ink/18" />
         </div>
 
         <div className="flex items-center justify-between border-b border-ink/6 pb-3.5">
-          <h2 className="text-[17px] font-semibold">บัญชีของคุณ</h2>
+          <h2 className="text-[17px] font-semibold">Your account</h2>
           <button
             type="button"
             className="flex size-11 items-center justify-center rounded-full bg-ink/5 text-ink transition-colors hover:bg-ink/10 focus-visible:outline-offset-2"
             onClick={onClose}
-            aria-label="ปิดเมนูบัญชี"
+            aria-label="Close account menu"
           >
             <XIcon size={20} weight="bold" />
           </button>
@@ -208,8 +274,12 @@ export default function AccountSheet({ isOpen, onClose }: AccountSheetProps) {
                   )}
                 </div>
                 <div className="flex min-w-0 flex-col">
-                  <span className="truncate text-[16px] font-semibold text-ink">{displayName}</span>
-                  <span className="truncate text-[13px] text-ink-muted">{user.email}</span>
+                  <span className="truncate text-[16px] font-semibold text-ink">
+                    {displayName}
+                  </span>
+                  <span className="truncate text-[13px] text-ink-muted">
+                    {user.email}
+                  </span>
                 </div>
               </div>
 
@@ -217,11 +287,21 @@ export default function AccountSheet({ isOpen, onClose }: AccountSheetProps) {
                 <SheetLink href="/room" icon={HouseIcon} onClick={onClose}>
                   My Room
                 </SheetLink>
-                <SheetLink href="/shop/orders" icon={ReceiptIcon} onClick={onClose}>
-                  คำสั่งซื้อของฉัน
+                <SheetLink
+                  href="/shop/orders"
+                  icon={ReceiptIcon}
+                  onClick={onClose}
+                >
+                  My orders
                 </SheetLink>
+                {lettersEntry}
                 {isAdmin && (
-                  <SheetLink href="/admin/contents" icon={SquaresFourIcon} tone="admin" onClick={onClose}>
+                  <SheetLink
+                    href="/admin/contents"
+                    icon={SquaresFourIcon}
+                    tone="admin"
+                    onClick={onClose}
+                  >
                     Admin
                   </SheetLink>
                 )}
@@ -233,7 +313,9 @@ export default function AccountSheet({ isOpen, onClose }: AccountSheetProps) {
                     signOut();
                   }}
                 >
-                  <span className={cn(sheetIcon, "bg-[#dc3545]/10 text-[#dc3545]")}>
+                  <span
+                    className={cn(sheetIcon, "bg-[#dc3545]/10 text-[#dc3545]")}
+                  >
                     <SignOutIcon size={20} aria-hidden="true" />
                   </span>
                   <span className="flex-1">Sign out</span>
@@ -245,10 +327,9 @@ export default function AccountSheet({ isOpen, onClose }: AccountSheetProps) {
               <div className="flex size-[54px] items-center justify-center rounded-full bg-sun text-sun-ink shadow-[0_4px_12px_rgb(184_134_11/0.25)]">
                 <PawPrintIcon size={28} weight="fill" aria-hidden="true" />
               </div>
-              <h3 className="text-[18px] font-semibold">ยินดีต้อนรับสู่ Pawsons</h3>
+              <h3 className="text-[18px] font-semibold">Welcome to Pawsons</h3>
               <p className="max-w-[280px] text-[14px] leading-[1.4]">
-                เข้าสู่ระบบเพื่อบันทึกผลการค้นหา Pawson
-                และตกแต่งห้องส่วนตัวของคุณ
+                Sign in to save your Pawson result and make your room your own.
               </p>
               <button
                 type="button"
@@ -260,6 +341,7 @@ export default function AccountSheet({ isOpen, onClose }: AccountSheetProps) {
               </button>
             </div>
           )}
+          {!user && lettersEntry}
         </div>
       </div>
     </div>
@@ -289,7 +371,10 @@ function SheetLink({
     <Link
       href={href}
       onClick={onClick}
-      className={cn(sheetRow, admin && "border-green/20 bg-green/5 text-[#255338]")}
+      className={cn(
+        sheetRow,
+        admin && "border-green/20 bg-green/5 text-[#255338]",
+      )}
     >
       <span className={cn(sheetIcon, admin && "bg-green/12 text-[#255338]")}>
         <Icon size={20} aria-hidden="true" />

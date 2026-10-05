@@ -5,7 +5,7 @@ import { ArrowRightIcon } from "@phosphor-icons/react/dist/ssr";
 import { ChipLink, DoodleLabel } from "@/components/character-ui";
 import { signButton } from "@/components/paper-ui";
 import { EmptySlot, PostCard, postGrid } from "@/components/post-card";
-import { houseBackground, houses } from "@/lib/data";
+import { houseBackground, houses, houseSigilSrc } from "@/lib/data";
 import type { ContentCategory, Post } from "@/lib/posts";
 import { cn } from "@/lib/utils";
 
@@ -33,12 +33,16 @@ function bandVars(i: number) {
 export const storiesWave = "[--wave:120px] max-md:[--wave:64px]";
 
 /** Heading row above a shelf: title on the left, a link on the right. */
-export const sectionHead = "mb-5 flex flex-wrap items-center justify-between gap-x-4 gap-y-2";
+export const sectionHead =
+  "mb-5 flex flex-wrap items-center justify-between gap-x-4 gap-y-2";
 export const sectionTitle =
   "flex max-w-full flex-wrap items-baseline gap-2.5 text-[30px] tracking-normal max-md:text-[26px]";
 
 /** Paper chip link with an arrow that slides right on hover. */
-export function StoriesLink({ className, ...props }: React.ComponentProps<typeof ChipLink>) {
+export function StoriesLink({
+  className,
+  ...props
+}: React.ComponentProps<typeof ChipLink>) {
   return (
     <ChipLink
       className={cn(
@@ -63,12 +67,21 @@ export function MagazineSpread({ featured }: { featured: (Post | null)[] }) {
       aria-label="เรื่องแนะนำ"
     >
       {lead ? (
-        <PostCard post={lead} lead sizes="(max-width: 767px) 100vw, 50vw" priority />
+        <PostCard
+          post={lead}
+          lead
+          sizes="(max-width: 767px) 100vw, 50vw"
+          priority
+        />
       ) : (
         <EmptySlot lead />
       )}
       {side.map((post, i) =>
-        post ? <PostCard key={post.id} post={post} /> : <EmptySlot key={`empty-${i}`} />,
+        post ? (
+          <PostCard key={post.id} post={post} />
+        ) : (
+          <EmptySlot key={`empty-${i}`} />
+        ),
       )}
     </section>
   );
@@ -120,7 +133,8 @@ export function MagazineBands({
             <div className={sectionHead}>
               <h2 id={`mag-${category.slug}-title`} className={sectionTitle}>
                 <DoodleLabel>
-                  {category.english?.trim() || category.slug.replace(/[-_]/g, " ")}
+                  {category.english?.trim() ||
+                    category.slug.replace(/[-_]/g, " ")}
                 </DoodleLabel>
               </h2>
               <StoriesLink href={`/contents?category=${category.slug}`}>
@@ -150,7 +164,11 @@ export function MagazineBands({
 
       {/* On the plain page below the bands: the house cards carry their own
           colours. */}
-      <section className="wrap pt-2" aria-labelledby="mag-houses-title" data-reveal>
+      <section
+        className="wrap pt-2"
+        aria-labelledby="mag-houses-title"
+        data-reveal
+      >
         <div className={sectionHead}>
           <h2 id="mag-houses-title" className={sectionTitle}>
             <DoodleLabel>Explore by House</DoodleLabel>
@@ -170,15 +188,19 @@ export function MagazineBands({
                 style={{ background: houseBackground(house), color: house.ink }}
               >
                 <Image
-                  className="col-start-2 row-span-3 row-start-1 h-[120px] w-auto self-center object-contain transition-[rotate] duration-300 ease-spring group-hover:-rotate-6 max-md:h-[72px]"
-                  src={`/characters/reference/crests/${house.id}s.png`}
+                  className="col-start-2 row-span-3 row-start-1 size-[88px] self-center object-contain transition-[rotate] duration-300 ease-spring group-hover:-rotate-6 max-md:size-16"
+                  src={houseSigilSrc(house)}
                   alt=""
                   width={120}
                   height={196}
                   sizes="48px"
                 />
-                <strong className="col-start-1 text-[18px]">{house.name}</strong>
-                <small className="col-start-1 text-[13px] opacity-80 max-md:hidden">{house.thai}</small>
+                <strong className="col-start-1 text-[18px]">
+                  {house.name}
+                </strong>
+                <small className="col-start-1 text-[13px] opacity-80 max-md:hidden">
+                  {house.thai}
+                </small>
                 <span className="col-start-1 mt-3 flex items-center gap-1.5 text-[13px] font-semibold">
                   {count} โพสต์
                   <ArrowRightIcon size={14} weight="bold" aria-hidden="true" />

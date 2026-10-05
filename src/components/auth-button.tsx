@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import {
+  EnvelopeSimpleIcon,
   HouseIcon,
   ReceiptIcon,
   SignOutIcon,
@@ -13,8 +14,16 @@ import { cn } from "@/lib/utils";
 
 /** Google sign-in button for the desktop header; avatar menu once signed in. */
 export default function AuthButton() {
-  const { supabase, user, isAdmin, loading, displayName, avatarUrl, signInWithGoogle, signOut } =
-    useAuth();
+  const {
+    supabase,
+    user,
+    isAdmin,
+    loading,
+    displayName,
+    avatarUrl,
+    signInWithGoogle,
+    signOut,
+  } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -83,7 +92,10 @@ export default function AuthButton() {
             referrerPolicy="no-referrer"
           />
         ) : (
-          <span className="text-[14px] leading-none font-bold text-ink-muted" aria-hidden="true">
+          <span
+            className="text-[14px] leading-none font-bold text-ink-muted"
+            aria-hidden="true"
+          >
             {displayName.charAt(0).toUpperCase()}
           </span>
         )}
@@ -95,22 +107,48 @@ export default function AuthButton() {
           role="menu"
         >
           <div className="flex flex-col gap-0.5 px-2.5 pt-1.5 pb-2">
-            <span className="text-[14px] font-semibold text-ink">{displayName}</span>
-            <span className="truncate text-[12px] text-ink-muted">{user.email}</span>
+            <span className="text-[14px] font-semibold text-ink">
+              {displayName}
+            </span>
+            <span className="truncate text-[12px] text-ink-muted">
+              {user.email}
+            </span>
           </div>
           <hr className="my-1 border-line" />
-          <Link href="/room" className={menuItem} role="menuitem" onClick={close}>
+          <Link
+            href="/room"
+            className={menuItem}
+            role="menuitem"
+            onClick={close}
+          >
             <HouseIcon size={20} aria-hidden="true" />
             <span>My Room</span>
           </Link>
-          <Link href="/shop/orders" className={menuItem} role="menuitem" onClick={close}>
+          <Link
+            href="/shop/orders"
+            className={menuItem}
+            role="menuitem"
+            onClick={close}
+          >
             <ReceiptIcon size={20} aria-hidden="true" />
-            <span>คำสั่งซื้อของฉัน</span>
+            <span>My orders</span>
+          </Link>
+          <Link
+            href="/letters"
+            className={menuItem}
+            role="menuitem"
+            onClick={close}
+          >
+            <EnvelopeSimpleIcon size={20} aria-hidden="true" />
+            <span>Letters</span>
           </Link>
           {isAdmin && (
             <Link
               href="/admin/contents"
-              className={cn(menuItem, "font-semibold text-green hover:text-green")}
+              className={cn(
+                menuItem,
+                "font-semibold text-green hover:text-green",
+              )}
               role="menuitem"
               onClick={close}
             >
@@ -119,7 +157,10 @@ export default function AuthButton() {
             </Link>
           )}
           <button
-            className={cn(menuItem, "text-[#9e5b5b] hover:bg-[#9e5b5b]/8 hover:text-[#8a4b4b]")}
+            className={cn(
+              menuItem,
+              "text-[#9e5b5b] hover:bg-[#9e5b5b]/8 hover:text-[#8a4b4b]",
+            )}
             onClick={() => {
               close();
               void signOut();
@@ -140,7 +181,13 @@ const menuItem =
 
 export function GoogleIcon({ size }: { size: number }) {
   return (
-    <svg className="shrink-0" viewBox="0 0 24 24" width={size} height={size} aria-hidden="true">
+    <svg
+      className="shrink-0"
+      viewBox="0 0 24 24"
+      width={size}
+      height={size}
+      aria-hidden="true"
+    >
       <path
         d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"
         fill="#4285F4"

@@ -21,6 +21,15 @@ export default function Navigation({ lettersBadge }: NavigationProps) {
     setAccountOpen(false);
   }, [pathname]);
 
+  useEffect(() => {
+    const desktop = window.matchMedia("(min-width: 768px)");
+    const closeOnDesktop = () => {
+      if (desktop.matches) setAccountOpen(false);
+    };
+    desktop.addEventListener("change", closeOnDesktop);
+    return () => desktop.removeEventListener("change", closeOnDesktop);
+  }, []);
+
   // Admin has its own sidebar and header.
   if (pathname.startsWith("/admin")) return null;
 
@@ -29,14 +38,19 @@ export default function Navigation({ lettersBadge }: NavigationProps) {
       {/* Desktop Navigation (>= 768px via CSS) */}
       <Navbar />
 
-      {/* Mobile Top Floating Pill Bar (< 768px via CSS) */}
-      <MobileTopBar onOpenAccount={() => setAccountOpen(true)} />
+      {/* Mobile scrolling brand header (< 768px via CSS) */}
+      <MobileTopBar />
 
       {/* Mobile Bottom Floating Navigation Bar (< 768px via CSS) */}
-      <BottomNav lettersBadge={lettersBadge} />
+      <BottomNav
+        lettersBadge={lettersBadge}
+        accountOpen={accountOpen}
+        onOpenAccount={() => setAccountOpen(true)}
+      />
 
       {/* Mobile Account Bottom Sheet */}
       <AccountSheet
+        lettersBadge={lettersBadge}
         isOpen={accountOpen}
         onClose={() => setAccountOpen(false)}
       />

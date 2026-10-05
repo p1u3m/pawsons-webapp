@@ -1,10 +1,10 @@
 import Image from "next/image";
 import type { ReactNode } from "react";
 import { DoodleLabel } from "@/components/character-ui";
-import type { House } from "@/lib/data";
+import { houseSigilSrc, type House } from "@/lib/data";
 import { cn } from "@/lib/utils";
 
-export const crestSrc = (house: House) => `/houses/${house.sigil}`;
+export const crestSrc = houseSigilSrc;
 
 // A halo in the band colour clears the doodles behind text on a band.
 export const bandHalo =
@@ -23,7 +23,10 @@ export function HouseCrest({
   return (
     <div
       data-crest
-      className={cn("doodle-bg doodle-2 grid aspect-square place-items-center [--doodle-inset:-18%]", className)}
+      className={cn(
+        "doodle-bg doodle-2 grid aspect-square place-items-center [--doodle-inset:-18%]",
+        className,
+      )}
       aria-hidden="true"
     >
       <Image
@@ -62,7 +65,9 @@ export function HouseIntro({
         className,
       )}
     >
-      <p className="mb-2 text-[12px] font-bold tracking-[0.14em] text-(--house)">{house.groupTitle}</p>
+      <p className="mb-2 text-[12px] font-bold tracking-[0.14em] text-(--house)">
+        {house.groupTitle}
+      </p>
       <Heading
         id={id}
         className="flex flex-col gap-1 text-[36px] leading-[1.15] tracking-[-0.02em] text-(--house-ink) md:text-[48px]"
@@ -71,12 +76,19 @@ export function HouseIntro({
         <DoodleLabel className="self-center [overflow-wrap:normal] md:-left-[0.8em] md:self-start">
           {title}
         </DoodleLabel>
-        <small className="text-[16px] font-semibold tracking-normal text-ink-soft">{house.thai}</small>
+        <small className="text-[16px] font-semibold tracking-normal text-ink-soft">
+          {house.thai}
+        </small>
       </Heading>
-      <p className="mt-4 text-[17px] font-semibold text-(--house-ink) italic" lang="en">
+      <p
+        className="mt-4 text-[17px] font-semibold text-(--house-ink) italic"
+        lang="en"
+      >
         “{house.motto}”
       </p>
-      <p className="mt-2 text-[15px] leading-[1.75] text-ink-soft">{house.description}</p>
+      <p className="mt-2 text-[15px] leading-[1.75] text-ink-soft">
+        {house.description}
+      </p>
       {children}
     </div>
   );

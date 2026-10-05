@@ -1,0 +1,66 @@
+{
+  "INTJ": {
+    "width": 984,
+    "height": 1149
+  },
+  "INTP": {
+    "width": 1094,
+    "height": 832
+  },
+  "ENTJ": {
+    "width": 878,
+    "height": 1171
+  },
+  "ENTP": {
+    "width": 887,
+    "height": 1045
+  },
+  "INFJ": {
+    "width": 989,
+    "height": 1028
+  },
+  "INFP": {
+    "width": 920,
+    "height": 904
+  },
+  "ENFJ": {
+    "width": 960,
+    "height": 984
+  },
+  "ENFP": {
+    "width": 996,
+    "height": 837
+  },
+  "ISTJ": {
+    "width": 986,
+    "height": 927
+  },
+  "ISFJ": {
+    "width": 854,
+    "height": 902
+  },
+  "ESTJ": {
+    "width": 883,
+    "height": 1185
+  },
+  "ESFJ": {
+    "width": 1055,
+    "height": 1153
+  },
+  "ISTP": {
+    "width": 968,
+    "height": 903
+  },
+  "ISFP": {
+    "width": 799,
+    "height": 942
+  },
+  "ESTP": {
+    "width": 819,
+    "height": 1030
+  },
+  "ESFP": {
+    "width": 1111,
+    "height": 892
+  }
+}

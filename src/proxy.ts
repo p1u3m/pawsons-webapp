@@ -1,14 +1,10 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseAnonKey =
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
-  process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
+import { supabaseKey, supabaseUrl } from "@/lib/supabase/env";
 
 export async function proxy(request: NextRequest) {
   // When Supabase is not configured, pass through without session refresh
-  if (!supabaseUrl || !supabaseAnonKey) {
+  if (!supabaseUrl || !supabaseKey) {
     return NextResponse.next();
   }
 
@@ -16,7 +12,7 @@ export async function proxy(request: NextRequest) {
     request,
   });
 
-  const supabase = createServerClient(supabaseUrl, supabaseAnonKey, {
+  const supabase = createServerClient(supabaseUrl, supabaseKey, {
     cookies: {
       getAll() {
         return request.cookies.getAll();
@@ -35,19 +31,22 @@ export async function proxy(request: NextRequest) {
     },
   });
 
-  // Refresh the auth token — this keeps the session alive.
-  const { data: { user } } = await supabase.auth.getUser();
+  // Refresh the auth token — this keeps the session alive. getClaims()
+  // verifies the JWT signature (locally with asymmetric keys, otherwise by
+  // asking Supabase), so unlike getSession() it cannot be spoofed.
+  const { data } = await supabase.auth.getClaims();
+  const userId = data?.claims.sub;
 
   // Guard /admin/* — only role=admin may enter
   if (request.nextUrl.pathname.startsWith("/admin")) {
-    if (!user) {
+    if (!userId) {
       return NextResponse.redirect(new URL("/", request.url));
     }
     // Check role in profiles table
     const { data: profile } = await supabase
       .from("profiles")
       .select("role")
-      .eq("id", user.id)
+      .eq("id", userId)
       .maybeSingle();
 
     if (profile?.role !== "admin") {

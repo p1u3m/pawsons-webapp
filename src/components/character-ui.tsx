@@ -1,3 +1,5 @@
+import MotionLink from "@/components/motion-link";
+import characterArt from "@/lib/character-art.json";
 import { houseBackground, type House } from "@/lib/data";
 import Image from "next/image";
 import Link from "next/link";
@@ -99,6 +101,7 @@ export const characterGrid = "grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-5";
 
 /** Character card on a solid ledge, for the /characters and /houses pages. */
 export function CharacterTile({ character: c }: { character: Character }) {
+  const art = characterArt[c.type];
   return (
     <Link
       className="group flex min-w-0 flex-col rounded-[22px] bg-cream p-1.5 shadow-ledge transition-transform duration-220 ease-spring hover:-translate-y-[5px] motion-reduce:transition-none md:rounded-[30px] md:p-2.5"
@@ -106,17 +109,22 @@ export function CharacterTile({ character: c }: { character: Character }) {
       style={{ "--house": c.house.badgeColor } as CSSProperties}
     >
       <span
-        className="grid aspect-square place-items-center overflow-hidden rounded-[17px] md:rounded-[22px]"
+        className="relative grid aspect-square place-items-center overflow-hidden rounded-[17px] md:rounded-[22px]"
         style={{ background: houseBackground(c.house) }}
       >
-        <Image
-          src={c.image}
-          alt=""
-          width={480}
-          height={480}
-          sizes="(max-width: 767px) 45vw, 260px"
-          className="size-[82%] object-contain transition-transform duration-350 ease-spring group-hover:-translate-y-1 group-hover:scale-104 motion-reduce:transition-none"
-        />
+        <span className="absolute inset-0 flex items-center justify-center">
+          <Image
+            src={c.image}
+            alt=""
+            width={art.width}
+            height={art.height}
+            sizes="(max-width: 767px) 45vw, 260px"
+            className={cn(
+              "w-auto object-contain transition-transform duration-350 ease-spring group-hover:-translate-y-1 group-hover:scale-104 motion-reduce:transition-none",
+              c.type === "INTP" ? "h-[65%] max-w-[81%]" : "h-[72%] max-w-[90%]",
+            )}
+          />
+        </span>
       </span>
       <span className="grid gap-1 px-1.5 pt-2.5 pb-1.5 md:px-2 md:pt-3.5 md:pb-2">
         <span className="flex items-center justify-between gap-2 text-[16px] font-bold md:text-[18px]">
@@ -136,7 +144,7 @@ export function CharacterTile({ character: c }: { character: Character }) {
 /** Small cream chip link on a ledge, with an arrow icon that nudges on hover. */
 export function ChipLink({ className, ...props }: ComponentProps<typeof Link>) {
   return (
-    <Link
+    <MotionLink
       className={cn(
         "inline-flex h-9 shrink-0 items-center gap-1.5 rounded-full bg-cream pr-3 pl-4 text-[14px] font-semibold whitespace-nowrap shadow-ledge-sm transition-all duration-350 ease-spring hover:-translate-y-px motion-reduce:transition-none [&_svg]:text-ink-muted [&_svg]:transition-transform [&_svg]:duration-350 [&_svg]:ease-spring hover:[&_svg]:translate-x-0.5 hover:[&_svg]:-translate-y-0.5 hover:[&_svg]:text-ink",
         className,
@@ -174,7 +182,9 @@ export function PageIntro({
     <header className={cn("mb-11 max-w-[780px]", className)}>
       <Eyebrow className="mb-4">{label}</Eyebrow>
       <h1 className="text-[clamp(32px,3.8vw,46px)] leading-[1.25]">{title}</h1>
-      {children && <p className="mt-3.5 text-[17px] leading-[1.75]">{children}</p>}
+      {children && (
+        <p className="mt-3.5 text-[17px] leading-[1.75]">{children}</p>
+      )}
     </header>
   );
 }

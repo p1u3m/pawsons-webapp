@@ -13,9 +13,12 @@ export const lowStockThreshold = 5;
 export function StockBadge({ stock }: { stock: number }) {
   const badge =
     "absolute top-3 left-3 rounded-full bg-cream/92 px-2.5 py-1 text-[12px] font-semibold backdrop-blur-[6px]";
-  if (stock < 1) return <span className={cn(badge, "text-ink-muted")}>หมดชั่วคราว</span>;
+  if (stock < 1)
+    return <span className={cn(badge, "text-ink-muted")}>หมดชั่วคราว</span>;
   if (stock <= lowStockThreshold)
-    return <span className={cn(badge, "text-[#9b5a10]")}>เหลือ {stock} ชิ้น</span>;
+    return (
+      <span className={cn(badge, "text-[#9b5a10]")}>เหลือ {stock} ชิ้น</span>
+    );
   return null;
 }
 
@@ -66,7 +69,12 @@ export function ProductCard({ product }: { product: ShopProduct }) {
       data-product
       className="group relative flex flex-col rounded-[30px] bg-cream p-2.5 shadow-ledge transition-[translate,background-color] duration-220 ease-spring hover:-translate-y-[5px] motion-reduce:transition-none max-md:rounded-[20px] max-md:p-1.5"
     >
-      <Link href={`/shop/${product.slug}`} className="relative block" tabIndex={-1} aria-hidden="true">
+      <Link
+        href={`/shop/${product.slug}`}
+        className="relative block"
+        tabIndex={-1}
+        aria-hidden="true"
+      >
         <ProductArt
           product={product}
           className={cn(product.stock_qty < 1 && "opacity-70 grayscale-70")}
@@ -76,7 +84,9 @@ export function ProductCard({ product }: { product: ShopProduct }) {
       <div className="flex flex-1 flex-col gap-1 px-2 pt-3.5 pb-1.5 max-md:px-1.5 max-md:pt-2.5 max-md:pb-1">
         <p className="flex flex-wrap items-center gap-1.5 text-[12px] max-md:text-[11px]">
           {character && <Dot color={character.house.badgeColor} />}
-          {character ? `${character.name} · ${character.type}` : product.character_type}
+          {character
+            ? `${character.name} · ${character.type}`
+            : product.character_type}
           <span aria-hidden="true">·</span>
           {kindLabel[product.kind]}
         </p>

@@ -1,9 +1,5 @@
 import { createBrowserClient } from "@supabase/ssr";
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseAnonKey =
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
-  process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
+import { supabaseKey, supabaseUrl } from "@/lib/supabase/env";
 
 /**
  * Returns a browser-side Supabase client, or `null` when the required
@@ -11,6 +7,6 @@ const supabaseAnonKey =
  * static build without `.env.local`).
  */
 export function createClient() {
-  if (!supabaseUrl || !supabaseAnonKey) return null;
-  return createBrowserClient(supabaseUrl, supabaseAnonKey);
+  if (!supabaseUrl || !supabaseKey) return null;
+  return createBrowserClient(supabaseUrl, supabaseKey);
 }

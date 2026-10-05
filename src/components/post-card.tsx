@@ -11,7 +11,8 @@ const card =
 const frame =
   "relative grid aspect-[4/5] place-items-center overflow-hidden rounded-[22px] max-md:rounded-[15px]";
 // The lead story's picture grows to fill the two rows beside it.
-const leadFrame = "flex-1 aspect-auto min-h-0 max-lg:flex-none max-lg:aspect-[4/5]";
+const leadFrame =
+  "flex-1 aspect-auto min-h-0 max-lg:flex-none max-lg:aspect-[4/5]";
 const leadCard = "col-span-2 row-span-2 max-lg:row-auto";
 
 /** Picture frame of a post: the artwork, or a placeholder until it is added. */
@@ -68,16 +69,32 @@ export function PostCard({
         lead && leadCard,
       )}
     >
-      <PostFrame post={post} sizes={sizes} priority={priority} className={cn(lead && leadFrame)} />
-      <span className={cn("flex flex-col gap-1 px-2 pt-3 pb-1.5 max-md:px-1.5 max-md:pt-2.5 max-md:pb-1", lead && "px-3 pt-4 pb-2 max-md:px-3 max-md:pt-4 max-md:pb-2")}>
-        <span className={cn("flex flex-wrap items-center gap-1.5 text-[12px] text-ink-muted", lead && "text-[13px]")}>
+      <PostFrame
+        post={post}
+        sizes={sizes}
+        priority={priority}
+        className={cn(lead && leadFrame)}
+      />
+      <span
+        className={cn(
+          "flex flex-col gap-1 px-2 pt-3 pb-1.5 max-md:px-1.5 max-md:pt-2.5 max-md:pb-1",
+          lead && "px-3 pt-4 pb-2 max-md:px-3 max-md:pt-4 max-md:pb-2",
+        )}
+      >
+        <span
+          className={cn(
+            "flex flex-wrap items-center gap-1.5 text-[12px] text-ink-muted",
+            lead && "text-[13px]",
+          )}
+        >
           <Dot color={c.house.badgeColor} />
           {post.category.label} · {c.name} {c.type}
         </span>
         <span
           className={cn(
             "line-clamp-2 text-[15px] leading-[1.45] font-semibold max-md:text-[13px]",
-            lead && "text-[clamp(20px,2vw,26px)] leading-[1.35] max-md:text-[17px]",
+            lead &&
+              "text-[clamp(20px,2vw,26px)] leading-[1.35] max-md:text-[17px]",
           )}
         >
           {post.category.layout === "quote" ? `“${post.title}”` : post.title}
@@ -91,7 +108,11 @@ export function PostCard({
 export function EmptySlot({ lead }: { lead?: boolean }) {
   return (
     <div
-      className={cn(card, "shadow-[inset_0_0_0_2px_var(--color-cream)]", lead && leadCard)}
+      className={cn(
+        card,
+        "shadow-[inset_0_0_0_2px_var(--color-cream)]",
+        lead && leadCard,
+      )}
       aria-hidden="true"
     >
       <span className={cn(frame, lead && leadFrame)}>
@@ -101,5 +122,6 @@ export function EmptySlot({ lead }: { lead?: boolean }) {
   );
 }
 
-/** Post grid: four per row on desktop, three on tablets, two on phones. */
-export const postGrid = "grid grid-cols-4 gap-5 max-lg:grid-cols-3 max-md:grid-cols-2 max-md:gap-3";
+/** Post grid: four per row from 768px, two on phones, matching /characters. */
+export const postGrid =
+  "grid grid-cols-4 gap-5 max-md:grid-cols-2 max-md:gap-3";
