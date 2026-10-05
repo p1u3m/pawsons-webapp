@@ -16,9 +16,9 @@ interface BottomNavProps {
 }
 
 const target =
-  "group relative flex min-h-[52px] min-w-11 flex-1 items-center justify-center rounded-full px-0.5 py-1 h-auto border-0 transition-colors duration-150 hover:bg-transparent focus-visible:ring-0 focus-visible:outline-none motion-reduce:transition-none";
+  "group relative flex min-h-[52px] min-w-11 flex-1 items-center justify-center rounded-full px-0.5 py-1 h-auto border-0 hover:bg-transparent focus-visible:ring-0 focus-visible:outline-none";
 const surface =
-  "relative flex size-11 items-center justify-center rounded-full transition-colors duration-160 group-focus-visible:outline-2 group-focus-visible:outline-offset-2 group-focus-visible:outline-green motion-reduce:transition-none";
+  "relative flex size-11 items-center justify-center rounded-full group-focus-visible:outline-2 group-focus-visible:outline-offset-2 group-focus-visible:outline-green";
 
 export default function BottomNav({
   lettersBadge,
@@ -98,7 +98,7 @@ export default function BottomNav({
           >
             {loading ? (
               <span
-                className="size-8 animate-pulse rounded-full bg-ink/8 motion-reduce:animate-none"
+                className="size-8 rounded-full bg-ink/8"
                 aria-hidden="true"
               />
             ) : user && avatarUrl ? (

@@ -42,7 +42,7 @@ export default async function Page({
           <CharacterImage
             character={c}
             priority
-            className="size-full animate-[float_7s_ease-in-out_infinite] object-contain"
+            className="size-full object-contain"
           />
           <span
             className="absolute right-2 bottom-4 rounded-full border border-line bg-cream px-[18px] py-1.5 text-[18px] font-semibold tracking-[1px] shadow-soft"

@@ -21,7 +21,7 @@ export default function Navbar() {
       <header className="pointer-events-auto relative mx-auto flex h-16 max-w-[1040px] items-center justify-between gap-3 rounded-full bg-cream py-2 pr-3 pl-6 shadow-[0_12px_32px_-10px_rgb(74_68_53/0.14),0_2px_6px_rgb(74_68_53/0.04)] max-lg:gap-2 max-lg:pr-2 max-lg:pl-4">
         <Link
           href="/"
-          className="flex min-h-11 shrink-0 items-center rounded-lg transition-opacity hover:opacity-75 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-green motion-reduce:transition-none"
+          className="flex min-h-11 shrink-0 items-center rounded-lg hover:opacity-75 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-green"
           aria-label="Pawsons Home"
         >
           <Image
@@ -47,7 +47,7 @@ export default function Navbar() {
                     active={active}
                     aria-current={active ? "page" : undefined}
                     className={cn(
-                      "min-h-11 flex-row gap-2 rounded-full px-3.5 py-2 text-[14px] font-medium whitespace-nowrap transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green focus-visible:ring-0 motion-reduce:transition-none max-lg:gap-1.5 max-lg:px-2 max-lg:text-[13px]",
+                      "min-h-11 flex-row gap-2 rounded-full px-3.5 py-2 text-[14px] font-medium whitespace-nowrap focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green focus-visible:ring-0 max-lg:gap-1.5 max-lg:px-2 max-lg:text-[13px]",
                       active
                         ? "bg-sun font-semibold text-sun-ink hover:bg-sun focus:bg-sun data-active:bg-sun data-active:hover:bg-sun data-active:focus:bg-sun"
                         : "text-ink-muted hover:bg-paper-soft hover:text-ink focus:bg-paper-soft",

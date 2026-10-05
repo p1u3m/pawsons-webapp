@@ -1,8 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
 import Link from "next/link";
-import { gsap } from "gsap";
 import { cn } from "@/lib/utils";
 import { CharacterImage } from "./character-ui";
 import { Eyebrow, IconDisc, pillButton } from "./pill-button";
@@ -16,51 +14,10 @@ export default function RoomScene({
   profile: Profile;
   character: Character | null;
 }) {
-  const mascotRef = useRef<HTMLDivElement>(null);
-  const roomRef = useRef<HTMLDivElement>(null);
-
-  // GSAP idle animation for the mascot
-  useEffect(() => {
-    if (!mascotRef.current || !character) return;
-
-    const media = gsap.matchMedia();
-    media.add("(prefers-reduced-motion: no-preference)", () => {
-      // Entrance animation
-      gsap.from(roomRef.current, {
-        opacity: 0,
-        y: 20,
-        duration: 0.8,
-        ease: "power2.out",
-        clearProps: "all",
-      });
-
-      // Gentle floating idle
-      gsap.to(mascotRef.current, {
-        y: -8,
-        duration: 2.5,
-        ease: "sine.inOut",
-        yoyo: true,
-        repeat: -1,
-      });
-
-      // Subtle head tilt
-      gsap.to(mascotRef.current, {
-        rotation: 2,
-        duration: 3.2,
-        ease: "sine.inOut",
-        yoyo: true,
-        repeat: -1,
-        delay: 0.5,
-      });
-    });
-
-    return () => media.revert();
-  }, [character]);
-
   // No character assigned — show a warm prompt to take the quiz
   if (!character) {
     return (
-      <div className={roomCard} ref={roomRef}>
+      <div className={roomCard}>
         <div className="px-6 pt-10 pb-12">
           <RoomWindow />
           <Eyebrow>YOUR ROOM</Eyebrow>
@@ -83,7 +40,7 @@ export default function RoomScene({
   const greeting = getGreeting();
 
   return (
-    <div className={roomCard} ref={roomRef}>
+    <div className={roomCard}>
       <RoomWindow sky={getSky()} />
 
       <div className="px-7 pt-4 pb-10">
@@ -95,10 +52,9 @@ export default function RoomScene({
           {character.name} กำลังพักผ่อนอยู่ในห้องของคุณ
         </p>
 
-        {/* Mascot with idle animation */}
+        {/* Mascot */}
         <div
-          className="mx-auto mb-5 flex aspect-square w-60 max-w-[85%] items-center justify-center rounded-full p-6 shadow-[0_12px_30px_-8px_rgb(24_24_24/0.08),inset_0_1px_3px_rgb(255_255_255/0.8)] will-change-transform"
-          ref={mascotRef}
+          className="mx-auto mb-5 flex aspect-square w-60 max-w-[85%] items-center justify-center rounded-full p-6 shadow-[0_12px_30px_-8px_rgb(24_24_24/0.08),inset_0_1px_3px_rgb(255_255_255/0.8)]"
           style={{ background: `linear-gradient(145deg, ${character.house.gradientStart}, ${character.house.color})` }}
         >
           <CharacterImage character={character} priority className="size-full object-contain" />
@@ -147,7 +103,7 @@ const roomCard =
 function RoomWindow({ sky }: { sky?: string }) {
   return (
     <div className="relative mx-auto mt-6 h-[70px] w-[120px] overflow-hidden rounded-t-[60px] border-[3px] border-b-4 border-[#e8e3d5] border-b-[#d5cebc] shadow-[inset_0_3px_8px_rgb(0_0_0/0.08)]">
-      <div className={cn("size-full transition-[background] duration-1000", sky)} />
+      <div className={cn("size-full", sky)} />
     </div>
   );
 }

@@ -1,5 +1,4 @@
 @import "tailwindcss";
-@import "tw-animate-css";
 
 /* shadcn (base-nova) writes data-horizontal:/data-vertical:, but Base UI marks
    orientation as data-orientation="…"; map one to the other. */
@@ -45,7 +44,7 @@
 }
 
 /* Pawsons design tokens. Use them as utilities: bg-paper, text-ink,
-   text-ink-muted, border-line, shadow-card, ease-spring, animate-float … */
+   text-ink-muted, border-line, shadow-card… */
 @theme {
   /* Extra breakpoints: xs is 480px (use max-xs for phones); split is 861px,
      where two-column page heroes start. */
@@ -89,46 +88,6 @@
   --shadow-ledge-sm: 0 3px 0 #d7d3cc, 0 5px 0 #e6e1d8;
   --shadow-ledge-pressed: 0 1px 0 #d7d3cc, 0 2px 0 #e6e1d8;
 
-  --ease-spring: cubic-bezier(0.22, 1, 0.36, 1);
-
-  --animate-float: float 6.5s ease-in-out infinite;
-  --animate-gradient-flow: gradient-flow 5s linear infinite;
-  --animate-bob: bob 6s ease-in-out infinite;
-  --animate-pop: pop 0.35s cubic-bezier(0.22, 1, 0.36, 1);
-  --animate-blink: blink 1.4s ease-in-out infinite;
-
-  @keyframes float {
-    0%,
-    100% {
-      transform: translateY(0) rotate(0deg);
-    }
-    50% {
-      transform: translateY(-9px) rotate(1.4deg);
-    }
-  }
-  @keyframes pop {
-    50% {
-      scale: 1.15;
-    }
-  }
-  @keyframes blink {
-    50% {
-      opacity: 0.3;
-    }
-  }
-  @keyframes bob {
-    50% {
-      translate: 0 -8px;
-    }
-  }
-  @keyframes gradient-flow {
-    from {
-      background-position: 0% 50%;
-    }
-    to {
-      background-position: 200% 50%;
-    }
-  }
 }
 
 @font-face {
@@ -237,7 +196,6 @@ body:has(.admin-theme) {
   }
 
   html {
-    scroll-behavior: smooth;
     scroll-padding-top: 110px;
     scrollbar-gutter: stable;
     @variant max-md {
@@ -482,6 +440,37 @@ body:has(.admin-theme) {
   & :is(a, button):focus-visible {
     outline: 2px solid var(--focus-ring, var(--color-ink));
     outline-offset: var(--focus-offset, 3px);
+  }
+}
+
+/* The one button state style: a solid ledge under the control. It rises on
+   hover and keyboard focus and sinks when pressed. States switch instantly;
+   the site has no transitions. Tune with --depth, --ledge and --ledge-2
+   (an optional outer band). */
+@utility press {
+  --depth: 4px;
+  box-shadow:
+    0 var(--depth) 0 var(--ledge, #d7d3cc),
+    0 calc(var(--depth) * 1.75) 0 var(--ledge-2, transparent);
+  &:not(:disabled, [aria-disabled="true"]):focus-visible {
+    translate: 0 -2px;
+    box-shadow:
+      0 calc(var(--depth) + 2px) 0 var(--ledge, #d7d3cc),
+      0 calc(var(--depth) * 1.75 + 2px) 0 var(--ledge-2, transparent);
+  }
+  @media (hover: hover) {
+    &:not(:disabled, [aria-disabled="true"]):hover {
+      translate: 0 -2px;
+      box-shadow:
+        0 calc(var(--depth) + 2px) 0 var(--ledge, #d7d3cc),
+        0 calc(var(--depth) * 1.75 + 2px) 0 var(--ledge-2, transparent);
+    }
+  }
+  &:not(:disabled, [aria-disabled="true"]):active {
+    translate: 0 var(--depth);
+    box-shadow:
+      0 0 0 var(--ledge, #d7d3cc),
+      0 calc(var(--depth) * 0.5) 0 var(--ledge-2, transparent);
   }
 }
 

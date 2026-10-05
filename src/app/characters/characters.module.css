@@ -137,11 +137,4 @@
     font-size: 22px;
   }
 }
-@media (prefers-reduced-motion: reduce) {
-  .page *,
-  .page *::before,
-  .page *::after {
-    animation: none !important;
-    transition: none !important;
-  }
-}
+

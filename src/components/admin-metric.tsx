@@ -24,7 +24,7 @@ export function AdminMetric({
   return (
     <Card
       size="sm"
-      className={cn("relative", href && "transition-colors hover:bg-muted/40")}
+      className={cn("relative", href && "hover:bg-muted/40")}
     >
       <CardHeader>
         <CardDescription>{label}</CardDescription>

@@ -2,7 +2,6 @@
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { gsap } from "gsap";
 import { questions, calculateType, characters } from "@/lib/data";
 import { cn } from "@/lib/utils";
 import { CharacterImage } from "./character-ui";
@@ -126,25 +125,13 @@ export default function Quiz() {
   const [isMuted, setIsMuted] = useState(false);
 
   const router = useRouter();
-  const panel = useRef<HTMLDivElement>(null);
   const heading = useRef<HTMLHeadingElement>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  // GSAP transition when step changes
+  // Move focus to the question heading when the step changes.
   useEffect(() => {
     if (!started) return;
     heading.current?.focus();
-    const media = gsap.matchMedia();
-    media.add("(prefers-reduced-motion: no-preference)", () => {
-      gsap.from(panel.current, {
-        opacity: 0,
-        y: 12,
-        duration: 0.4,
-        ease: "power2.out",
-        clearProps: "all",
-      });
-    });
-    return () => media.revert();
   }, [step, started]);
 
   // Audio event listeners
@@ -230,7 +217,7 @@ export default function Quiz() {
         <button
           type="button"
           className={cn(
-            "absolute top-[26px] right-[26px] z-10 flex size-11 items-center justify-center rounded-full border-[1.5px] shadow-soft transition-all duration-350 ease-spring hover:scale-108 max-xs:top-[18px] max-xs:right-[18px] max-xs:size-[38px]",
+            "absolute top-[26px] right-[26px] z-10 flex size-11 items-center justify-center rounded-full border-[1.5px] shadow-soft hover:scale-108 max-xs:top-[18px] max-xs:right-[18px] max-xs:size-[38px]",
             playing
               ? "border-green/35 bg-clover text-[#2d6b46]"
               : "border-line bg-white text-ink hover:border-green/40 hover:bg-[#faf8f2]",
@@ -258,7 +245,7 @@ export default function Quiz() {
           <CharacterImage
             character={characters[5]}
             priority
-            className="size-[155px] animate-float object-contain"
+            className="size-[155px]"
           />
         </div>
 
@@ -309,7 +296,7 @@ export default function Quiz() {
 
       <div className="flex items-center justify-between text-[13.5px] font-medium text-ink-muted">
         <button
-          className="rounded-full bg-ink/4 px-3.5 py-1.5 text-[13.5px] font-medium text-ink transition-all duration-350 ease-spring hover:bg-ink/8"
+          className="rounded-full bg-ink/4 px-3.5 py-1.5 text-[13.5px] font-medium text-ink hover:bg-ink/8"
           onClick={handleBack}
         >
           ← ย้อนกลับ
@@ -336,14 +323,14 @@ export default function Quiz() {
           <span
             key={i}
             className={cn(
-              "h-1 flex-1 rounded-[4px] transition-colors duration-300",
+              "h-1 flex-1 rounded-[4px]",
               i < progress ? "bg-green" : "bg-ink/7",
             )}
           />
         ))}
       </div>
 
-      <div ref={panel}>
+      <div>
         {/* INTERSTITIAL SCENE SLIDE */}
         {currentStep.kind === "scene" && (
           <div className="mx-auto flex flex-col items-center px-2 pt-4 pb-3 text-center">
@@ -366,7 +353,7 @@ export default function Quiz() {
                 alt={currentStep.imageAlt}
                 width={170}
                 height={170}
-                className="relative size-[155px] animate-[float_5.5s_ease-in-out_infinite] object-contain"
+                className="relative size-[155px] object-contain"
                 priority
               />
             </div>
@@ -398,7 +385,7 @@ export default function Quiz() {
                   key={option}
                   type="button"
                   className={cn(
-                    "flex items-center justify-center rounded-full border-[1.5px] px-5 py-4 text-center text-[16px] text-ink transition-all duration-350 ease-spring select-none hover:-translate-y-0.5 max-xs:px-2.5 max-xs:py-3.5 max-xs:text-[15px]",
+                    "flex items-center justify-center rounded-full border-[1.5px] px-5 py-4 text-center text-[16px] text-ink select-none hover:-translate-y-0.5 max-xs:px-2.5 max-xs:py-3.5 max-xs:text-[15px]",
                     selectedVibe === option
                       ? cn(SELECTED, "font-semibold text-[#1f4b30] shadow-[0_4px_16px_-3px_rgb(61_127_88/0.2)]")
                       : "border-line bg-paper font-medium hover:border-green/40 hover:bg-[#faf8f2]",
@@ -435,7 +422,7 @@ export default function Quiz() {
                 <label
                   key={option}
                   className={cn(
-                    "flex cursor-pointer items-center gap-4 rounded-[20px] border-[1.5px] px-6 py-[18px] text-[16px] transition-all duration-350 ease-spring hover:translate-x-[3px]",
+                    "flex cursor-pointer items-center gap-4 rounded-[20px] border-[1.5px] px-6 py-[18px] text-[16px] hover:translate-x-[3px]",
                     answers[questionIndex] === i
                       ? cn(SELECTED, "shadow-[0_4px_16px_-3px_rgb(61_127_88/0.15)]")
                       : "border-line bg-paper hover:border-green/30 hover:bg-[#faf8f2]",

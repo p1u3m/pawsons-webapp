@@ -144,13 +144,4 @@
     font-size: 23px;
   }
 }
-@media (prefers-reduced-motion: reduce) {
-  .page a,
-  .page img {
-    transition: none !important;
-  }
-  .page a:hover,
-  .page img:hover {
-    transform: none;
-  }
-}
+

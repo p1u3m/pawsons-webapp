@@ -54,7 +54,7 @@ export default async function Page({
 
   return (
     <article
-      className={`${styles.profile} focus-ink motion-reduce:[&_a]:translate-none! motion-reduce:[&_a_svg]:translate-none!`}
+      className={`${styles.profile} focus-ink`}
       style={houseVars(c.house)}
     >
       <div className={styles.hero}>

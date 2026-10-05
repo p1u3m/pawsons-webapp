@@ -116,7 +116,7 @@ export function EditRoleDialog({
                 aria-checked={selected}
                 onClick={() => setRole(value)}
                 className={cn(
-                  "flex items-start gap-3 rounded-lg border p-3 text-left transition-colors hover:bg-muted/60",
+                  "flex items-start gap-3 rounded-lg border p-3 text-left hover:bg-muted/60",
                   selected && "border-primary bg-muted/60",
                 )}
               >

@@ -131,7 +131,6 @@
   border-radius: 22px;
   box-shadow: var(--shadow-ledge);
   background: var(--color-cream);
-  transition: transform 220ms var(--ease-spring);
 }
 .memberArt {
   display: grid;
@@ -372,7 +371,6 @@
   background: var(--color-cream);
   border-radius: 48% 48% 12px 12px;
   padding: 18px;
-  transition: transform 180ms var(--ease-spring);
 }
 .otherGrid h3 {
   color: var(--house-ink);
@@ -518,17 +516,4 @@
     font-size: 11px;
   }
 }
-@media (prefers-reduced-motion: reduce) {
-  .page *,
-  .page *::before,
-  .page *::after {
-    transition: none !important;
-  }
-  .page a:hover,
-  .page a:hover img {
-    transform: none;
-  }
-  :global(html):has(.page) {
-    scroll-behavior: auto;
-  }
-}
+

@@ -28,12 +28,27 @@ export function HeroChibis({
   const pick = (r: number, slot: number) =>
     characters[(slot * rounds + (r % rounds)) % characters.length];
 
-  // Preload the next round so the swap never shows an empty slot.
+  // Decoded images are kept here so the browser can't drop them before the swap.
+  const cache = useRef(new Map<string, HTMLImageElement>());
+  const load = (r: number) =>
+    Promise.all(
+      Array.from({ length: SLOTS }, (_, s) => {
+        const src = chibiSrc(pick(r, s));
+        let img = cache.current.get(src);
+        if (!img) {
+          img = new window.Image();
+          img.src = src;
+          cache.current.set(src, img);
+        }
+        return img.decode().catch(() => undefined);
+      }),
+    );
+  const loadRef = useRef(load);
+  loadRef.current = load;
+
+  // Warm the next round while the current one is on screen.
   useEffect(() => {
-    for (let s = 0; s < SLOTS; s++) {
-      const img = new window.Image();
-      img.src = chibiSrc(pick(round + 1, s));
-    }
+    void loadRef.current(round + 1);
   }, [round]);
 
   // Layout effect: the new images get their hidden start state before paint.
@@ -41,61 +56,52 @@ export function HeroChibis({
     const root = rootRef.current;
     if (!root) return;
     const chars = root.querySelectorAll<HTMLElement>("[data-chibi]");
-    const media = gsap.matchMedia();
+    const ctx = gsap.context(() => {});
     let tl: gsap.core.Timeline | undefined;
 
-    media.add(
-      {
-        motion: "(prefers-reduced-motion: no-preference)",
-        reduced: "(prefers-reduced-motion: reduce)",
-      },
-      (ctx) => {
-        const reduced = ctx.conditions?.reduced;
-        const next = () => setRound((r) => r + 1);
+    ctx.add(() => {
+      // Swap only once the next four are decoded, so no slot comes up empty.
+      const next = () => {
+        void loadRef.current(round + 1).then(() => setRound(round + 1));
+      };
+      tl = gsap.timeline({ delay: HOLD, onComplete: next });
 
-        if (reduced) {
-          gsap.set(chars, { opacity: 1 });
-          return;
-        }
-        tl = gsap.timeline({ delay: HOLD, onComplete: next });
+      // Reduced motion keeps the same swap as a plain fade, with no movement.
+      const still = window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
+      ).matches;
+      const move = (vars: gsap.TweenVars) => (still ? {} : vars);
 
-        // Enter: pop up from below with a little squash, left to right.
-        gsap.fromTo(
-          chars,
-          { yPercent: 40, scaleX: 1.15, scaleY: 0.6, opacity: 0 },
+      // Enter: pop up from below with a little squash, left to right.
+      gsap.fromTo(
+        chars,
+        { opacity: 0, ...move({ yPercent: 40, scaleX: 1.15, scaleY: 0.6 }) },
+        {
+          opacity: 1,
+          ...move({ yPercent: 0, scaleX: 1, scaleY: 1 }),
+          duration: 0.7,
+          ease: still ? "power1.out" : "back.out(2.2)",
+          stagger: 0.09,
+        },
+      );
+      // Exit: hop and squash out, same order.
+      tl.to(chars, {
+        keyframes: [
           {
-            yPercent: 0,
-            scaleX: 1,
-            scaleY: 1,
-            opacity: 1,
-            duration: 0.7,
-            ease: "back.out(2.2)",
-            stagger: 0.09,
+            ...move({ yPercent: -10, scaleY: 1.08, scaleX: 0.94 }),
+            duration: 0.18,
+            ease: "power2.out",
           },
-        );
-        // Exit: hop and drop out of view, same order.
-        tl.to(chars, {
-          keyframes: [
-            {
-              yPercent: -10,
-              scaleY: 1.08,
-              scaleX: 0.94,
-              duration: 0.18,
-              ease: "power2.out",
-            },
-            {
-              yPercent: 45,
-              scaleY: 0.6,
-              scaleX: 1.1,
-              opacity: 0,
-              duration: 0.3,
-              ease: "power2.in",
-            },
-          ],
-          stagger: 0.08,
-        });
-      },
-    );
+          {
+            opacity: 0,
+            ...move({ yPercent: 6, scaleY: 0.6, scaleX: 1.1 }),
+            duration: 0.3,
+            ease: "power2.in",
+          },
+        ],
+        stagger: 0.08,
+      });
+    });
 
     const pause = () => tl?.pause();
     const resume = () => tl?.resume();
@@ -104,7 +110,7 @@ export function HeroChibis({
     return () => {
       root.removeEventListener("mouseenter", pause);
       root.removeEventListener("mouseleave", resume);
-      media.revert();
+      ctx.revert();
     };
   }, [round]);
 

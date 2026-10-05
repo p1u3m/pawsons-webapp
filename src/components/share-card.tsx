@@ -125,7 +125,7 @@ export default function ShareCard({ character: c }: { character: Character }) {
         <h2 className="mt-3.5 text-[24px] tracking-[-0.5px]">I feel like {c.name}.</h2>
         <CharacterImage
           character={c}
-          className="mt-6 mb-4 h-[230px] min-h-0 w-full animate-[float_7s_ease-in-out_infinite] object-contain max-md:mt-3.5 max-md:mb-2.5 max-md:h-[175px] tiny:h-[150px]"
+          className="mt-6 mb-4 h-[230px] min-h-0 w-full object-contain max-md:mt-3.5 max-md:mb-2.5 max-md:h-[175px] tiny:h-[150px]"
         />
         <strong className="text-[28px] tracking-[1.5px]" style={{ color: c.house.ink }}>
           {c.type}

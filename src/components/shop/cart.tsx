@@ -149,8 +149,8 @@ export function AddToCartIcon({ product }: { product: ShopProduct }) {
     <button
       type="button"
       className={cn(
-        "relative z-1 grid size-[42px] place-items-center rounded-full bg-cream text-navy shadow-[inset_0_0_0_1.5px_#e3dccb,0_3px_0_#d7d3cc] transition-[translate,background-color,box-shadow] duration-200 ease-spring disabled:opacity-35 max-md:size-9",
-        added && "animate-pop bg-green text-cream motion-reduce:animate-none",
+        "relative z-1 grid size-[42px] place-items-center rounded-full bg-cream text-navy shadow-[inset_0_0_0_1.5px_#e3dccb,0_3px_0_#d7d3cc] disabled:opacity-35 max-md:size-9",
+        added && "bg-green text-cream",
         "not-disabled:hover:-translate-y-0.5 not-disabled:hover:bg-sun not-disabled:hover:text-gold-ink not-disabled:hover:shadow-[0_3px_0_var(--color-gold)]",
       )}
       disabled={soldOut}
@@ -501,7 +501,7 @@ export function CartDrawer({
   return (
     <dialog
       ref={dialog}
-      className="focus-ink fixed inset-y-0 right-0 left-auto m-0 h-dvh max-h-dvh w-[min(420px,100vw)] max-w-[100vw] translate-x-full overflow-visible border-0 bg-transparent p-0 text-ink transition-[translate,overlay,display] transition-discrete duration-400 ease-spring backdrop:bg-ink/0 backdrop:backdrop-blur-none backdrop:transition-[background-color,backdrop-filter,overlay,display] backdrop:transition-discrete backdrop:duration-400 open:translate-x-0 open:backdrop:bg-ink/28 open:backdrop:backdrop-blur-[2px] motion-reduce:transition-none motion-reduce:backdrop:transition-none starting:open:translate-x-full starting:open:backdrop:bg-ink/0 starting:open:backdrop:backdrop-blur-none"
+      className="focus-ink fixed inset-y-0 right-0 left-auto m-0 h-dvh max-h-dvh w-[min(420px,100vw)] max-w-[100vw] translate-x-full overflow-visible border-0 bg-transparent p-0 text-ink backdrop:bg-ink/0 backdrop:backdrop-blur-none open:translate-x-0 open:backdrop:bg-ink/28 open:backdrop:backdrop-blur-[2px] starting:open:translate-x-full starting:open:backdrop:bg-ink/0 starting:open:backdrop:backdrop-blur-none"
       aria-labelledby="store-drawer-title"
       onClick={(event) => {
         if (event.target === event.currentTarget) close();

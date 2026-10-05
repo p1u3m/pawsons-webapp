@@ -12,14 +12,14 @@ export const shopButton = cn(signButton, "px-7");
 
 /** Cream pill on a ledge (cart, my orders). */
 export const shopPillButton =
-  "inline-flex min-h-[46px] items-center gap-2.5 rounded-3xl bg-cream pr-[7px] pl-[18px] text-[15px] font-bold text-navy shadow-[0_4px_0_#ccc9c2] transition-[translate,box-shadow] duration-200 ease-spring hover:-translate-y-0.5";
+  "press inline-flex min-h-[46px] items-center gap-2.5 rounded-3xl bg-cream pr-[7px] pl-[18px] text-[15px] font-bold text-navy [--ledge:#ccc9c2]";
 /** In the shop toolbar on phones: an icon-only square. */
 export const toolbarPillButton =
-  "max-md:relative max-md:size-[52px] max-md:justify-center max-md:p-0 max-md:shadow-[0_3px_0_#d7d3cc]";
+  "max-md:relative max-md:size-[52px] max-md:justify-center max-md:p-0 max-md:[--depth:3px] max-md:[--ledge:#d7d3cc]";
 
 /** Underlined inline link. */
 export const shopTextLink =
-  "text-[14px] font-medium text-ink underline decoration-line-strong underline-offset-4 transition-[text-decoration-color] duration-200 hover:decoration-current";
+  "text-[14px] font-medium text-ink underline decoration-line-strong underline-offset-4 hover:decoration-current";
 
 export const shopAlert =
   "mb-5 rounded-[14px] border border-[#b54744]/22 bg-[#fbefec] px-4 py-3 text-[14px] text-[#8e3431]";

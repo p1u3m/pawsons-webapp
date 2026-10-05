@@ -33,7 +33,6 @@ export default function AccountSheet({
   const { user, isAdmin, displayName, avatarUrl, signInWithGoogle, signOut } =
     useAuth();
   const [dragOffset, setDragOffset] = useState(0);
-  const [mounted, setMounted] = useState(isOpen);
   const dragOffsetRef = useRef(0);
   const dragFrame = useRef<number | null>(null);
   const touchStartY = useRef<number | null>(null);
@@ -90,31 +89,13 @@ export default function AccountSheet({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isOpen, onClose]);
 
+  // Lock body scroll while the sheet is open.
   useEffect(() => {
-    if (isOpen) {
-      setMounted(true);
-      return;
-    }
-    if (!mounted) return;
-    const duration = window.matchMedia("(prefers-reduced-motion: reduce)")
-      .matches
-      ? 0
-      : 240;
-    const timeout = window.setTimeout(() => setMounted(false), duration);
-    return () => window.clearTimeout(timeout);
-  }, [isOpen, mounted]);
-
-  // Lock body scroll until the closing animation finishes.
-  useEffect(() => {
-    if (isOpen || mounted) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
+    if (isOpen) document.body.style.overflow = "hidden";
     return () => {
       document.body.style.overflow = "";
     };
-  }, [isOpen, mounted]);
+  }, [isOpen]);
 
   // Reset drag offset when opening
   useEffect(() => {
@@ -183,25 +164,17 @@ export default function AccountSheet({
     </SheetLink>
   );
 
-  if (!isOpen && !mounted) return null;
+  if (!isOpen) return null;
 
   return (
     <div
-      className={cn(
-        "fixed inset-0 z-100 md:hidden",
-        !isOpen && "pointer-events-none",
-      )}
+      className="fixed inset-0 z-100 md:hidden"
       role="region"
       aria-label="Account Menu Portal"
     >
       {/* Backdrop */}
       <div
-        className={cn(
-          "fixed inset-0 bg-ink/40 backdrop-blur-xs motion-reduce:animate-none motion-reduce:transition-none",
-          isOpen
-            ? "animate-in duration-200 fade-in"
-            : "opacity-0 transition-opacity duration-220 ease-out",
-        )}
+        className="fixed inset-0 bg-ink/40 backdrop-blur-xs"
         onClick={onClose}
         aria-hidden="true"
       />
@@ -209,12 +182,7 @@ export default function AccountSheet({
       {/* Sheet Container */}
       <div
         ref={sheetRef}
-        className={cn(
-          "fixed inset-x-0 bottom-0 z-101 mx-auto flex max-h-[85vh] max-w-[480px] flex-col overflow-y-auto rounded-t-[28px] bg-cream px-5 pt-3 pb-[max(24px,env(safe-area-inset-bottom,24px))] shadow-[0_-10px_40px_rgb(24_24_24/0.16)] motion-reduce:animate-none motion-reduce:transition-none",
-          isOpen
-            ? "animate-in duration-240 ease-spring slide-in-from-bottom"
-            : "translate-y-full transition-[translate] duration-220 ease-[cubic-bezier(0.4,0,1,1)]",
-        )}
+        className="fixed inset-x-0 bottom-0 z-101 mx-auto flex max-h-[85vh] max-w-[480px] flex-col overflow-y-auto rounded-t-[28px] bg-cream px-5 pt-3 pb-[max(24px,env(safe-area-inset-bottom,24px))] shadow-[0_-10px_40px_rgb(24_24_24/0.16)]"
         id="mobile-account-menu"
         role="dialog"
         aria-modal="true"
@@ -224,7 +192,6 @@ export default function AccountSheet({
             isOpen && dragOffset > 0
               ? `translateY(${dragOffset}px)`
               : undefined,
-          transition: isOpen && dragOffset > 0 ? "none" : undefined,
         }}
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
@@ -242,7 +209,7 @@ export default function AccountSheet({
           <h2 className="text-[17px] font-semibold">Your account</h2>
           <button
             type="button"
-            className="flex size-11 items-center justify-center rounded-full bg-ink/5 text-ink transition-colors hover:bg-ink/10 focus-visible:outline-offset-2"
+            className="flex size-11 items-center justify-center rounded-full bg-ink/5 text-ink hover:bg-ink/10 focus-visible:outline-offset-2"
             onClick={onClose}
             aria-label="Close account menu"
           >
@@ -298,6 +265,7 @@ export default function AccountSheet({
                 {isAdmin && (
                   <SheetLink
                     href="/admin/contents"
+                    target="_blank"
                     icon={SquaresFourIcon}
                     tone="admin"
                     onClick={onClose}
@@ -349,18 +317,20 @@ export default function AccountSheet({
 }
 
 const sheetRow =
-  "flex min-h-12 items-center gap-3 rounded-2xl border border-ink/8 bg-cream px-3.5 py-2.5 text-left text-[15px] font-medium text-ink transition-[background-color,scale] duration-180 hover:bg-ink/4 focus-visible:outline-offset-2 active:scale-[0.98]";
+  "flex min-h-12 items-center gap-3 rounded-2xl border border-ink/8 bg-cream px-3.5 py-2.5 text-left text-[15px] font-medium text-ink focus-visible:outline-offset-2 active:scale-[0.98]";
 const sheetIcon =
   "flex size-[34px] shrink-0 items-center justify-center rounded-full bg-ink/5 text-ink";
 
 function SheetLink({
   href,
+  target,
   icon: Icon,
   tone,
   onClick,
   children,
 }: {
   href: string;
+  target?: "_blank";
   icon: Icon;
   tone?: "admin";
   onClick: () => void;
@@ -370,6 +340,8 @@ function SheetLink({
   return (
     <Link
       href={href}
+      target={target}
+      rel={target === "_blank" ? "noopener noreferrer" : undefined}
       onClick={onClick}
       className={cn(
         sheetRow,

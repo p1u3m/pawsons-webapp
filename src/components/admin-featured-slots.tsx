@@ -192,7 +192,7 @@ export function AdminFeaturedSlots({
                   disabled={pending}
                   onClick={() => setPicking(i + 1)}
                   className={cn(
-                    "relative flex aspect-[4/5] w-full flex-col items-center justify-center gap-1.5 rounded-lg border border-dashed text-sm text-muted-foreground transition-colors hover:bg-muted/60 hover:text-foreground",
+                    "relative flex aspect-[4/5] w-full flex-col items-center justify-center gap-1.5 rounded-lg border border-dashed text-sm text-muted-foreground hover:bg-muted/60 hover:text-foreground",
                     i === 0 && "max-sm:aspect-[4/3]",
                   )}
                 >

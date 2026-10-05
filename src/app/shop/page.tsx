@@ -124,7 +124,7 @@ export default async function Page({
               aria-current={active ? "page" : undefined}
               scroll={false}
               className={cn(
-                "inline-flex h-9 shrink-0 items-center gap-2 rounded-full pr-2 pl-4 text-[14px] font-semibold whitespace-nowrap transition-all duration-350 ease-spring",
+                "inline-flex h-9 shrink-0 items-center gap-2 rounded-full pr-2 pl-4 text-[14px] font-semibold whitespace-nowrap",
                 active
                   ? "bg-sun text-gold-ink shadow-[0_2px_0_var(--color-gold)]"
                   : "bg-[#f4efe1] text-ink-muted hover:text-ink",
@@ -162,7 +162,7 @@ export default async function Page({
               }
               scroll={false}
               className={cn(
-                "inline-flex h-9 items-center gap-[7px] rounded-full px-3.5 text-[13px] font-semibold transition-all duration-350 ease-spring hover:-translate-y-px",
+                "inline-flex h-9 items-center gap-[7px] rounded-full px-3.5 text-[13px] font-semibold hover:-translate-y-px",
                 active
                   ? "bg-(--house-bg) text-ink shadow-[inset_0_0_0_1.5px_color-mix(in_srgb,var(--house)_55%,transparent)]"
                   : "bg-cream text-ink-muted shadow-[inset_0_0_0_1.5px_#ebe4d3] hover:text-ink",

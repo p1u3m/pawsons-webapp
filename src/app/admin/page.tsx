@@ -227,7 +227,7 @@ export default async function AdminDashboard() {
                 >
                   <div
                     className={cn(
-                      "w-full rounded-md transition-colors",
+                      "w-full rounded-md",
                       day.satang
                         ? "bg-primary/80 hover:bg-primary"
                         : "bg-muted",
@@ -272,7 +272,7 @@ export default async function AdminDashboard() {
                   <li key={todo.href}>
                     <Link
                       href={todo.href}
-                      className="group flex items-center gap-3 rounded-lg bg-muted/60 p-3 transition-colors hover:bg-muted"
+                      className="group flex items-center gap-3 rounded-lg bg-muted/60 p-3 hover:bg-muted"
                     >
                       <span className="flex size-8 items-center justify-center rounded-md border bg-background">
                         <todo.icon className="size-4" />
@@ -281,7 +281,7 @@ export default async function AdminDashboard() {
                       <span className="font-semibold tabular-nums">
                         {number.format(todo.count)}
                       </span>
-                      <ArrowRightIcon className="size-4 text-muted-foreground transition-transform group-hover:translate-x-0.5" />
+                      <ArrowRightIcon className="size-4 text-muted-foreground group-hover:translate-x-0.5" />
                     </Link>
                   </li>
                 ))}

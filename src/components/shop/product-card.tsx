@@ -53,7 +53,7 @@ export function ProductArt({
               : "(max-width: 640px) 45vw, 280px"
           }
           priority={priority}
-          className="object-cover transition-transform duration-600 ease-spring group-hover:scale-104"
+          className="object-cover group-hover:scale-104"
         />
       ) : (
         <ImagePlaceholder label="ยังไม่มีรูปสินค้า" />
@@ -67,7 +67,7 @@ export function ProductCard({ product }: { product: ShopProduct }) {
   return (
     <article
       data-product
-      className="group relative flex flex-col rounded-[30px] bg-cream p-2.5 shadow-ledge transition-[translate,background-color] duration-220 ease-spring hover:-translate-y-[5px] motion-reduce:transition-none max-md:rounded-[20px] max-md:p-1.5"
+      className="group relative flex flex-col rounded-[30px] bg-cream p-2.5 shadow-ledge hover:-translate-y-[5px] max-md:rounded-[20px] max-md:p-1.5"
     >
       <Link
         href={`/shop/${product.slug}`}

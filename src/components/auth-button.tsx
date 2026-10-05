@@ -61,7 +61,7 @@ export default function AuthButton() {
   if (!user) {
     return (
       <button
-        className="flex shrink-0 items-center gap-[7px] rounded-full border border-line bg-ink/4 py-[7px] pr-4 pl-3 text-[13px] font-semibold whitespace-nowrap text-ink transition-all duration-350 ease-spring hover:border-line-strong hover:bg-ink/8"
+        className="flex shrink-0 items-center gap-[7px] rounded-full border border-line bg-ink/4 py-[7px] pr-4 pl-3 text-[13px] font-semibold whitespace-nowrap text-ink hover:border-line-strong hover:bg-ink/8"
         onClick={signInWithGoogle}
         aria-label="Sign in with Google"
       >
@@ -76,7 +76,7 @@ export default function AuthButton() {
   return (
     <div className="relative shrink-0" ref={menuRef}>
       <button
-        className="flex size-9 items-center justify-center overflow-hidden rounded-full border-2 border-line bg-paper-soft transition-all duration-350 ease-spring hover:border-line-strong hover:shadow-soft"
+        className="flex size-9 items-center justify-center overflow-hidden rounded-full border-2 border-line bg-paper-soft hover:border-line-strong hover:shadow-soft"
         onClick={() => setMenuOpen(!menuOpen)}
         aria-expanded={menuOpen}
         aria-haspopup="true"
@@ -103,7 +103,7 @@ export default function AuthButton() {
 
       {menuOpen && (
         <div
-          className="absolute top-[calc(100%+10px)] right-0 z-60 min-w-[210px] animate-in rounded-[20px] border border-line bg-cream p-2.5 shadow-float duration-200 ease-spring fade-in zoom-in-97 slide-in-from-top-2"
+          className="absolute top-[calc(100%+10px)] right-0 z-60 min-w-[210px] rounded-[20px] border border-line bg-cream p-2.5 shadow-float"
           role="menu"
         >
           <div className="flex flex-col gap-0.5 px-2.5 pt-1.5 pb-2">
@@ -145,6 +145,8 @@ export default function AuthButton() {
           {isAdmin && (
             <Link
               href="/admin/contents"
+              target="_blank"
+              rel="noopener noreferrer"
               className={cn(
                 menuItem,
                 "font-semibold text-green hover:text-green",
@@ -177,7 +179,7 @@ export default function AuthButton() {
 }
 
 const menuItem =
-  "flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-left text-[14px] font-medium text-ink-muted transition-all duration-350 ease-spring hover:bg-ink/5 hover:text-ink [&_svg]:shrink-0 [&_svg]:opacity-85";
+  "flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-left text-[14px] font-medium text-ink-muted hover:bg-ink/5 hover:text-ink [&_svg]:shrink-0 [&_svg]:opacity-85";
 
 export function GoogleIcon({ size }: { size: number }) {
   return (

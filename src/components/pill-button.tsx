@@ -2,12 +2,11 @@ import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 const base =
-  "group/pill inline-flex items-center justify-center gap-3 whitespace-nowrap transition-all duration-350 ease-spring tiny:whitespace-normal";
-// Hover lifts the pill a touch; press settles it.
+  "group/pill inline-flex items-center justify-center gap-3 whitespace-nowrap tiny:whitespace-normal";
+// The wave-art sign has no box-shadow to grow (its ledge is a drop-shadow
+// filter), so it just lifts a little and settles.
 const lift =
-  "hover:-translate-y-px hover:scale-[1.015] active:translate-y-0 active:scale-[0.98]";
-const raised =
-  "shadow-[inset_0_1px_1px_rgb(255_255_255/0.22),0_4px_14px_-3px_rgb(24_24_24/0.14)] hover:shadow-[inset_0_1px_1px_rgb(255_255_255/0.25),0_6px_20px_-4px_rgb(24_24_24/0.18)]";
+  "hover:-translate-y-0.5 active:translate-y-0.5";
 
 const sizes = {
   md: "min-h-12 px-[22px] py-2.5 text-[15px] tiny:px-3.5 tiny:text-[13.5px]",
@@ -15,14 +14,12 @@ const sizes = {
 };
 
 const tones = {
-  primary: cn(raised, "border-ink/12 bg-ink text-cream hover:bg-[#282828]"),
+  primary: "press border-ink/12 bg-ink text-cream [--ledge:#77706a] hover:bg-[#282828]",
   secondary:
-    "border-ink/10 bg-cream/85 text-ink shadow-soft hover:border-ink/18 hover:bg-cream hover:shadow-card [&_[data-slot=disc]]:bg-ink/5 hover:[&_[data-slot=disc]]:bg-ink/8",
+    "press border-ink/10 bg-cream text-ink [--ledge:#ccc9c2] hover:border-ink/18 [&_[data-slot=disc]]:bg-ink/5 hover:[&_[data-slot=disc]]:bg-ink/8",
   /** Rainbow wash for "keep it in my room" actions. */
-  gradient: cn(
-    raised,
-    "animate-gradient-flow border-ink/12 bg-[linear-gradient(90deg,#f7cac9,#dec2e6,#92a8d1,#a3d9c9,#f5df4d,#f7cac9)] bg-size-[200%_100%] text-ink",
-  ),
+  gradient:
+    "press bg-size-[200%_100%] text-ink [--ledge:#b6a6c4]",
 };
 
 /** Soft, slightly uneven yellow sign with a wave pattern (homepage invitation). */
@@ -31,7 +28,7 @@ const sign =
 
 /** Cream pill standing on a solid ledge (footer). */
 const ledge =
-  "min-h-14 gap-3.5 rounded-[28px] bg-cream py-2.5 pr-[25px] pl-6 text-[17px] font-bold text-navy shadow-[0_4px_0_#ccc9c2,0_8px_0_#e7dfcf] hover:-translate-y-0.5 active:translate-y-1 active:scale-[0.99] active:shadow-[0_1px_0_#ccc9c2,0_3px_0_#e7dfcf] [&_[data-slot=disc]]:size-[31px] [&_[data-slot=disc]]:bg-navy [&_[data-slot=disc]]:text-[15px] [&_[data-slot=disc]]:text-cream";
+  "press min-h-14 gap-3.5 rounded-[28px] bg-cream py-2.5 pr-[25px] pl-6 text-[17px] font-bold text-navy [--ledge-2:#e7dfcf] [--ledge:#ccc9c2] [&_[data-slot=disc]]:size-[31px] [&_[data-slot=disc]]:bg-navy [&_[data-slot=disc]]:text-[15px] [&_[data-slot=disc]]:text-cream";
 
 type PillOptions = {
   variant?: keyof typeof tones | "sign" | "ledge";
@@ -45,7 +42,7 @@ type PillOptions = {
 export function pillButton({ variant = "primary", size = "md" }: PillOptions = {}) {
   if (variant === "sign") return cn(base, lift, sign);
   if (variant === "ledge") return cn(base, ledge);
-  return cn(base, lift, "rounded-full border font-medium", sizes[size], tones[variant]);
+  return cn(base, "rounded-full border font-medium", sizes[size], tones[variant]);
 }
 
 /**
@@ -64,7 +61,7 @@ export function IconDisc({
       data-slot="disc"
       aria-hidden="true"
       className={cn(
-        "-my-0.5 -mr-3 inline-flex size-8 shrink-0 items-center justify-center rounded-full bg-white/16 text-[14px] transition-transform duration-250 ease-spring group-hover/pill:translate-x-0.5 group-hover/pill:-translate-y-0.5",
+        "-my-0.5 -mr-3 inline-flex size-8 shrink-0 items-center justify-center rounded-full bg-white/16 text-[14px] group-hover/pill:translate-x-0.5 group-hover/pill:-translate-y-0.5",
         className,
       )}
     >
@@ -95,4 +92,4 @@ export function Eyebrow({
 
 /** Inline text link; an aria-hidden arrow inside nudges on hover. */
 export const textLink =
-  "inline-flex items-center gap-1.5 py-1 text-[15px] font-medium whitespace-nowrap text-ink transition-opacity hover:opacity-72 [&>[aria-hidden=true]]:inline-block [&>[aria-hidden=true]]:text-[14px] [&>[aria-hidden=true]]:leading-none [&>[aria-hidden=true]]:transition-transform [&>[aria-hidden=true]]:duration-220 [&>[aria-hidden=true]]:ease-spring hover:[&>[aria-hidden=true]]:translate-x-0.5 hover:[&>[aria-hidden=true]]:-translate-y-0.5";
+  "inline-flex items-center gap-1.5 py-1 text-[15px] font-medium whitespace-nowrap text-ink hover:[&>[aria-hidden=true]]:translate-x-0.5 hover:[&>[aria-hidden=true]]:-translate-y-0.5";

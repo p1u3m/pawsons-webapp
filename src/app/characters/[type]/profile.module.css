@@ -35,7 +35,6 @@
   background: var(--color-cream);
   color: var(--color-ink);
   box-shadow: var(--shadow-ledge-sm);
-  transition: transform 180ms var(--ease-spring);
 }
 .back:hover {
   transform: translateY(-1px);
@@ -314,7 +313,6 @@
   padding: 14px;
   border-radius: 16px;
   background: var(--color-cream);
-  transition: transform 220ms var(--ease-spring);
 }
 .member:hover {
   transform: translateY(-2px);
@@ -552,19 +550,6 @@
   }
   .friendFace {
     width: 44px;
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .profile *,
-  .profile *::before,
-  .profile *::after {
-    transition: none !important;
-    scroll-behavior: auto !important;
-  }
-  .member:hover,
-  .back:hover,
-  .back:active {
-    transform: none;
   }
 }
 

@@ -8,7 +8,7 @@ const art = (type: string) => getCharacter(type)!.image;
 
 // Art row of each card; it tilts a little when the card is hovered.
 const artBox =
-  "relative flex h-24 items-center justify-center transition-[rotate,scale] duration-300 ease-spring group-hover:-rotate-2 group-hover:scale-103 motion-reduce:transform-none motion-reduce:transition-none";
+  "relative flex h-24 items-center justify-center group-hover:-rotate-2 group-hover:scale-103";
 const crestTilt = [
   "-rotate-14 translate-y-2",
   "-rotate-5",
@@ -57,7 +57,7 @@ const destinations = [
             width={80}
             height={80}
             className={cn(
-              "-mx-[5px] w-10 drop-shadow-[0_2px_0_rgb(24_24_24/0.08)]",
+              "-mx-[5px] w-[52px] max-[33.75rem]:w-11 drop-shadow-[0_2px_0_rgb(24_24_24/0.08)]",
               crestTilt[i],
             )}
           />
@@ -108,7 +108,7 @@ const destinations = [
 
 // Card on a solid ledge (--ledge) that rises on hover and sinks when pressed.
 const card =
-  "group relative flex flex-col items-center gap-3 rounded-[24px] px-4 pt-[22px] pb-5 text-center text-ink shadow-[0_3px_0_var(--ledge)] transition-[translate,scale,box-shadow] duration-220 ease-spring [--ledge:#e2d3a4] hover:-translate-y-[2px] hover:shadow-[0_5px_0_var(--ledge)] focus-visible:outline-3 focus-visible:outline-offset-3 focus-visible:outline-ink active:translate-y-px active:scale-[0.98] active:shadow-[0_3px_0_var(--ledge)] max-[33.75rem]:rounded-[20px] max-[33.75rem]:px-2.5 max-[33.75rem]:pt-[18px] max-[33.75rem]:pb-4";
+  "group relative flex flex-col items-center gap-3 rounded-[24px] px-4 pt-[22px] pb-5 text-center text-ink shadow-[0_3px_0_var(--ledge)] [--ledge:#e2d3a4] hover:-translate-y-[2px] hover:shadow-[0_5px_0_var(--ledge)] focus-visible:outline-3 focus-visible:outline-offset-3 focus-visible:outline-ink active:translate-y-px active:scale-[0.98] active:shadow-[0_3px_0_var(--ledge)] max-[33.75rem]:rounded-[20px] max-[33.75rem]:px-2.5 max-[33.75rem]:pt-[18px] max-[33.75rem]:pb-4";
 
 export function ExploreDestinations() {
   return (

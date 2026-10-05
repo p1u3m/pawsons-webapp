@@ -15,16 +15,15 @@ See README.md for the stack, routes, and folder layout. Rules below are what kee
 Design mood and principles: `docs/DESIGN.md` (historical; tokens in `globals.css` win).
 
 - **Tailwind v4 (with Preflight) is the only styling system.** Style in JSX with utilities. `src/app/globals.css` is the one CSS file and holds only: design tokens (`@theme`), base element styles (`@layer base`), the admin theme swap, and a few `@utility` effects utilities can't express (`wrap`, `band*`, `doodle-bg`, `focus-ink`). Do not add route CSS files or class-name CSS.
-- Tokens: `bg-paper`, `bg-cream`, `bg-paper-soft`, `text-ink`, `text-ink-soft`, `text-ink-muted`, `text-ink-faint`, `border-line`, `border-line-strong`, `bg-sun` / `text-sun-ink`, `text-gold-ink`, `bg-navy`, `text-green`, house tints `bg-clover|lavender|forget|dandelion`, `shadow-soft|card|float|ledge|ledge-sm`, `ease-spring`, `animate-float|bob|pop|blink`. One-off values use arbitrary utilities (`rounded-[28px]`).
+- Tokens: `bg-paper`, `bg-cream`, `bg-paper-soft`, `text-ink`, `text-ink-soft`, `text-ink-muted`, `text-ink-faint`, `border-line`, `border-line-strong`, `bg-sun` / `text-sun-ink`, `text-gold-ink`, `bg-navy`, `text-green`, house tints `bg-clover|lavender|forget|dandelion`, `shadow-soft|card|float|ledge|ledge-sm`. One-off values use arbitrary utilities (`rounded-[28px]`).
 - Font sizes: write `text-[14px]`, not `text-sm`. Named sizes also set line-height, while the site relies on the inherited one.
 - Breakpoints: `md` (768px) is the main split; extra ones are `xs` (480px, use `max-xs`), `split` (861px, two-column heroes) and `tiny` (≤360px). Write any other breakpoint in rem (`max-[67.5rem]`), because px values sort before the theme's and lose to `max-md`.
 - Reuse before writing: `pill-button.tsx` (`pillButton()`, `IconDisc`, `Eyebrow`, `textLink`), `paper-ui.tsx` (`signButton`, `roundButton`, `FriendLink`, `Dot`, page hero), `character-ui.tsx` (`HouseBand`, `houseVars`, `CharacterTile`, `ChipLink`, `DoodleLabel`, `HeroFriends`, `PageIntro`, `BackLink`, `EmptyState`), `post-card.tsx`, `shop/shop-ui.tsx`. Repeated class strings become a component or a constant beside it; `cn()` (tailwind-merge) resolves overrides.
 - Class-string constants that server components import must not live in a `"use client"` file (they arrive as client references, not strings).
-- GSAP hooks select `data-*` attributes (`data-band`, `data-crest`, `data-post`, `data-product`, `data-chibi`), never styling classes.
 - shadcn primitives live in `src/components/ui/` (style `base-nova`, built on `@base-ui/react`). Add new ones with the shadcn CLI. `cn` comes from the `cn` package via `@/lib/utils`. `/admin` gets the neutral shadcn theme through `.admin-theme` (tokens in `globals.css`).
 - Icons: `@phosphor-icons/react` only.
 - Fonts: LINE Seed EN/TH are local (`public/fonts`); Fredoka comes from `next/font` and Itim from Google Fonts via `layout.tsx`.
-- Animation: GSAP, respecting `prefers-reduced-motion` and cleaning up on unmount.
+- Motion: the site is static on purpose. The only animation is the homepage character swap (`hero-chibis.tsx`, GSAP: select `data-chibi`, honour `prefers-reduced-motion`, clean up on unmount). No `transition-*`, `animate-*`, keyframes, scroll reveals or smooth scrolling elsewhere. Buttons use the `press` utility in `globals.css` (ledge rises on hover/focus, sinks when pressed, switches instantly). Add new motion only by agreement, and through one shared helper rather than per-component.
 
 ## Components
 

@@ -65,13 +65,7 @@
     padding-inline: 16px;
   }
 }
-@media (prefers-reduced-motion: reduce) {
-  .home a,
-  .home a * {
-    animation: none !important;
-    transition: none !important;
-  }
-}
+
 .tagline {
   display: inline-block;
   margin-top: 0;
@@ -95,31 +89,18 @@
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: tagline-flow 8s linear infinite;
 }
-@keyframes tagline-flow {
-  from {
-    background-position: 0% 50%;
-  }
-  to {
-    background-position: 200% 50%;
-  }
-}
+
 @media (min-width: 768px) {
   .tagline {
     font-size: clamp(48px, 4.5vw, 68px);
   }
 }
-@media (prefers-reduced-motion: reduce) {
-  .tagline {
-    animation: none;
-  }
-}
+
 @media (forced-colors: active) {
   .tagline {
     background: none;
     -webkit-text-fill-color: currentColor;
     color: CanvasText;
-    animation: none;
   }
 }

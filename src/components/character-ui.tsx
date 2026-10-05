@@ -1,4 +1,3 @@
-import MotionLink from "@/components/motion-link";
 import characterArt from "@/lib/character-art.json";
 import { houseBackground, type House } from "@/lib/data";
 import Image from "next/image";
@@ -57,44 +56,7 @@ export function HouseBand({ className, ...props }: ComponentProps<"section">) {
   );
 }
 
-// Group order: the middle pair stands taller and in front, the outer two
-// turn slightly outward. Sizes use container units so the group scales as one.
-const groupPlacement = [
-  "z-1 -rotate-7",
-  "z-3 h-[50cqw] [animation-delay:-1.5s]",
-  "z-2 h-[47cqw] [animation-delay:-3s]",
-  "z-0 rotate-7 [animation-delay:-4.5s]",
-];
-
-/**
- * Friends standing together on a cream glow and a shared floor shadow, for
- * page heroes. Four friends form a group; a single friend stands larger.
- */
-export function HeroFriends({ friends }: { friends: Character[] }) {
-  const single = friends.length === 1;
-  return (
-    <div
-      className="@container relative isolate flex aspect-[1.3] w-[min(80%,340px)] items-end justify-center justify-self-center pb-[9%] before:absolute before:bottom-[10%] before:left-1/2 before:-z-2 before:aspect-square before:w-[66%] before:-translate-x-1/2 before:rounded-full before:bg-[radial-gradient(circle_at_50%_45%,var(--color-cream)_0_58%,rgb(255_253_249/0)_71%)] before:content-[''] after:absolute after:bottom-[6%] after:left-1/2 after:-z-1 after:h-[9%] after:w-[86%] after:-translate-x-1/2 after:rounded-full after:bg-[radial-gradient(closest-side,rgb(24_24_24/0.12),rgb(24_24_24/0))] after:content-[''] split:w-[min(100%,480px)]"
-      aria-hidden="true"
-    >
-      {friends.map((c, i) => (
-        <Image
-          key={c.type}
-          src={c.image}
-          alt=""
-          width={480}
-          height={480}
-          sizes="(max-width: 860px) 45vw, 240px"
-          priority
-          className={cn(
-            "relative h-[38cqw] w-auto flex-none origin-bottom animate-bob drop-shadow-[0_6px_10px_rgb(24_24_24/0.08)] motion-reduce:animate-none",
-            single ? "h-[58cqw]" : cn("-mx-[7cqw]", groupPlacement[i]),
-          )}
-        />
-      ))}
-    </div>
-  );
-}
+export { HeroFriends } from "./hero-friends";
 
 /** Two cards per row on phones, four from 768px. */
 export const characterGrid = "grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-5";
@@ -104,7 +66,7 @@ export function CharacterTile({ character: c }: { character: Character }) {
   const art = characterArt[c.type];
   return (
     <Link
-      className="group flex min-w-0 flex-col rounded-[22px] bg-cream p-1.5 shadow-ledge transition-transform duration-220 ease-spring hover:-translate-y-[5px] motion-reduce:transition-none md:rounded-[30px] md:p-2.5"
+      className="group flex min-w-0 flex-col rounded-[22px] bg-cream p-1.5 shadow-ledge hover:-translate-y-[5px] md:rounded-[30px] md:p-2.5"
       href={`/characters/${c.type.toLowerCase()}`}
       style={{ "--house": c.house.badgeColor } as CSSProperties}
     >
@@ -120,7 +82,7 @@ export function CharacterTile({ character: c }: { character: Character }) {
             height={art.height}
             sizes="(max-width: 767px) 45vw, 260px"
             className={cn(
-              "w-auto object-contain transition-transform duration-350 ease-spring group-hover:-translate-y-1 group-hover:scale-104 motion-reduce:transition-none",
+              "w-auto object-contain group-hover:-translate-y-1 group-hover:scale-104",
               c.type === "INTP" ? "h-[65%] max-w-[81%]" : "h-[72%] max-w-[90%]",
             )}
           />
@@ -144,9 +106,9 @@ export function CharacterTile({ character: c }: { character: Character }) {
 /** Small cream chip link on a ledge, with an arrow icon that nudges on hover. */
 export function ChipLink({ className, ...props }: ComponentProps<typeof Link>) {
   return (
-    <MotionLink
+    <Link
       className={cn(
-        "inline-flex h-9 shrink-0 items-center gap-1.5 rounded-full bg-cream pr-3 pl-4 text-[14px] font-semibold whitespace-nowrap shadow-ledge-sm transition-all duration-350 ease-spring hover:-translate-y-px motion-reduce:transition-none [&_svg]:text-ink-muted [&_svg]:transition-transform [&_svg]:duration-350 [&_svg]:ease-spring hover:[&_svg]:translate-x-0.5 hover:[&_svg]:-translate-y-0.5 hover:[&_svg]:text-ink",
+        "inline-flex h-9 shrink-0 items-center gap-1.5 rounded-full bg-cream pr-3 pl-4 text-[14px] font-semibold whitespace-nowrap press [--depth:3px] [--ledge-2:#e6e1d8] [&_svg]:text-ink-muted hover:[&_svg]:translate-x-0.5 hover:[&_svg]:-translate-y-0.5 hover:[&_svg]:text-ink",
         className,
       )}
       {...props}
@@ -201,7 +163,7 @@ export function BackLink({
   return (
     <Link
       className={cn(
-        "mb-8 inline-flex items-center gap-2 rounded-full bg-ink/4 px-3.5 py-1.5 text-[13.5px] font-medium text-ink-muted transition-all duration-350 ease-spring hover:bg-ink/8 hover:text-ink",
+        "mb-8 inline-flex items-center gap-2 rounded-full bg-ink/4 px-3.5 py-1.5 text-[13.5px] font-medium text-ink-muted hover:bg-ink/8 hover:text-ink",
         className,
       )}
       href={href}

@@ -37,7 +37,7 @@ export function PostFrame({
           height={1350}
           sizes={sizes}
           priority={priority}
-          className="size-full object-cover transition-transform duration-600 ease-spring group-hover:scale-103"
+          className="size-full object-cover group-hover:scale-103"
         />
       ) : (
         <ImagePlaceholder label="รอรูปอยู่นะ" />
@@ -65,7 +65,7 @@ export function PostCard({
       data-post
       className={cn(
         card,
-        "group shadow-ledge transition-transform duration-220 ease-spring hover:-translate-y-[5px]",
+        "group shadow-ledge hover:-translate-y-[5px]",
         lead && leadCard,
       )}
     >

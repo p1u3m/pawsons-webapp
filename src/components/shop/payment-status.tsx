@@ -93,7 +93,7 @@ export function ShopPaymentStatus({
       <h1 className="mt-3.5 mb-2.5 text-[28px] leading-[1.3]">{title}</h1>
       <p className="leading-[1.75]">{body}</p>
       {status === "pending" && (
-        <span className="mt-4 inline-flex items-center gap-2 text-[13px] text-ink-muted before:size-2 before:animate-blink before:rounded-full before:bg-[#e0a52b] before:content-[''] motion-reduce:before:animate-none">
+        <span className="mt-4 inline-flex items-center gap-2 text-[13px] text-ink-muted before:size-2 before:rounded-full before:bg-[#e0a52b] before:content-['']">
           กำลังตรวจสอบทุก 5 วินาที
         </span>
       )}

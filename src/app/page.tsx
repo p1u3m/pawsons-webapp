@@ -1,4 +1,3 @@
-import MotionLink from "@/components/motion-link";
 import Link from "next/link";
 import { Sarina } from "next/font/google";
 import { characters } from "@/lib/data";
@@ -17,7 +16,7 @@ const sarina = Sarina({
 export default function Home() {
   return (
     <div
-      className={`${styles.home} motion-reduce:[&_a]:translate-none! motion-reduce:[&_a]:scale-100! motion-reduce:[&_a_*]:rotate-none! motion-reduce:[&_a_*]:scale-100!`}
+      className={`${styles.home}`}
     >
       <section className={styles.hero}>
         <div className={styles.heroContent}>
@@ -36,12 +35,12 @@ export default function Home() {
             <br />
             ค่อย ๆ รู้จักตัวเอง ผ่านเพื่อนตัวน้อยในโลกของ Pawsons
           </p>
-          <MotionLink
+          <Link
             href="/quiz"
             className={cn(pillButton({ variant: "sign" }), styles.quizAction)}
           >
             <span>Find your Pawson</span>
-          </MotionLink>
+          </Link>
         </div>
       </section>
 

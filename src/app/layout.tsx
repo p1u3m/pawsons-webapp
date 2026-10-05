@@ -1,7 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Fredoka } from "next/font/google";
 import Navigation from "@/components/navigation";
-import Reveal from "@/components/reveal";
 import SiteFooter from "@/components/site-footer";
 import "./globals.css";
 
@@ -54,15 +53,13 @@ export default function RootLayout({
       </head>
       <body>
         <a
-          className="fixed top-3 left-3 z-100 -translate-y-[160%] rounded-full bg-ink px-[18px] py-2.5 text-[13px] text-white transition-transform focus:translate-y-0"
+          className="fixed top-3 left-3 z-100 -translate-y-[160%] rounded-full bg-ink px-[18px] py-2.5 text-[13px] text-white focus:translate-y-0"
           href="#main"
         >
           ข้ามไปเนื้อหา
         </a>
         <Navigation />
-        <Reveal>
-          <main id="main">{children}</main>
-        </Reveal>
+        <main id="main">{children}</main>
         <SiteFooter />
       </body>
     </html>

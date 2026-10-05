@@ -10,7 +10,7 @@ export const crestSrc = houseSigilSrc;
 export const bandHalo =
   "[text-shadow:0_0_2px_var(--band),0_0_8px_var(--band),0_0_18px_var(--band)]";
 
-/** House crest on a paper blob (houses-motion unfolds the blob on scroll). */
+/** House crest on a paper blob (the blob is part of the crest). */
 export function HouseCrest({
   house,
   priority,
@@ -35,7 +35,7 @@ export function HouseCrest({
         width={320}
         height={320}
         priority={priority}
-        className="h-[92%] w-auto animate-[bob_7s_ease-in-out_infinite] drop-shadow-[0_10px_18px_rgb(24_24_24/0.08)] motion-reduce:animate-none"
+        className="h-[92%] w-auto drop-shadow-[0_10px_18px_rgb(24_24_24/0.08)]"
       />
     </div>
   );

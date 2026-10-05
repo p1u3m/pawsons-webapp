@@ -9,11 +9,11 @@ import { cn } from "@/lib/utils";
 
 /** Yellow sign button on a gold ledge; rises on hover, sinks when pressed. */
 export const signButton =
-  "inline-flex min-h-[52px] items-center justify-center gap-2.5 rounded-[26px] bg-sun px-[26px] text-[16px] font-bold whitespace-nowrap text-gold-ink [text-shadow:0_1px_0_rgb(255_255_255/0.35)] shadow-[0_4px_0_var(--color-gold),0_7px_0_#efe0b7] transition-[translate,box-shadow] duration-200 ease-spring not-disabled:hover:-translate-y-0.5 not-disabled:hover:shadow-[0_6px_0_var(--color-gold),0_9px_0_#efe0b7] not-disabled:active:translate-y-1 not-disabled:active:shadow-[0_0_0_var(--color-gold),0_2px_0_#efe0b7]";
+  "inline-flex min-h-[52px] items-center justify-center gap-2.5 press rounded-[26px] bg-sun px-[26px] text-[16px] font-bold whitespace-nowrap text-gold-ink [--ledge-2:#efe0b7] [--ledge:var(--color-gold)] [text-shadow:0_1px_0_rgb(255_255_255/0.35)]";
 
 /** Round cream button with an ink-blue icon (back, cart). */
 export const roundButton =
-  "grid size-[46px] shrink-0 place-items-center rounded-full bg-cream text-navy shadow-[0_4px_0_#ccc9c2] transition-transform duration-200 ease-spring hover:-translate-y-0.5";
+  "grid size-[46px] shrink-0 place-items-center rounded-full bg-cream text-navy press [--ledge:#ccc9c2]";
 
 /** Small house-coloured dot. */
 export function Dot({ color, className }: { color?: string; className?: string }) {
@@ -30,7 +30,7 @@ export function Dot({ color, className }: { color?: string; className?: string }
 export function FriendLink({ character: c, title }: { character: Character; title: string }) {
   return (
     <Link
-      className="group flex items-center gap-3.5 rounded-3xl bg-cream py-3 pr-[18px] pl-3 shadow-ledge-sm transition-transform duration-220 ease-spring hover:-translate-y-[3px]"
+      className="group flex items-center gap-3.5 rounded-3xl bg-cream py-3 pr-[18px] pl-3 shadow-ledge-sm hover:-translate-y-[3px]"
       href={`/characters/${c.type.toLowerCase()}`}
     >
       <span
@@ -45,7 +45,7 @@ export function FriendLink({ character: c, title }: { character: Character; titl
       </span>
       <span
         aria-hidden="true"
-        className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+        className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
       >
         ↗
       </span>

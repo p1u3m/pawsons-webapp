@@ -330,7 +330,7 @@ export default async function Page({
 /** Filter tab; the active one is a yellow sign chip. */
 function tab(active: boolean) {
   return cn(
-    "inline-flex h-9 shrink-0 items-center gap-2 rounded-full px-4 text-[14px] font-semibold whitespace-nowrap transition-all duration-350 ease-spring",
+    "inline-flex h-9 shrink-0 items-center gap-2 rounded-full px-4 text-[14px] font-semibold whitespace-nowrap",
     active
       ? "bg-sun text-gold-ink shadow-[0_2px_0_var(--color-gold)]"
       : "bg-[#f4efe1] text-ink",

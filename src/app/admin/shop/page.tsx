@@ -494,7 +494,7 @@ function FilterLink({
       scroll={false}
       aria-current={active ? "page" : undefined}
       className={cn(
-        "inline-flex h-7 shrink-0 items-center gap-1.5 rounded-md px-2.5 text-sm whitespace-nowrap text-foreground/60 transition-colors hover:text-foreground",
+        "inline-flex h-7 shrink-0 items-center gap-1.5 rounded-md px-2.5 text-sm whitespace-nowrap text-foreground/60 hover:text-foreground",
         active && "bg-background text-foreground shadow-sm",
       )}
     >

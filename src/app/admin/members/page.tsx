@@ -253,7 +253,7 @@ export default async function AdminMembersPage({
                   href={href({ role: value ?? null, page: 0 })}
                   aria-current={role === value ? "page" : undefined}
                   className={cn(
-                    "inline-flex h-7 items-center gap-1.5 rounded-md px-2.5 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground",
+                    "inline-flex h-7 items-center gap-1.5 rounded-md px-2.5 text-sm font-medium text-muted-foreground hover:text-foreground",
                     role === value && "bg-background text-foreground shadow-sm",
                   )}
                 >

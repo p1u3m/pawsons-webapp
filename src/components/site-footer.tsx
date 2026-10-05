@@ -1,6 +1,5 @@
 "use client";
 
-import MotionLink from "@/components/motion-link";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -23,7 +22,7 @@ export default function SiteFooter() {
           alt="pawsons"
           width={125}
           height={28}
-          className="h-7 w-[125px] object-contain transition-opacity group-hover:opacity-80"
+          className="h-7 w-[125px] object-contain group-hover:opacity-80"
         />
       </Link>
       <div className="flex flex-col gap-0.5">
@@ -35,13 +34,13 @@ export default function SiteFooter() {
         </span>
       </div>
       <div className="ml-auto flex flex-col items-end gap-2 max-md:ml-0 max-md:items-center">
-        <MotionLink
+        <Link
           href="/letters"
           className={pillButton({ variant: "ledge" })}
         >
-          <span>Personal letters</span>
+          <span>Learn more</span>
           <IconDisc>↗</IconDisc>
-        </MotionLink>
+        </Link>
         <small className="text-[12px] text-ink-muted">
           © {new Date().getFullYear()} Pawsons · Made with a little warmth
         </small>

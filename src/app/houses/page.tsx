@@ -11,7 +11,7 @@ export const metadata = { title: "Four houses" };
 export default function Page() {
   return (
     <div
-      className={`${styles.page} focus-ink motion-reduce:[&_a]:translate-none! motion-reduce:[&_svg]:translate-none!`}
+      className={`${styles.page} focus-ink`}
     >
       <section className={styles.intro} aria-labelledby="houses-title">
         <h1 id="houses-title">บ้านไหนที่เป็นคุณ</h1>

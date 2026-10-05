@@ -1,4 +1,3 @@
-import MotionLink from "@/components/motion-link";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRightIcon } from "@phosphor-icons/react/dist/ssr";
@@ -25,7 +24,7 @@ const heroFriends = [
 export default function Page() {
   return (
     <div
-      className={`${styles.page} focus-ink motion-reduce:[&_a]:translate-none! motion-reduce:[&_a]:scale-100! motion-reduce:[&_svg]:translate-none!`}
+      className={`${styles.page} focus-ink`}
     >
       <h1 className="sr-only">
         เพื่อนทั้ง {characters.length} ตัวในโลกของ Pawsons
@@ -79,12 +78,12 @@ export default function Page() {
             {characters.length} บุคลิก {houses.length} บ้าน และอีกหลายมุมเล็ก ๆ
             ที่อยากให้คุณรู้จัก
           </p>
-          <MotionLink
+          <Link
             href="/quiz"
             className={cn(pillButton({ variant: "sign" }), styles.quizButton)}
           >
             <span>ค้นหาเพื่อนของคุณ</span>
-          </MotionLink>
+          </Link>
         </div>
       </section>
     </div>

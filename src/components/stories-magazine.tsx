@@ -129,7 +129,7 @@ export function MagazineBands({
           style={bandVars(i)}
           aria-labelledby={`mag-${category.slug}-title`}
         >
-          <div className="wrap" data-reveal>
+          <div className="wrap">
             <div className={sectionHead}>
               <h2 id={`mag-${category.slug}-title`} className={sectionTitle}>
                 <DoodleLabel>
@@ -164,11 +164,7 @@ export function MagazineBands({
 
       {/* On the plain page below the bands: the house cards carry their own
           colours. */}
-      <section
-        className="wrap pt-2"
-        aria-labelledby="mag-houses-title"
-        data-reveal
-      >
+      <section className="wrap pt-2" aria-labelledby="mag-houses-title">
         <div className={sectionHead}>
           <h2 id="mag-houses-title" className={sectionTitle}>
             <DoodleLabel>Explore by House</DoodleLabel>
@@ -184,11 +180,11 @@ export function MagazineBands({
               <Link
                 key={house.id}
                 href={`/contents?house=${house.id}`}
-                className="group grid grid-cols-[minmax(0,1fr)_auto] content-center gap-x-3 gap-y-0.5 rounded-[28px] px-5 pt-[18px] pb-4 shadow-ledge-sm transition-transform duration-220 ease-spring hover:-translate-y-1 max-md:rounded-[22px] max-md:p-3.5"
+                className="group grid grid-cols-[minmax(0,1fr)_auto] content-center gap-x-3 gap-y-0.5 rounded-[28px] px-5 pt-[18px] pb-4 shadow-ledge-sm hover:-translate-y-1 max-md:rounded-[22px] max-md:p-3.5"
                 style={{ background: houseBackground(house), color: house.ink }}
               >
                 <Image
-                  className="col-start-2 row-span-3 row-start-1 size-[88px] self-center object-contain transition-[rotate] duration-300 ease-spring group-hover:-rotate-6 max-md:size-16"
+                  className="col-start-2 row-span-3 row-start-1 size-[88px] self-center object-contain group-hover:-rotate-6 max-md:size-16"
                   src={houseSigilSrc(house)}
                   alt=""
                   width={120}
