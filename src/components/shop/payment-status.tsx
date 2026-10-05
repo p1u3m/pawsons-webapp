@@ -82,7 +82,7 @@ export function ShopPaymentStatus({
   const { Icon, title, body } = copy[status];
   return (
     <section
-      className="mx-auto mt-6 flex max-w-[560px] flex-col items-center rounded-[34px] bg-cream px-8 py-12 text-center shadow-ledge max-md:px-5 max-md:py-9"
+      className="mx-auto mt-6 flex max-w-[560px] flex-col items-center rounded-panel bg-cream px-8 py-12 text-center shadow-ledge max-md:px-5 max-md:py-9"
       role="status"
       aria-live="polite"
     >

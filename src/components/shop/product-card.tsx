@@ -38,7 +38,7 @@ export function ProductArt({
   return (
     <div
       className={cn(
-        "relative grid aspect-square place-items-center overflow-hidden rounded-[22px] bg-[#f4efe1] max-md:rounded-[15px]",
+        "relative grid aspect-square place-items-center overflow-hidden rounded-card-sm bg-[#f4efe1] max-md:rounded-tile",
         className,
       )}
     >
@@ -67,7 +67,7 @@ export function ProductCard({ product }: { product: ShopProduct }) {
   return (
     <article
       data-product
-      className="group relative flex flex-col rounded-[30px] bg-cream p-2.5 shadow-ledge hover:-translate-y-[5px] max-md:rounded-[20px] max-md:p-1.5"
+      className="group relative flex flex-col rounded-card bg-cream p-2.5 shadow-ledge hover:-translate-y-[5px] max-md:rounded-card-sm max-md:p-1.5"
     >
       <Link
         href={`/shop/${product.slug}`}
@@ -94,7 +94,7 @@ export function ProductCard({ product }: { product: ShopProduct }) {
           {/* The whole card is clickable while the add button stays on top. */}
           <Link
             href={`/shop/${product.slug}`}
-            className="after:absolute after:inset-0 after:rounded-[30px] after:content-['']"
+            className="after:absolute after:inset-0 after:rounded-card after:content-['']"
           >
             {product.title}
           </Link>

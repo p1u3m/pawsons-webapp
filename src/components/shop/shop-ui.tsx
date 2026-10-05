@@ -12,19 +12,19 @@ export const shopButton = cn(signButton, "px-7");
 
 /** Cream pill on a ledge (cart, my orders). */
 export const shopPillButton =
-  "press inline-flex min-h-[46px] items-center gap-2.5 rounded-3xl bg-cream pr-[7px] pl-[18px] text-[15px] font-bold text-navy [--ledge:#ccc9c2]";
+  "press inline-flex min-h-[46px] items-center gap-2.5 rounded-card-sm bg-cream pr-[7px] pl-[18px] text-[15px] font-bold text-navy ";
 /** In the shop toolbar on phones: an icon-only square. */
 export const toolbarPillButton =
-  "max-md:relative max-md:size-[52px] max-md:justify-center max-md:p-0 max-md:[--depth:3px] max-md:[--ledge:#d7d3cc]";
+  "max-md:relative max-md:h-[46px] max-md:w-auto max-md:justify-center max-md:gap-2 max-md:px-4 max-md:[--depth:3px]";
 
 /** Underlined inline link. */
 export const shopTextLink =
   "text-[14px] font-medium text-ink underline decoration-line-strong underline-offset-4 hover:decoration-current";
 
 export const shopAlert =
-  "mb-5 rounded-[14px] border border-[#b54744]/22 bg-[#fbefec] px-4 py-3 text-[14px] text-[#8e3431]";
+  "mb-5 rounded-tile border border-[#b54744]/22 bg-[#fbefec] px-4 py-3 text-[14px] text-[#8e3431]";
 export const shopNote =
-  "rounded-[14px] bg-paper-soft px-3.5 py-3 text-[13px] leading-[1.6] text-ink-muted";
+  "rounded-tile bg-paper-soft px-3.5 py-3 text-[13px] leading-[1.6] text-ink-muted";
 export const shopFineprint = "mt-2.5 text-center text-[12px] text-ink-faint";
 
 /** Product grid: four per row, two on phones, matching /characters. */
@@ -48,7 +48,7 @@ export function ShopEmpty({
   return (
     <div
       className={cn(
-        "flex flex-col items-center gap-1.5 rounded-[30px] bg-cream px-6 pt-14 pb-16 text-center text-ink-muted shadow-ledge",
+        "flex flex-col items-center gap-1.5 rounded-card bg-cream px-6 pt-14 pb-16 text-center text-ink-muted shadow-ledge",
         className,
       )}
     >

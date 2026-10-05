@@ -9,11 +9,11 @@ import { cn } from "@/lib/utils";
 
 /** Yellow sign button on a gold ledge; rises on hover, sinks when pressed. */
 export const signButton =
-  "inline-flex min-h-[52px] items-center justify-center gap-2.5 press rounded-[26px] bg-sun px-[26px] text-[16px] font-bold whitespace-nowrap text-gold-ink [--ledge-2:#efe0b7] [--ledge:var(--color-gold)] [text-shadow:0_1px_0_rgb(255_255_255/0.35)]";
+  "inline-flex min-h-[52px] items-center justify-center gap-2.5 press rounded-card bg-sun px-[26px] text-[16px] font-bold whitespace-nowrap text-gold-ink [--ledge-2:var(--color-ledge-sun)] [--ledge:var(--color-gold)] [text-shadow:0_1px_0_rgb(255_255_255/0.35)]";
 
 /** Round cream button with an ink-blue icon (back, cart). */
 export const roundButton =
-  "grid size-[46px] shrink-0 place-items-center rounded-full bg-cream text-navy press [--ledge:#ccc9c2]";
+  "grid size-[46px] shrink-0 place-items-center rounded-full bg-cream text-navy press ";
 
 /** Small house-coloured dot. */
 export function Dot({ color, className }: { color?: string; className?: string }) {
@@ -30,7 +30,7 @@ export function Dot({ color, className }: { color?: string; className?: string }
 export function FriendLink({ character: c, title }: { character: Character; title: string }) {
   return (
     <Link
-      className="group flex items-center gap-3.5 rounded-3xl bg-cream py-3 pr-[18px] pl-3 shadow-ledge-sm hover:-translate-y-[3px]"
+      className="group flex items-center gap-3.5 rounded-card-sm bg-cream py-3 pr-[18px] pl-3 shadow-ledge-sm hover:-translate-y-[3px]"
       href={`/characters/${c.type.toLowerCase()}`}
     >
       <span
@@ -53,13 +53,28 @@ export function FriendLink({ character: c, title }: { character: Character; titl
   );
 }
 
-/** Page hero of /contents and /shop: copy beside art, stacked and centered on phones. */
+/** Page hero of /contents: copy beside art on a cream arch, stacked on phones. */
 export const pageHero =
-  "wrap mb-11 grid grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] items-center gap-12 max-split:grid-cols-1 max-split:gap-6 max-md:gap-2 max-md:text-center";
+  "wrap mb-11 grid grid-cols-2 items-center gap-16 pt-5 pb-3 max-[62.5rem]:gap-8 max-md:grid-cols-1 max-md:gap-6 max-md:py-0 max-md:text-left [&>div:last-child]:w-[min(100%,380px)] [&>div:last-child]:justify-self-center [&>div:last-child]:rounded-[48%_48%_16px_16px] [&>div:last-child]:bg-cream [&>div:last-child]:p-5 max-md:[&>div:last-child]:w-[min(80%,280px)]";
 export const pageHeroTitle =
-  "mb-4 text-[clamp(34px,4.4vw,54px)] leading-[1.18] tracking-[-0.02em] max-md:mb-3.5 max-md:text-[32px] max-md:leading-[1.3]";
+  "mb-4 text-[clamp(34px,3.8vw,48px)] leading-[1.35] tracking-[-0.02em] text-balance max-md:mb-3.5 max-md:text-[30px] max-md:leading-[1.4]";
 export const pageHeroText =
-  "max-w-[460px] text-[17px] leading-[1.75] max-md:mx-auto max-md:max-w-[320px] max-md:text-[15px] max-md:leading-[1.7]";
+  "max-w-[460px] text-[17px] leading-[1.75] text-ink-soft max-md:mr-auto max-md:ml-0 max-md:max-w-[38ch] max-md:text-[15px] max-md:leading-[1.7]";
+
+/** Listing pages (/contents, /shop): focus ring, text selection, toolbar, result header. */
+export const listingPage =
+  "[--focus-ring:var(--color-green)] [--focus-offset:4px] selection:bg-navy selection:text-cream";
+export const listToolbar =
+  "flex flex-wrap items-center gap-4 rounded-card-sm p-4 max-md:gap-3 max-md:p-0";
+export const listFilters =
+  "flex-wrap items-start gap-x-6 gap-y-4";
+export const listResults =
+  "mt-7 mb-6 flex flex-wrap items-baseline justify-between gap-3 max-md:mt-6 max-md:mb-5";
+export const listResultsTitle =
+  "text-[26px] leading-[1.4] tracking-[-0.02em] max-md:text-[23px]";
+export const listResultsCount = "mt-1.5 text-[13px] text-ink-muted";
+export const listReset =
+  "inline-flex min-h-11 items-center gap-2 text-[13px] text-ink-soft underline underline-offset-4";
 
 /**
  * Stand-in for a missing picture (product photo, post artwork): a picture

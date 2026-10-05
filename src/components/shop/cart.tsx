@@ -149,9 +149,9 @@ export function AddToCartIcon({ product }: { product: ShopProduct }) {
     <button
       type="button"
       className={cn(
-        "relative z-1 grid size-[42px] place-items-center rounded-full bg-cream text-navy shadow-[inset_0_0_0_1.5px_#e3dccb,0_3px_0_#d7d3cc] disabled:opacity-35 max-md:size-9",
+        "press relative z-1 grid size-[42px] place-items-center rounded-full border-[1.5px] border-[#e3dccb] bg-cream text-navy [--depth:3px] disabled:opacity-35 max-md:size-9",
         added && "bg-green text-cream",
-        "not-disabled:hover:-translate-y-0.5 not-disabled:hover:bg-sun not-disabled:hover:text-gold-ink not-disabled:hover:shadow-[0_3px_0_var(--color-gold)]",
+        "not-disabled:hover:bg-sun not-disabled:hover:text-gold-ink not-disabled:hover:[--ledge:var(--color-gold)]",
       )}
       disabled={soldOut}
       aria-label={
@@ -191,7 +191,7 @@ export function QuantityStepper({
     "grid h-[46px] w-11 place-items-center rounded-full text-ink not-disabled:hover:bg-ink/5 disabled:opacity-30";
   return (
     <div
-      className="inline-flex items-center rounded-full bg-cream shadow-[inset_0_0_0_1.5px_#e3dccb,0_3px_0_#d7d3cc]"
+      className="inline-flex items-center rounded-full bg-cream shadow-[inset_0_0_0_1.5px_#e3dccb,0_3px_0_var(--color-ledge)]"
       role="group"
       aria-label={label}
     >
@@ -204,7 +204,10 @@ export function QuantityStepper({
       >
         <MinusIcon size={14} weight="bold" aria-hidden="true" />
       </button>
-      <output aria-live="polite" className="min-w-6 text-center font-semibold tabular-nums">
+      <output
+        aria-live="polite"
+        className="min-w-6 text-center font-semibold tabular-nums"
+      >
         {value}
       </output>
       <button
@@ -268,7 +271,11 @@ export function AddToCartPanel({ product }: { product: ShopProduct }) {
  * toolbar it shrinks to an icon with a badge on phones; on the product page
  * it drops its label on very narrow screens.
  */
-export function CartButton({ placement = "top" }: { placement?: "toolbar" | "top" }) {
+export function CartButton({
+  placement = "top",
+}: {
+  placement?: "toolbar" | "top";
+}) {
   const count = useCart().reduce((sum, line) => sum + line.quantity, 0);
   const toolbar = placement === "toolbar";
   return (
@@ -279,7 +286,9 @@ export function CartButton({ placement = "top" }: { placement?: "toolbar" | "top
       aria-label={`เปิดตะกร้า มีสินค้า ${count} ชิ้น`}
     >
       <ShoppingBagIcon size={16} weight="bold" aria-hidden="true" />
-      <span className={toolbar ? "max-md:hidden" : "max-[26.25rem]:hidden"}>ตะกร้า</span>
+      <span className={toolbar ? undefined : "max-[26.25rem]:hidden"}>
+        ตะกร้า
+      </span>
       <span
         className={cn(
           "grid h-8 min-w-8 place-items-center rounded-full bg-navy px-2 text-[13px] font-bold tabular-nums",
@@ -334,13 +343,19 @@ function CartLines({
           >
             <Link
               href={`/shop/${slug}`}
-              className="relative grid size-16 place-items-center overflow-hidden rounded-[14px] bg-paper-soft text-ink-faint max-[26.25rem]:size-[52px]"
+              className="relative grid size-16 place-items-center overflow-hidden rounded-tile bg-paper-soft text-ink-faint max-[26.25rem]:size-[52px]"
               onClick={onNavigate}
               tabIndex={-1}
               aria-hidden="true"
             >
               {product.image_url ? (
-                <Image src={product.image_url} alt="" fill sizes="64px" className="object-cover" />
+                <Image
+                  src={product.image_url}
+                  alt=""
+                  fill
+                  sizes="64px"
+                  className="object-cover"
+                />
               ) : (
                 <ImagePlaceholder />
               )}
@@ -433,17 +448,24 @@ function CheckoutBlock({
           className="mt-2 flex justify-between gap-4 border-t border-line py-1.5 pt-3.5 text-[18px]"
         >
           <dt className="font-semibold text-ink">รวม</dt>
-          <dd className="text-right font-bold tabular-nums">{formatPrice(total)}</dd>
+          <dd className="text-right font-bold tabular-nums">
+            {formatPrice(total)}
+          </dd>
         </div>
       </dl>
       {checkoutReady && !loading && !user ? (
         <>
-          <button type="button" className={blockButton} onClick={signInWithGoogle}>
+          <button
+            type="button"
+            className={blockButton}
+            onClick={signInWithGoogle}
+          >
             <SignInIcon size={16} weight="bold" aria-hidden="true" />
             เข้าสู่ระบบเพื่อชำระเงิน
           </button>
           <p className={shopFineprint}>
-            ต้องเข้าสู่ระบบก่อนสั่งซื้อ เพื่อให้ติดตามคำสั่งซื้อและสถานะจัดส่งได้
+            ต้องเข้าสู่ระบบก่อนสั่งซื้อ
+            เพื่อให้ติดตามคำสั่งซื้อและสถานะจัดส่งได้
           </p>
         </>
       ) : checkoutReady ? (
@@ -501,16 +523,19 @@ export function CartDrawer({
   return (
     <dialog
       ref={dialog}
-      className="focus-ink fixed inset-y-0 right-0 left-auto m-0 h-dvh max-h-dvh w-[min(420px,100vw)] max-w-[100vw] translate-x-full overflow-visible border-0 bg-transparent p-0 text-ink backdrop:bg-ink/0 backdrop:backdrop-blur-none open:translate-x-0 open:backdrop:bg-ink/28 open:backdrop:backdrop-blur-[2px] starting:open:translate-x-full starting:open:backdrop:bg-ink/0 starting:open:backdrop:backdrop-blur-none"
+      className="focus-ink fixed inset-y-0 right-0 left-auto m-0 h-dvh max-h-dvh w-[min(420px,100vw)] max-w-[100vw] translate-x-full overflow-visible border-0 bg-transparent p-0 text-ink transition-[translate,overlay,display] transition-discrete duration-200 backdrop:bg-ink/0 backdrop:transition-[background-color,backdrop-filter,overlay,display] backdrop:transition-discrete backdrop:duration-200 backdrop:backdrop-blur-none open:translate-x-0 open:backdrop:bg-ink/28 open:backdrop:backdrop-blur-[2px] starting:open:translate-x-full starting:open:backdrop:bg-ink/0 starting:open:backdrop:backdrop-blur-none"
       aria-labelledby="store-drawer-title"
       onClick={(event) => {
         if (event.target === event.currentTarget) close();
       }}
     >
-      <div className="flex h-full flex-col rounded-l-[30px] bg-paper shadow-[-24px_0_60px_-20px_rgb(24_24_24/0.25)]">
+      <div className="flex h-full flex-col rounded-l-card bg-paper shadow-[-24px_0_60px_-20px_rgb(24_24_24/0.25)]">
         <header className="flex items-center justify-between gap-4 border-b border-line pt-5 pr-5 pb-4 pl-6">
           <h2 id="store-drawer-title" className="text-[20px]">
-            ตะกร้า <span className="ml-1.5 text-[14px] font-normal text-ink-muted">{count} ชิ้น</span>
+            ตะกร้า{" "}
+            <span className="ml-1.5 text-[14px] font-normal text-ink-muted">
+              {count} ชิ้น
+            </span>
           </h2>
           <button
             type="button"
@@ -531,7 +556,7 @@ export function CartDrawer({
             <div className="flex-1 overflow-y-auto overscroll-contain px-6 py-1">
               <CartLines lines={validLines} onNavigate={close} />
             </div>
-            <footer className="mx-3 mb-3 flex flex-col items-center gap-3.5 rounded-[26px] bg-cream px-5 pt-5 pb-[calc(20px+env(safe-area-inset-bottom))] shadow-ledge-sm">
+            <footer className="mx-3 mb-3 flex flex-col items-center gap-3.5 rounded-card bg-cream px-5 pt-5 pb-[calc(20px+env(safe-area-inset-bottom))] shadow-ledge-sm">
               <CheckoutBlock
                 total={total}
                 checkoutReady={checkoutReady}

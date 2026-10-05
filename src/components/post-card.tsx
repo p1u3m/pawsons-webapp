@@ -7,9 +7,9 @@ import { cn } from "@/lib/utils";
 
 // Cream card on a ledge holding a 4:5 picture frame.
 const card =
-  "flex min-w-0 flex-col rounded-[30px] bg-cream p-2.5 max-md:rounded-[20px] max-md:p-1.5";
+  "flex min-w-0 flex-col rounded-card bg-cream p-2.5 max-md:rounded-card-sm max-md:p-1.5";
 const frame =
-  "relative grid aspect-[4/5] place-items-center overflow-hidden rounded-[22px] max-md:rounded-[15px]";
+  "relative grid aspect-[4/5] place-items-center overflow-hidden rounded-card-sm max-md:rounded-tile";
 // The lead story's picture grows to fill the two rows beside it.
 const leadFrame =
   "flex-1 aspect-auto min-h-0 max-lg:flex-none max-lg:aspect-[4/5]";

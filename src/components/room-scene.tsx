@@ -97,7 +97,7 @@ export default function RoomScene({
 }
 
 const roomCard =
-  "relative overflow-hidden rounded-[36px] border border-line bg-cream text-center shadow-card";
+  "relative overflow-hidden rounded-panel border border-line bg-cream text-center shadow-card";
 
 /** Small arched window; the sky follows the time of day. */
 function RoomWindow({ sky }: { sky?: string }) {

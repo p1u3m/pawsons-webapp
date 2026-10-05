@@ -20,7 +20,7 @@ export function FilterSheet({
     <>
       <button
         type="button"
-        className="press relative hidden size-[52px] shrink-0 place-items-center rounded-full bg-navy text-cream [--ledge:#0a1a23] max-md:grid"
+        className="press relative hidden size-[52px] shrink-0 place-items-center rounded-full bg-navy text-cream [--ledge:var(--color-ledge-navy)] max-md:grid"
         onClick={() => dialog.current?.showModal()}
         aria-label={
           activeCount ? `${title} (ใช้อยู่ ${activeCount} รายการ)` : title
@@ -38,7 +38,7 @@ export function FilterSheet({
       </button>
       <dialog
         ref={dialog}
-        className="focus-ink fixed inset-x-0 top-auto bottom-0 m-0 max-h-[85dvh] w-full max-w-full translate-y-full border-0 bg-transparent p-0 text-ink backdrop:bg-ink/28 open:translate-y-0 starting:open:translate-y-full"
+        className="focus-ink fixed inset-x-0 top-auto bottom-0 m-0 max-h-[85dvh] w-full max-w-full translate-y-full border-0 bg-transparent p-0 text-ink transition-[translate,overlay,display] transition-discrete duration-200 backdrop:transition-[background-color,overlay,display] backdrop:transition-discrete backdrop:duration-200 backdrop:bg-ink/28 open:translate-y-0 starting:open:translate-y-full"
         aria-labelledby={titleId}
         onClick={(event) => {
           const target = event.target as HTMLElement;

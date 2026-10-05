@@ -5,8 +5,7 @@ const base =
   "group/pill inline-flex items-center justify-center gap-3 whitespace-nowrap tiny:whitespace-normal";
 // The wave-art sign has no box-shadow to grow (its ledge is a drop-shadow
 // filter), so it just lifts a little and settles.
-const lift =
-  "hover:-translate-y-0.5 active:translate-y-0.5";
+const lift = "hover:-translate-y-0.5 active:translate-y-0.5";
 
 const sizes = {
   md: "min-h-12 px-[22px] py-2.5 text-[15px] tiny:px-3.5 tiny:text-[13.5px]",
@@ -14,12 +13,13 @@ const sizes = {
 };
 
 const tones = {
-  primary: "press border-ink/12 bg-ink text-cream [--ledge:#77706a] hover:bg-[#282828]",
+  primary:
+    "press border-ink/12 bg-ink text-cream [--ledge:var(--color-ledge-ink)] hover:bg-[#282828]",
   secondary:
-    "press border-ink/10 bg-cream text-ink [--ledge:#ccc9c2] hover:border-ink/18 [&_[data-slot=disc]]:bg-ink/5 hover:[&_[data-slot=disc]]:bg-ink/8",
+    "press border-ink/10 bg-cream text-ink hover:border-ink/18 [&_[data-slot=disc]]:bg-ink/5 hover:[&_[data-slot=disc]]:bg-ink/8",
   /** Rainbow wash for "keep it in my room" actions. */
   gradient:
-    "press bg-size-[200%_100%] text-ink [--ledge:#b6a6c4]",
+    "press border-ink/12 bg-[linear-gradient(90deg,#f7cac9,#dec2e6,#92a8d1,#a3d9c9,#f5df4d,#f7cac9)] text-ink [--ledge:var(--color-ledge-lilac)]",
 };
 
 /** Soft, slightly uneven yellow sign with a wave pattern (homepage invitation). */
@@ -28,7 +28,7 @@ const sign =
 
 /** Cream pill standing on a solid ledge (footer). */
 const ledge =
-  "press min-h-14 gap-3.5 rounded-[28px] bg-cream py-2.5 pr-[25px] pl-6 text-[17px] font-bold text-navy [--ledge-2:#e7dfcf] [--ledge:#ccc9c2] [&_[data-slot=disc]]:size-[31px] [&_[data-slot=disc]]:bg-navy [&_[data-slot=disc]]:text-[15px] [&_[data-slot=disc]]:text-cream";
+  "press min-h-14 gap-3.5 rounded-card bg-cream py-2.5 pr-[25px] pl-6 text-[17px] font-bold text-navy [--ledge-2:var(--color-ledge-2)] [&_[data-slot=disc]]:size-[31px] [&_[data-slot=disc]]:bg-navy [&_[data-slot=disc]]:text-[15px] [&_[data-slot=disc]]:text-cream";
 
 type PillOptions = {
   variant?: keyof typeof tones | "sign" | "ledge";
@@ -39,10 +39,18 @@ type PillOptions = {
  * Pawsons pill button classes, for <Link>, <a> and <button> alike:
  *   <Link className={pillButton()} href="/quiz">Start <IconDisc>↗</IconDisc></Link>
  */
-export function pillButton({ variant = "primary", size = "md" }: PillOptions = {}) {
+export function pillButton({
+  variant = "primary",
+  size = "md",
+}: PillOptions = {}) {
   if (variant === "sign") return cn(base, lift, sign);
   if (variant === "ledge") return cn(base, ledge);
-  return cn(base, "rounded-full border font-medium", sizes[size], tones[variant]);
+  return cn(
+    base,
+    "rounded-full border font-medium",
+    sizes[size],
+    tones[variant],
+  );
 }
 
 /**

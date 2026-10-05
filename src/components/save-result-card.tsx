@@ -57,7 +57,7 @@ export default function SaveResultCard({
   if (checking) return null;
 
   return (
-    <div className="mx-auto mt-5 mb-7 max-w-[440px] rounded-[20px] border border-dashed border-line-strong bg-paper-soft px-5 py-4 text-center">
+    <div className="mx-auto mt-5 mb-7 max-w-[440px] rounded-card-sm border border-dashed border-line-strong bg-paper-soft px-5 py-4 text-center">
       {isCurrentCompanion ? (
         <div className="flex flex-col items-center gap-2">
           <p className="mb-1.5 text-[14.5px] font-medium text-[#2f5d3e]">

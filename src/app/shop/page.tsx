@@ -1,9 +1,17 @@
-import styles from "@/components/listing-page.module.css";
 import Link from "next/link";
 import { Suspense } from "react";
 import { ReceiptIcon } from "@phosphor-icons/react/dist/ssr";
 import { CartButton, CartDrawer } from "@/components/shop/cart";
-import { Dot } from "@/components/paper-ui";
+import {
+  Dot,
+  listFilters,
+  listingPage,
+  listReset,
+  listResults,
+  listResultsCount,
+  listResultsTitle,
+  listToolbar,
+} from "@/components/paper-ui";
 import {
   ShopEmpty,
   shopButton,
@@ -111,7 +119,7 @@ export default async function Page({
           "flex gap-1.5 pt-0.5 pb-1",
           inSheet
             ? "flex-none flex-wrap"
-            : "min-w-0 flex-[1_1_280px] overflow-x-auto overscroll-x-contain mask-[linear-gradient(90deg,#000_calc(100%-28px),transparent)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
+            : "min-w-0 flex-[1_1_280px] flex-wrap gap-2 pl-0 max-[62.5rem]:flex-[1_1_100%]",
         )}
         aria-label="ประเภทสินค้า"
       >
@@ -125,6 +133,7 @@ export default async function Page({
               scroll={false}
               className={cn(
                 "inline-flex h-9 shrink-0 items-center gap-2 rounded-full pr-2 pl-4 text-[14px] font-semibold whitespace-nowrap",
+                !inSheet && "h-auto min-h-10",
                 active
                   ? "bg-sun text-gold-ink shadow-[0_2px_0_var(--color-gold)]"
                   : "bg-[#f4efe1] text-ink-muted hover:text-ink",
@@ -141,9 +150,7 @@ export default async function Page({
       <nav
         className={cn(
           "flex gap-1.5",
-          inSheet
-            ? "flex-wrap"
-            : "ml-auto flex-nowrap border-l-[1.5px] border-[#ebe4d3] pl-3.5",
+          inSheet ? "flex-wrap" : "flex-wrap gap-2 max-[62.5rem]:flex-[1_1_100%]",
         )}
         aria-label="บ้าน"
       >
@@ -163,6 +170,7 @@ export default async function Page({
               scroll={false}
               className={cn(
                 "inline-flex h-9 items-center gap-[7px] rounded-full px-3.5 text-[13px] font-semibold hover:-translate-y-px",
+                !inSheet && "h-auto min-h-10 whitespace-nowrap",
                 active
                   ? "bg-(--house-bg) text-ink shadow-[inset_0_0_0_1.5px_color-mix(in_srgb,var(--house)_55%,transparent)]"
                   : "bg-cream text-ink-muted shadow-[inset_0_0_0_1.5px_#ebe4d3] hover:text-ink",
@@ -179,7 +187,7 @@ export default async function Page({
   );
 
   return (
-    <div className={cn(shopPage, styles.page, "pb-0 max-md:pt-6")}>
+    <div className={cn(shopPage, listingPage, "pb-0 max-md:pt-6")}>
       <h1 className="sr-only">ร้าน Pawsons</h1>
       <section className="pt-2 pb-20 max-md:pb-16" aria-label="สินค้า">
         <div className="wrap">
@@ -187,21 +195,21 @@ export default async function Page({
               Mobile: search, filter button and cart; filters in the sheet. */}
           <div
             className={cn(
-              styles.toolbar,
-              "mb-8 flex flex-wrap items-center bg-cream shadow-ledge max-md:shadow-none",
+              listToolbar,
+              "mb-8 bg-cream shadow-ledge max-md:bg-transparent max-md:shadow-none",
             )}
           >
             <div
               className={cn(
-                styles.filters,
-                "order-2 basis-full border-t border-line-strong pt-4 max-md:hidden",
+                listFilters,
+                "order-2 flex basis-full border-t border-line-strong pt-4 max-md:hidden",
               )}
             >
               {filters(false)}
             </div>
             <Suspense>
               <SearchField
-                className="max-md:h-[52px] max-md:max-w-none max-md:min-w-0 max-md:flex-1 max-md:bg-cream max-md:shadow-ledge-sm"
+                className="min-w-0 max-md:h-[52px] max-md:max-w-none max-md:flex-[1_1_calc(100%-64px)] max-md:bg-cream max-md:shadow-ledge-sm"
                 placeholder="ค้นหาสินค้าหรือตัวละคร"
                 label="ค้นหาสินค้า"
               />
@@ -216,14 +224,14 @@ export default async function Page({
                 aria-label="คำสั่งซื้อของฉัน"
               >
                 <ReceiptIcon size={18} weight="bold" aria-hidden="true" />
-                <span className="max-md:hidden">คำสั่งซื้อ</span>
+                <span>คำสั่งซื้อ</span>
               </Link>
               <CartButton placement="toolbar" />
             </div>
           </div>
 
           {selectedCharacter && (
-            <div className="-mt-3 mb-7 flex items-center justify-between gap-4 rounded-[22px] bg-cream px-5 py-3.5 shadow-ledge-sm">
+            <div className="-mt-3 mb-7 flex items-center justify-between gap-4 rounded-card-sm bg-cream px-5 py-3.5 shadow-ledge-sm">
               <p className="text-[14px]">
                 ของจาก <strong>{selectedCharacter.name}</strong> ·{" "}
                 {selectedCharacter.type}
@@ -234,14 +242,14 @@ export default async function Page({
             </div>
           )}
 
-          <div className={styles.results}>
+          <div className={listResults}>
             <div>
-              <h2>
+              <h2 className={listResultsTitle}>
                 {currentKind === "all"
                   ? "ของเล็ก ๆ จากเพื่อนตัวน้อย"
                   : kindLabel[currentKind]}
               </h2>
-              <p>
+              <p className={listResultsCount}>
                 {visible.length} สินค้า
                 {currentHouse
                   ? ` · ${houses.find((h) => h.id === currentHouse)?.name}`
@@ -252,7 +260,7 @@ export default async function Page({
               selectedCharacter ||
               currentHouse ||
               currentKind !== "all") && (
-              <Link className={styles.reset} href="/shop">
+              <Link className={listReset} href="/shop">
                 ล้างตัวกรอง
               </Link>
             )}

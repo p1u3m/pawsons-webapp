@@ -174,7 +174,7 @@ export default function AccountSheet({
     >
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-ink/40 backdrop-blur-xs"
+        className="fixed inset-0 bg-ink/40 backdrop-blur-xs transition-opacity duration-200 starting:opacity-0"
         onClick={onClose}
         aria-hidden="true"
       />
@@ -182,7 +182,7 @@ export default function AccountSheet({
       {/* Sheet Container */}
       <div
         ref={sheetRef}
-        className="fixed inset-x-0 bottom-0 z-101 mx-auto flex max-h-[85vh] max-w-[480px] flex-col overflow-y-auto rounded-t-[28px] bg-cream px-5 pt-3 pb-[max(24px,env(safe-area-inset-bottom,24px))] shadow-[0_-10px_40px_rgb(24_24_24/0.16)]"
+        className="fixed inset-x-0 bottom-0 z-101 mx-auto flex max-h-[85vh] max-w-[480px] flex-col overflow-y-auto rounded-t-card bg-cream px-5 pt-3 pb-[max(24px,env(safe-area-inset-bottom,24px))] shadow-[0_-10px_40px_rgb(24_24_24/0.16)] transition-[translate] duration-200 starting:translate-y-full"
         id="mobile-account-menu"
         role="dialog"
         aria-modal="true"
@@ -220,7 +220,7 @@ export default function AccountSheet({
         <div className="flex flex-col gap-4 pt-[18px]">
           {user ? (
             <>
-              <div className="flex items-center gap-3.5 rounded-[20px] border border-ink/6 bg-ink/3 px-4 py-3.5">
+              <div className="flex items-center gap-3.5 rounded-card-sm border border-ink/6 bg-ink/3 px-4 py-3.5">
                 <div className="shrink-0">
                   {avatarUrl ? (
                     <Image
@@ -317,7 +317,7 @@ export default function AccountSheet({
 }
 
 const sheetRow =
-  "flex min-h-12 items-center gap-3 rounded-2xl border border-ink/8 bg-cream px-3.5 py-2.5 text-left text-[15px] font-medium text-ink focus-visible:outline-offset-2 active:scale-[0.98]";
+  "flex min-h-12 items-center gap-3 rounded-2xl border border-ink/8 bg-cream px-3.5 py-2.5 text-left text-[15px] font-medium text-ink hover:bg-ink/4 focus-visible:outline-offset-2 active:scale-[0.98]";
 const sheetIcon =
   "flex size-[34px] shrink-0 items-center justify-center rounded-full bg-ink/5 text-ink";
 

@@ -11,7 +11,6 @@ import {
 import { pillButton } from "@/components/pill-button";
 import { characters, houses, houseSigilSrc } from "@/lib/data";
 import { cn } from "@/lib/utils";
-import styles from "./characters.module.css";
 
 export const metadata = { title: "Characters" };
 const heroFriends = [
@@ -23,9 +22,7 @@ const heroFriends = [
 
 export default function Page() {
   return (
-    <div
-      className={`${styles.page} focus-ink`}
-    >
+    <div className="focus-ink overflow-x-clip [--focus-offset:5px] [--focus-ring:var(--color-green)]">
       <h1 className="sr-only">
         เพื่อนทั้ง {characters.length} ตัวในโลกของ Pawsons
       </h1>
@@ -33,30 +30,33 @@ export default function Page() {
         <HouseBand
           key={house.id}
           style={houseVars(house)}
-          className={styles.band}
+          className="pt-6 pb-22 [--focus-ring:var(--house-ink)] [--wave:48px] first-of-type:-mt-14 first-of-type:pt-22 first-of-type:[--wave:0px] md:pt-10 md:pb-32 md:[--wave:88px] md:first-of-type:-mt-16 md:first-of-type:pt-27"
           aria-labelledby={`house-${house.id}`}
         >
-          <div className={styles.wrap}>
-            <header className={styles.houseHeader}>
-              <h2 id={`house-${house.id}`}>
+          <div className="wrap">
+            <header className="mb-6 flex flex-wrap items-center justify-between gap-3 md:mb-7">
+              <h2
+                id={`house-${house.id}`}
+                className="flex min-w-0 items-center gap-2 text-[24px] leading-[1.4] tracking-[-0.015em] text-(--house-ink) md:gap-3 md:text-[30px] tiny:text-[22px]"
+              >
                 <Image
                   src={houseSigilSrc(house)}
                   alt=""
                   width={48}
                   height={48}
-                  className={styles.sigil}
+                  className="size-9 shrink-0 object-contain md:size-11"
                 />
                 <span lang="en">{house.name}</span>
               </h2>
               <ChipLink
                 href={`/houses/${house.id}`}
-                className={styles.houseButton}
+                className="h-auto min-h-11 text-[13px]"
               >
                 รู้จักบ้านนี้
                 <ArrowUpRightIcon size={14} aria-hidden="true" />
               </ChipLink>
             </header>
-            <div className={styles.cards}>
+            <div className="grid grid-cols-2 gap-x-3 gap-y-4 md:grid-cols-4 md:gap-5">
               {characters
                 .filter((character) => character.house.id === house.id)
                 .map((character) => (
@@ -66,21 +66,27 @@ export default function Page() {
           </div>
         </HouseBand>
       ))}
-      <section className={styles.invitation} aria-labelledby="invitation-title">
+      <section
+        className="wrap grid justify-items-center gap-6 pt-12 pb-14 text-center md:grid-cols-2 md:items-center md:gap-14 md:py-18 md:text-left"
+        aria-labelledby="invitation-title"
+      >
         <HeroFriends friends={heroFriends} />
-        <div className={styles.invitationCopy}>
-          <h2 id="invitation-title">
+        <div>
+          <h2
+            id="invitation-title"
+            className="text-[28px] leading-[1.4] tracking-[-0.02em] md:text-[38px]"
+          >
             ทุกตัวตน
             <br />
             มีเรื่องราวของตัวเอง
           </h2>
-          <p>
+          <p className="mx-auto mt-4 max-w-[36ch] text-[16px] leading-[1.8] md:mr-auto md:ml-0 md:max-w-[42ch] md:text-[17px]">
             {characters.length} บุคลิก {houses.length} บ้าน และอีกหลายมุมเล็ก ๆ
             ที่อยากให้คุณรู้จัก
           </p>
           <Link
             href="/quiz"
-            className={cn(pillButton({ variant: "sign" }), styles.quizButton)}
+            className={cn(pillButton({ variant: "sign" }), "mt-6")}
           >
             <span>ค้นหาเพื่อนของคุณ</span>
           </Link>

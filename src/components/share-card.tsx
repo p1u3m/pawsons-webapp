@@ -118,7 +118,7 @@ export default function ShareCard({ character: c }: { character: Character }) {
     <div className="mx-auto my-[30px] grid max-w-[920px] grid-cols-2 items-center gap-[70px] max-[67.5rem]:grid-cols-1 max-[67.5rem]:gap-10 max-md:w-full max-md:gap-8 max-md:overflow-hidden">
       {/* 9:16 preview of the story card */}
       <div
-        className="flex aspect-[9/16] w-[min(320px,100%)] max-w-full flex-col items-center justify-self-center rounded-[28px] border border-white/60 px-5 pt-10 pb-6 text-center shadow-[0_20px_60px_-15px_rgb(24_24_24/0.15)] max-md:w-full max-md:max-w-[270px] max-md:px-4 max-md:pt-7 max-md:pb-5 tiny:max-w-[240px] tiny:px-3 tiny:pt-5 tiny:pb-4"
+        className="flex aspect-[9/16] w-[min(320px,100%)] max-w-full flex-col items-center justify-self-center rounded-card border border-white/60 px-5 pt-10 pb-6 text-center shadow-[0_20px_60px_-15px_rgb(24_24_24/0.15)] max-md:w-full max-md:max-w-[270px] max-md:px-4 max-md:pt-7 max-md:pb-5 tiny:max-w-[240px] tiny:px-3 tiny:pt-5 tiny:pb-4"
         style={{ background: houseBackground(c.house) }}
       >
         <span className="text-[10px] font-semibold tracking-[2px]">A LITTLE PIECE OF ME</span>

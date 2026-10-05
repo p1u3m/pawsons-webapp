@@ -1,4 +1,3 @@
-import styles from "@/components/listing-page.module.css";
 import Link from "next/link";
 import { Suspense } from "react";
 import { ArrowLeftIcon, ArrowRightIcon } from "@phosphor-icons/react/dist/ssr";
@@ -11,6 +10,13 @@ import { SearchField } from "@/components/search-field";
 import { HeroFriends } from "@/components/character-ui";
 import {
   Dot,
+  listFilters,
+  listingPage,
+  listReset,
+  listResults,
+  listResultsCount,
+  listResultsTitle,
+  listToolbar,
   pageHero,
   pageHeroText,
   pageHeroTitle,
@@ -106,13 +112,13 @@ export default async function Page({
       <nav
         className={cn(
           "flex flex-wrap gap-x-1.5 gap-y-2 pb-0.5",
-          !inSheet && "min-w-0 flex-1",
+          !inSheet && "min-w-0 flex-1 gap-2 max-[62.5rem]:flex-[1_1_100%]",
         )}
         aria-label="เลือกดูเรื่องราว"
       >
         {!selected && (
           <Link
-            className={tab(magazine)}
+            className={tab(magazine, inSheet)}
             href="/contents"
             aria-current={magazine ? "page" : undefined}
           >
@@ -120,7 +126,7 @@ export default async function Page({
           </Link>
         )}
         <Link
-          className={tab(!magazine && !currentCategory)}
+          className={tab(!magazine && !currentCategory, inSheet)}
           href={filterHref({ category: null })}
           aria-current={!magazine && !currentCategory ? "page" : undefined}
         >
@@ -129,7 +135,7 @@ export default async function Page({
         {categories.map(({ slug, label }) => (
           <Link
             key={slug}
-            className={tab(currentCategory === slug)}
+            className={tab(currentCategory === slug, inSheet)}
             href={filterHref({
               category: currentCategory === slug ? null : slug,
             })}
@@ -146,8 +152,7 @@ export default async function Page({
         <nav
           className={cn(
             "flex flex-wrap gap-2",
-            !inSheet &&
-              "shrink-0 flex-nowrap gap-1.5 border-l-[1.5px] border-[#ebe4d3] pl-3.5",
+            !inSheet && "max-[62.5rem]:flex-[1_1_100%]",
           )}
           aria-label="บ้าน"
         >
@@ -157,7 +162,7 @@ export default async function Page({
               <Link
                 key={item.id}
                 className={cn(
-                  tab(false),
+                  tab(false, inSheet),
                   "gap-[7px] bg-cream px-3.5 text-[13px] shadow-[inset_0_0_0_1.5px_#ebe4d3]",
                   active &&
                     "bg-(--house-bg) text-ink shadow-[inset_0_0_0_1.5px_color-mix(in_srgb,var(--house)_55%,transparent)]",
@@ -185,11 +190,11 @@ export default async function Page({
   return (
     <div
       className={cn(
-        styles.page,
+        listingPage,
         "focus-ink min-h-[70vh] overflow-x-clip pt-8 max-md:pt-6",
       )}
     >
-      <section className={cn(pageHero, styles.hero)}>
+      <section className={pageHero}>
         <div>
           {selected && (
             <Link
@@ -239,13 +244,13 @@ export default async function Page({
               one cream bar, search on top and the filters below a dashed line. */}
           <div
             className={cn(
-              styles.toolbar,
-              "mb-7 flex flex-wrap items-center md:bg-cream md:shadow-ledge",
+              listToolbar,
+              "mb-7 md:bg-cream md:shadow-ledge",
             )}
           >
             <Suspense>
               <SearchField
-                className="h-[52px] min-w-0 flex-1 bg-cream shadow-ledge-sm md:h-[46px] md:bg-[#f4efe1] md:shadow-none"
+                className="h-[52px] min-w-0 flex-1 bg-cream shadow-ledge-sm max-md:flex-[1_1_calc(100%-64px)] md:h-[46px] md:bg-[#f4efe1] md:shadow-none"
                 placeholder="ค้นหาเรื่องหรือตัวละคร"
                 label="ค้นหาเรื่องราว"
               />
@@ -255,7 +260,7 @@ export default async function Page({
             </FilterSheet>
             <div
               className={cn(
-                styles.filters,
+                listFilters,
                 "hidden md:flex md:basis-full md:border-t md:border-line-strong md:pt-4",
               )}
             >
@@ -264,7 +269,7 @@ export default async function Page({
           </div>
 
           {selected && (
-            <div className="-mt-4 mb-7 flex flex-wrap items-center justify-between gap-3 rounded-[22px] bg-cream py-3 pr-3 pl-5 text-[14px] shadow-ledge-sm">
+            <div className="-mt-4 mb-7 flex flex-wrap items-center justify-between gap-3 rounded-card-sm bg-cream py-3 pr-3 pl-5 text-[14px] shadow-ledge-sm">
               <p className="flex items-center gap-2">
                 <Dot color={selected.house.badgeColor} />
                 โพสต์ของ <strong>{selected.name}</strong> · {selected.type}
@@ -276,17 +281,19 @@ export default async function Page({
             </div>
           )}
 
-          <div className={styles.results}>
+          <div className={listResults}>
             <div>
-              <h2>{magazine ? "เรื่องแนะนำสำหรับคุณ" : "เรื่องราวทั้งหมด"}</h2>
-              <p>
+              <h2 className={listResultsTitle}>
+                {magazine ? "เรื่องแนะนำสำหรับคุณ" : "เรื่องราวทั้งหมด"}
+              </h2>
+              <p className={listResultsCount}>
                 {magazine
                   ? "เรื่องเล็ก ๆ ที่อยากชวนคุณอ่าน"
                   : `${visible.length} เรื่อง${currentHouse ? ` · ${currentHouse.name}` : ""}${selected ? ` · ${selected.name}` : ""}`}
               </p>
             </div>
             {(query || selected || currentHouse || currentCategory) && (
-              <Link className={styles.reset} href="/contents?view=all">
+              <Link className={listReset} href="/contents?view=all">
                 ล้างตัวกรอง
               </Link>
             )}
@@ -297,7 +304,7 @@ export default async function Page({
             // Client component for the GSAP scroll reveal.
             <ContentsGrid posts={visible} />
           ) : (
-            <div className="flex flex-col items-center gap-2 rounded-[30px] bg-cream px-6 py-14 text-center shadow-ledge">
+            <div className="flex flex-col items-center gap-2 rounded-card bg-cream px-6 py-14 text-center shadow-ledge">
               <p className="text-[18px] font-semibold">
                 {query
                   ? `ไม่พบเรื่องที่ตรงกับ “${q!.trim()}”`
@@ -328,9 +335,10 @@ export default async function Page({
 }
 
 /** Filter tab; the active one is a yellow sign chip. */
-function tab(active: boolean) {
+function tab(active: boolean, inSheet: boolean) {
   return cn(
     "inline-flex h-9 shrink-0 items-center gap-2 rounded-full px-4 text-[14px] font-semibold whitespace-nowrap",
+    !inSheet && "h-auto min-h-10",
     active
       ? "bg-sun text-gold-ink shadow-[0_2px_0_var(--color-gold)]"
       : "bg-[#f4efe1] text-ink",

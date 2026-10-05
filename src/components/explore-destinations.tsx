@@ -36,7 +36,7 @@ const destinations = [
             alt=""
             width={81}
             height={62}
-            className="w-11 rounded-[14px] odd:-rotate-4 even:rotate-4"
+            className="w-11 rounded-tile odd:-rotate-4 even:rotate-4"
           />
         ))}
       </span>
@@ -108,7 +108,7 @@ const destinations = [
 
 // Card on a solid ledge (--ledge) that rises on hover and sinks when pressed.
 const card =
-  "group relative flex flex-col items-center gap-3 rounded-[24px] px-4 pt-[22px] pb-5 text-center text-ink shadow-[0_3px_0_var(--ledge)] [--ledge:#e2d3a4] hover:-translate-y-[2px] hover:shadow-[0_5px_0_var(--ledge)] focus-visible:outline-3 focus-visible:outline-offset-3 focus-visible:outline-ink active:translate-y-px active:scale-[0.98] active:shadow-[0_3px_0_var(--ledge)] max-[33.75rem]:rounded-[20px] max-[33.75rem]:px-2.5 max-[33.75rem]:pt-[18px] max-[33.75rem]:pb-4";
+  "group relative flex flex-col items-center gap-3 rounded-card-sm px-4 pt-[22px] pb-5 text-center text-ink shadow-[0_3px_0_var(--ledge)] [--ledge:var(--color-ledge-warm)] hover:-translate-y-[2px] hover:shadow-[0_5px_0_var(--ledge)] focus-visible:outline-3 focus-visible:outline-offset-3 focus-visible:outline-ink active:translate-y-px active:scale-[0.98] active:shadow-[0_3px_0_var(--ledge)] max-[33.75rem]:rounded-card-sm max-[33.75rem]:px-2.5 max-[33.75rem]:pt-[18px] max-[33.75rem]:pb-4";
 
 export function ExploreDestinations() {
   return (

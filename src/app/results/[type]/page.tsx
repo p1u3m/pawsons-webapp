@@ -24,7 +24,7 @@ export default async function Page({
 
   return (
     <div className="wrap max-w-[720px] pt-10 pb-20 text-center">
-      <div className="rounded-[36px] border border-line bg-cream px-10 py-14 shadow-card max-md:rounded-[28px] max-md:px-5 max-md:py-7">
+      <div className="rounded-panel border border-line bg-cream px-10 py-14 shadow-card max-md:rounded-card max-md:px-5 max-md:py-7">
         <Eyebrow>A LITTLE PIECE OF YOU</Eyebrow>
         <h1 className="mt-4">You feel like {c.name}.</h1>
         <p>{c.tagline}</p>

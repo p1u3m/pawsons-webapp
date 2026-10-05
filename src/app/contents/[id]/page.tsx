@@ -69,12 +69,12 @@ export default async function Page({
       </div>
 
       <div className="grid grid-cols-2 items-start gap-14 max-split:grid-cols-1 max-split:gap-8">
-        <div className="sticky top-[110px] max-w-[540px] rounded-[34px] bg-cream p-2.5 shadow-ledge max-split:static max-split:mx-auto max-split:w-full">
+        <div className="sticky top-[110px] max-w-[540px] rounded-panel bg-cream p-2.5 shadow-ledge max-split:static max-split:mx-auto max-split:w-full">
           <PostFrame
             post={post}
             sizes="(max-width: 860px) 100vw, 50vw"
             priority
-            className="rounded-[26px] max-md:rounded-[26px]"
+            className="rounded-card max-md:rounded-card"
           />
         </div>
 

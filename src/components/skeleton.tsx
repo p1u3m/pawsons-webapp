@@ -10,7 +10,7 @@ export function Bone({ className }: { className?: string }) {
   return (
     <span
       aria-hidden="true"
-      className={cn("block rounded-[14px] bg-ink/5", className)}
+      className={cn("block rounded-tile bg-ink/5", className)}
     />
   );
 }

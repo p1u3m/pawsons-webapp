@@ -75,7 +75,7 @@ export default async function OrderPage({ params }: { params: Promise<{ id: stri
       </header>
 
       <ol
-        className="mb-7 grid grid-cols-4 rounded-[28px] bg-cream px-5 py-6 shadow-ledge-sm max-md:px-2 max-md:py-5"
+        className="mb-7 grid grid-cols-4 rounded-card bg-cream px-5 py-6 shadow-ledge-sm max-md:px-2 max-md:py-5"
         aria-label="สถานะคำสั่งซื้อ"
       >
         {steps.map(({ key, label, Icon }, index) => {
@@ -213,5 +213,5 @@ export default async function OrderPage({ params }: { params: Promise<{ id: stri
   );
 }
 
-const card = "rounded-3xl bg-cream px-6 py-[22px] shadow-ledge-sm";
+const card = "rounded-card-sm bg-cream px-6 py-[22px] shadow-ledge-sm";
 const cardTitle = "mb-3.5 flex items-center gap-2 text-[17px]";

@@ -103,7 +103,7 @@ export default function AuthButton() {
 
       {menuOpen && (
         <div
-          className="absolute top-[calc(100%+10px)] right-0 z-60 min-w-[210px] rounded-[20px] border border-line bg-cream p-2.5 shadow-float"
+          className="absolute top-[calc(100%+10px)] right-0 z-60 min-w-[210px] rounded-card-sm border border-line bg-cream p-2.5 shadow-float transition-[opacity,translate] duration-150 starting:-translate-y-1 starting:opacity-0"
           role="menu"
         >
           <div className="flex flex-col gap-0.5 px-2.5 pt-1.5 pb-2">

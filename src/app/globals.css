@@ -46,6 +46,11 @@
 /* Pawsons design tokens. Use them as utilities: bg-paper, text-ink,
    text-ink-muted, border-line, shadow-card… */
 @theme {
+  /* The one transition: short and ease-out. Tailwind's `transition-*`
+     utilities and the base rules below all read these. */
+  --default-transition-duration: 160ms;
+  --default-transition-timing-function: ease-out;
+
   /* Extra breakpoints: xs is 480px (use max-xs for phones); split is 861px,
      where two-column page heroes start. */
   --breakpoint-xs: 30rem;
@@ -72,6 +77,22 @@
   --color-gold-ink: #60420d;
   --color-navy: #142d3b;
 
+  /* Ledges: the solid bands under cards and buttons (see `press`). */
+  --color-ledge: #d7d3cc;
+  --color-ledge-2: #e6e1d8;
+  --color-ledge-sun: #efe0b7;
+  --color-ledge-warm: #e2d3a4;
+  --color-ledge-navy: #0a1a23;
+  --color-ledge-ink: #77706a;
+  --color-ledge-lilac: #b6a6c4;
+
+  /* Corner radii: inner tiles and pictures, small and regular cards, and
+     large panels. Pills and circles use rounded-full. */
+  --radius-tile: 14px;
+  --radius-card-sm: 22px;
+  --radius-card: 28px;
+  --radius-panel: 36px;
+
   /* House tints */
   --color-clover: #eef6ec;
   --color-lavender: #f3eef9;
@@ -84,9 +105,9 @@
     0 14px 34px -10px rgb(24 24 24 / 0.05), 0 2px 6px -1px rgb(24 24 24 / 0.02);
   --shadow-float:
     0 22px 50px -12px rgb(24 24 24 / 0.08), 0 4px 14px -2px rgb(24 24 24 / 0.03);
-  --shadow-ledge: 0 4px 0 #d7d3cc, 0 8px 0 #e6e1d8;
-  --shadow-ledge-sm: 0 3px 0 #d7d3cc, 0 5px 0 #e6e1d8;
-  --shadow-ledge-pressed: 0 1px 0 #d7d3cc, 0 2px 0 #e6e1d8;
+  --shadow-ledge: 0 4px 0 var(--color-ledge), 0 8px 0 var(--color-ledge-2);
+  --shadow-ledge-sm: 0 3px 0 var(--color-ledge), 0 5px 0 var(--color-ledge-2);
+  --shadow-ledge-pressed: 0 1px 0 var(--color-ledge), 0 2px 0 var(--color-ledge-2);
 
 }
 
@@ -119,7 +140,7 @@
   /* Strength of every doodle tile (public/patterns/) on the site. Band
      bodies use it as opacity; wave edges paint tile and colour in one
      background, so they lay a band-colour veil of (1 - this) on top. */
-  --pattern-opacity: 0.7;
+  --pattern-opacity: 0.6;
 
   /* shadcn tokens (see @theme inline) on the paper palette */
   --background: var(--color-paper);
@@ -213,6 +234,40 @@ body:has(.admin-theme) {
     caret-color: transparent;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Links and buttons ease their colour, shadow and small movements; what
+     they contain (icons, pictures, labels) eases its own lift or nudge. */
+  a,
+  button,
+  summary,
+  [role="button"],
+  [role="tab"] {
+    transition-property:
+      color, background-color, border-color, text-decoration-color, opacity,
+      box-shadow, translate, scale, rotate;
+    transition-duration: var(--default-transition-duration);
+    transition-timing-function: var(--default-transition-timing-function);
+  }
+  :where(a, button) :is(svg, img, span) {
+    transition-property: translate, scale, rotate, color, opacity;
+    transition-duration: var(--default-transition-duration);
+    transition-timing-function: var(--default-transition-timing-function);
+  }
+  input,
+  textarea,
+  select {
+    transition-property: border-color, box-shadow;
+    transition-duration: var(--default-transition-duration);
+    transition-timing-function: var(--default-transition-timing-function);
+  }
+  /* Reduced motion: every state change is instant. */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    ::before,
+    ::after {
+      transition-duration: 0s !important;
+    }
   }
 
   /* Paper grain over the whole site. */
@@ -444,43 +499,47 @@ body:has(.admin-theme) {
 }
 
 /* The one button state style: a solid ledge under the control. It rises on
-   hover and keyboard focus and sinks when pressed. States switch instantly;
-   the site has no transitions. Tune with --depth, --ledge and --ledge-2
+   hover and keyboard focus and sinks when pressed, over a short ease-out
+   transition (none under reduced motion). Tune with --depth, --ledge and --ledge-2
    (an optional outer band). */
 @utility press {
   --depth: 4px;
   box-shadow:
-    0 var(--depth) 0 var(--ledge, #d7d3cc),
+    0 var(--depth) 0 var(--ledge, var(--color-ledge)),
     0 calc(var(--depth) * 1.75) 0 var(--ledge-2, transparent);
+  transition:
+    translate var(--default-transition-duration) ease-out,
+    box-shadow var(--default-transition-duration) ease-out,
+    color var(--default-transition-duration) ease-out,
+    background-color var(--default-transition-duration) ease-out,
+    border-color var(--default-transition-duration) ease-out;
   &:not(:disabled, [aria-disabled="true"]):focus-visible {
     translate: 0 -2px;
     box-shadow:
-      0 calc(var(--depth) + 2px) 0 var(--ledge, #d7d3cc),
+      0 calc(var(--depth) + 2px) 0 var(--ledge, var(--color-ledge)),
       0 calc(var(--depth) * 1.75 + 2px) 0 var(--ledge-2, transparent);
   }
   @media (hover: hover) {
     &:not(:disabled, [aria-disabled="true"]):hover {
       translate: 0 -2px;
       box-shadow:
-        0 calc(var(--depth) + 2px) 0 var(--ledge, #d7d3cc),
+        0 calc(var(--depth) + 2px) 0 var(--ledge, var(--color-ledge)),
         0 calc(var(--depth) * 1.75 + 2px) 0 var(--ledge-2, transparent);
     }
   }
   &:not(:disabled, [aria-disabled="true"]):active {
     translate: 0 var(--depth);
     box-shadow:
-      0 0 0 var(--ledge, #d7d3cc),
+      0 0 0 var(--ledge, var(--color-ledge)),
       0 calc(var(--depth) * 0.5) 0 var(--ledge-2, transparent);
   }
 }
 
-/* Centered page column. */
+/* Centered page column: the one content width for every page (the navbar
+   matches it at 1040px). */
 @utility wrap {
-  width: min(1180px, calc(100% - 64px));
+  width: min(1040px, calc(100% - 40px));
   margin-inline: auto;
-  @variant max-md {
-    width: calc(100% - 32px);
-  }
   @variant tiny {
     width: calc(100% - 20px);
   }

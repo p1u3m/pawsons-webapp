@@ -155,11 +155,14 @@ export default function Quiz() {
     setStarted(true);
     setStep(0);
     if (!isMuted && audioRef.current) {
-      audioRef.current.play().then(() => {
-        setIsPlaying(true);
-      }).catch(() => {
-        // Autoplay policy fallback
-      });
+      audioRef.current
+        .play()
+        .then(() => {
+          setIsPlaying(true);
+        })
+        .catch(() => {
+          // Autoplay policy fallback
+        });
     }
   }
 
@@ -169,9 +172,12 @@ export default function Quiz() {
     if (audio.paused || isMuted) {
       audio.muted = false;
       setIsMuted(false);
-      audio.play().then(() => {
-        setIsPlaying(true);
-      }).catch(() => {});
+      audio
+        .play()
+        .then(() => {
+          setIsPlaying(true);
+        })
+        .catch(() => {});
     } else {
       audio.pause();
       setIsPlaying(false);
@@ -191,8 +197,12 @@ export default function Quiz() {
     if (step === QUIZ_STEPS.length - 1) {
       // Final scene complete, calculate results
       const fullAnswers = Array.from({ length: 12 }, (_, i) => answers[i] ?? 0);
-      const vibeQuery = selectedVibe ? `?vibe=${encodeURIComponent(selectedVibe)}` : "";
-      router.push(`/results/${calculateType(fullAnswers).toLowerCase()}${vibeQuery}`);
+      const vibeQuery = selectedVibe
+        ? `?vibe=${encodeURIComponent(selectedVibe)}`
+        : "";
+      router.push(
+        `/results/${calculateType(fullAnswers).toLowerCase()}${vibeQuery}`,
+      );
     } else {
       setStep(step + 1);
     }
@@ -209,7 +219,7 @@ export default function Quiz() {
   if (!started) {
     const playing = isPlaying && !isMuted;
     return (
-      <div className="relative mx-auto max-w-[600px] rounded-[36px] border border-line bg-cream px-9 py-14 text-center shadow-card">
+      <div className="relative mx-auto max-w-[600px] rounded-panel border border-line bg-cream px-9 py-14 text-center shadow-card">
         {/* Invisible audio element initialized and persists across quiz */}
         <audio ref={audioRef} src="/audio/quiz-bgm.mp3" loop preload="auto" />
 
@@ -227,13 +237,31 @@ export default function Quiz() {
           title={playing ? "ปิดเพลงคลอ" : "เปิดเพลงคลอ"}
         >
           {playing ? (
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
               <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
               <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
               <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
             </svg>
           ) : (
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
               <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
               <line x1="23" y1="9" x2="17" y2="15" />
               <line x1="17" y1="9" x2="23" y2="15" />
@@ -245,7 +273,7 @@ export default function Quiz() {
           <CharacterImage
             character={characters[5]}
             priority
-            className="size-[155px]"
+            className="size-[155px] object-contain"
           />
         </div>
 
@@ -290,7 +318,7 @@ export default function Quiz() {
     "mt-4 mb-6 text-[clamp(24px,3.2vw,32px)] leading-[1.45] tracking-[-0.5px] outline-none";
 
   return (
-    <div className="mx-auto mt-2.5 mb-10 max-w-[680px] rounded-[36px] border border-line bg-cream px-9 py-10 shadow-card max-md:rounded-[28px] max-md:px-5 max-md:py-7">
+    <div className="mx-auto mt-2.5 mb-10 max-w-[680px] rounded-panel border border-line bg-cream px-9 py-10 shadow-card max-md:rounded-card max-md:px-5 max-md:py-7">
       {/* Persistent audio element continues playing seamlessly */}
       <audio ref={audioRef} src="/audio/quiz-bgm.mp3" loop preload="auto" />
 
@@ -305,8 +333,8 @@ export default function Quiz() {
           {isQuestion
             ? `คำถามที่ ${questionIndex + 1} / 12`
             : isSpecialVibe
-            ? "คำถามพิเศษ"
-            : currentStep.badge ?? "เรื่องราวระหว่างทาง"}
+              ? "คำถามพิเศษ"
+              : (currentStep.badge ?? "เรื่องราวระหว่างทาง")}
         </span>
       </div>
 
@@ -317,7 +345,13 @@ export default function Quiz() {
         aria-label="ความคืบหน้าคำถาม"
         aria-valuemin={0}
         aria-valuemax={12}
-        aria-valuenow={isQuestion ? questionIndex + 1 : isSpecialVibe ? 12 : Math.max(0, questionIndex + 1)}
+        aria-valuenow={
+          isQuestion
+            ? questionIndex + 1
+            : isSpecialVibe
+              ? 12
+              : Math.max(0, questionIndex + 1)
+        }
       >
         {questions.map((_, i) => (
           <span
@@ -343,7 +377,9 @@ export default function Quiz() {
               {currentStep.text}
             </h2>
             {currentStep.subtext && (
-              <p className="mb-5 text-[14.5px] leading-[1.6]">{currentStep.subtext}</p>
+              <p className="mb-5 text-[14.5px] leading-[1.6]">
+                {currentStep.subtext}
+              </p>
             )}
 
             {/* Soft green glow behind the friend */}
@@ -358,7 +394,11 @@ export default function Quiz() {
               />
             </div>
 
-            <button type="button" className={cn(pillButton(), "mt-2")} onClick={handleNext}>
+            <button
+              type="button"
+              className={cn(pillButton(), "mt-2")}
+              onClick={handleNext}
+            >
               <span>{currentStep.buttonText}</span>
               <IconDisc>↗</IconDisc>
             </button>
@@ -369,11 +409,17 @@ export default function Quiz() {
         {isSpecialVibe && (
           <div>
             <Eyebrow>{currentStep.badge ?? "YOUR INNER SANCTUARY"}</Eyebrow>
-            <h1 ref={heading} tabIndex={-1} className={cn(questionHeading, "mb-2 text-center")}>
+            <h1
+              ref={heading}
+              tabIndex={-1}
+              className={cn(questionHeading, "mb-2 text-center")}
+            >
               {currentStep.text}
             </h1>
             {currentStep.subtext && (
-              <p className="mb-6 text-center text-[15px]">{currentStep.subtext}</p>
+              <p className="mb-6 text-center text-[15px]">
+                {currentStep.subtext}
+              </p>
             )}
 
             <div
@@ -387,7 +433,10 @@ export default function Quiz() {
                   className={cn(
                     "flex items-center justify-center rounded-full border-[1.5px] px-5 py-4 text-center text-[16px] text-ink select-none hover:-translate-y-0.5 max-xs:px-2.5 max-xs:py-3.5 max-xs:text-[15px]",
                     selectedVibe === option
-                      ? cn(SELECTED, "font-semibold text-[#1f4b30] shadow-[0_4px_16px_-3px_rgb(61_127_88/0.2)]")
+                      ? cn(
+                          SELECTED,
+                          "font-semibold text-[#1f4b30] shadow-[0_4px_16px_-3px_rgb(61_127_88/0.2)]",
+                        )
                       : "border-line bg-paper font-medium hover:border-green/40 hover:bg-[#faf8f2]",
                   )}
                   onClick={() => setSelectedVibe(option)}
@@ -397,7 +446,11 @@ export default function Quiz() {
               ))}
             </div>
 
-            <button className={nextButton} disabled={!selectedVibe} onClick={handleNext}>
+            <button
+              className={nextButton}
+              disabled={!selectedVibe}
+              onClick={handleNext}
+            >
               <span>ข้อต่อไป</span>
               <IconDisc>↗</IconDisc>
             </button>
@@ -422,9 +475,12 @@ export default function Quiz() {
                 <label
                   key={option}
                   className={cn(
-                    "flex cursor-pointer items-center gap-4 rounded-[20px] border-[1.5px] px-6 py-[18px] text-[16px] hover:translate-x-[3px]",
+                    "flex cursor-pointer items-center gap-4 rounded-card-sm border-[1.5px] px-6 py-[18px] text-[16px] hover:translate-x-[3px]",
                     answers[questionIndex] === i
-                      ? cn(SELECTED, "shadow-[0_4px_16px_-3px_rgb(61_127_88/0.15)]")
+                      ? cn(
+                          SELECTED,
+                          "shadow-[0_4px_16px_-3px_rgb(61_127_88/0.15)]",
+                        )
                       : "border-line bg-paper hover:border-green/30 hover:bg-[#faf8f2]",
                   )}
                 >

@@ -180,7 +180,7 @@ export function MagazineBands({
               <Link
                 key={house.id}
                 href={`/contents?house=${house.id}`}
-                className="group grid grid-cols-[minmax(0,1fr)_auto] content-center gap-x-3 gap-y-0.5 rounded-[28px] px-5 pt-[18px] pb-4 shadow-ledge-sm hover:-translate-y-1 max-md:rounded-[22px] max-md:p-3.5"
+                className="group grid grid-cols-[minmax(0,1fr)_auto] content-center gap-x-3 gap-y-0.5 rounded-card px-5 pt-[18px] pb-4 shadow-ledge-sm hover:-translate-y-1 max-md:rounded-card-sm max-md:p-3.5"
                 style={{ background: houseBackground(house), color: house.ink }}
               >
                 <Image

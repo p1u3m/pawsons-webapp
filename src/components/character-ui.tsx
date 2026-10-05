@@ -66,12 +66,12 @@ export function CharacterTile({ character: c }: { character: Character }) {
   const art = characterArt[c.type];
   return (
     <Link
-      className="group flex min-w-0 flex-col rounded-[22px] bg-cream p-1.5 shadow-ledge hover:-translate-y-[5px] md:rounded-[30px] md:p-2.5"
+      className="group flex min-w-0 flex-col rounded-card-sm bg-cream p-1.5 shadow-ledge hover:-translate-y-[5px] md:p-2.5"
       href={`/characters/${c.type.toLowerCase()}`}
       style={{ "--house": c.house.badgeColor } as CSSProperties}
     >
       <span
-        className="relative grid aspect-square place-items-center overflow-hidden rounded-[17px] md:rounded-[22px]"
+        className="relative grid aspect-square place-items-center overflow-hidden rounded-tile"
         style={{ background: houseBackground(c.house) }}
       >
         <span className="absolute inset-0 flex items-center justify-center">
@@ -95,7 +95,7 @@ export function CharacterTile({ character: c }: { character: Character }) {
             {c.type}
           </span>
         </span>
-        <span className="line-clamp-2 text-[12px] leading-[1.5] text-ink-muted md:text-[13px]">
+        <span className="line-clamp-2 text-[13px] leading-[1.6] text-ink-muted">
           {c.tagline}
         </span>
       </span>
@@ -108,7 +108,7 @@ export function ChipLink({ className, ...props }: ComponentProps<typeof Link>) {
   return (
     <Link
       className={cn(
-        "inline-flex h-9 shrink-0 items-center gap-1.5 rounded-full bg-cream pr-3 pl-4 text-[14px] font-semibold whitespace-nowrap press [--depth:3px] [--ledge-2:#e6e1d8] [&_svg]:text-ink-muted hover:[&_svg]:translate-x-0.5 hover:[&_svg]:-translate-y-0.5 hover:[&_svg]:text-ink",
+        "inline-flex h-9 shrink-0 items-center gap-1.5 rounded-full bg-cream pr-3 pl-4 text-[14px] font-semibold whitespace-nowrap press [--depth:3px] [--ledge-2:var(--color-ledge-2)] [&_svg]:text-ink-muted hover:[&_svg]:translate-x-0.5 hover:[&_svg]:-translate-y-0.5 hover:[&_svg]:text-ink",
         className,
       )}
       {...props}
@@ -177,7 +177,7 @@ export function BackLink({
 /** Centered cream panel for 404, errors and other empty pages. */
 export function EmptyState({ children }: { children: ReactNode }) {
   return (
-    <section className="wrap mt-5 rounded-[28px] border border-line bg-cream py-20 text-center">
+    <section className="wrap mt-5 rounded-card border border-line bg-cream py-20 text-center">
       {children}
     </section>
   );

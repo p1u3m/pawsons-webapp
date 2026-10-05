@@ -11,7 +11,7 @@ export default function SiteFooter() {
 
   return (
     // On mobile the bottom padding leaves room for the bottom navigation.
-    <footer className="mx-auto flex w-[min(1180px,calc(100%-64px))] flex-wrap items-center justify-between gap-8 pt-10 pb-11 max-md:flex-col max-md:gap-5 max-md:pt-9 max-md:pb-[calc(96px+env(safe-area-inset-bottom,16px))] max-md:text-center">
+    <footer className="wrap flex flex-wrap items-center justify-between gap-8 pt-10 pb-11 max-md:flex-col max-md:gap-5 max-md:pt-9 max-md:pb-[calc(96px+env(safe-area-inset-bottom,16px))] max-md:text-center">
       <Link
         href="/"
         className="group flex shrink-0 items-center"
