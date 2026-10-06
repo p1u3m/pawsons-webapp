@@ -17,6 +17,7 @@ import {
   PlusIcon,
   ShoppingBagIcon,
   SignInIcon,
+  TagIcon,
   TrashIcon,
   XIcon,
 } from "@phosphor-icons/react";
@@ -33,6 +34,7 @@ import {
 import { ImagePlaceholder } from "@/components/paper-ui";
 import { cn } from "@/lib/utils";
 import { type ShopProduct } from "@/lib/shop/catalog";
+import { normalizeCode, type DiscountQuote } from "@/lib/shop/discounts";
 
 export type CartLine = { slug: string; quantity: number };
 const key = "pawsons-test-cart-v1";
@@ -398,7 +400,81 @@ function CartLines({
   );
 }
 
-function useCheckout(lines: ReturnType<typeof useCartDetails>["validLines"]) {
+/**
+ * Discount code box. The server prices the cart with the code (nothing is
+ * reserved); the quote is fetched again whenever the cart total changes.
+ */
+function useDiscountCode(
+  lines: ReturnType<typeof useCartDetails>["validLines"],
+  subtotal: number,
+  signedIn: boolean,
+) {
+  const [applied, setApplied] = useState<string | null>(null);
+  const [quote, setQuote] = useState<DiscountQuote | null>(null);
+  const [checking, setChecking] = useState(false);
+  const [error, setError] = useState("");
+  const items = JSON.stringify(
+    lines.map(({ slug, quantity }) => ({ slug, quantity })),
+  );
+
+  useEffect(() => {
+    if (!applied) return;
+    let stale = false;
+    setChecking(true);
+    fetch("/api/shop/discount-quote", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ code: applied, items: JSON.parse(items) }),
+    })
+      .then(async (response) => {
+        const result = await response.json();
+        if (stale) return;
+        if (!response.ok) {
+          setApplied(null);
+          setQuote(null);
+          setError(result.error || "ตรวจโค้ดไม่สำเร็จ");
+        } else {
+          setQuote(result as DiscountQuote);
+          setError("");
+        }
+      })
+      .catch(() => {
+        if (!stale) setError("ตรวจโค้ดไม่สำเร็จ กรุณาลองอีกครั้ง");
+      })
+      .finally(() => {
+        if (!stale) setChecking(false);
+      });
+    return () => {
+      stale = true;
+    };
+  }, [applied, items, subtotal]);
+
+  return {
+    applied,
+    // Ignore a quote for an older cart until the new one arrives.
+    quote: applied && quote?.subtotal_satang === subtotal ? quote : null,
+    checking,
+    error,
+    apply(raw: string) {
+      const code = normalizeCode(raw);
+      if (!signedIn) return setError("กรุณาเข้าสู่ระบบก่อนใช้โค้ดส่วนลด");
+      if (code.length < 3) return setError("กรอกโค้ดส่วนลดก่อน");
+      setError("");
+      setQuote(null);
+      setApplied(code);
+    },
+    remove() {
+      setApplied(null);
+      setQuote(null);
+      setError("");
+    },
+  };
+}
+
+function useCheckout(
+  lines: ReturnType<typeof useCartDetails>["validLines"],
+  code: string | null,
+) {
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   async function checkout() {
@@ -410,6 +486,7 @@ function useCheckout(lines: ReturnType<typeof useCartDetails>["validLines"]) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           items: lines.map(({ slug, quantity }) => ({ slug, quantity })),
+          ...(code && { code }),
         }),
       });
       const result = await response.json();
@@ -433,23 +510,96 @@ function CheckoutBlock({
   checkoutReady: boolean;
   lines: ReturnType<typeof useCartDetails>["validLines"];
 }) {
-  const { checkout, busy, error } = useCheckout(lines);
   const { user, loading, signInWithGoogle } = useAuth();
+  const discount = useDiscountCode(lines, total, Boolean(user));
+  const { checkout, busy, error } = useCheckout(lines, discount.applied);
+  const [codeInput, setCodeInput] = useState("");
   const blockButton = cn(shopButton, "w-full");
+  const payable = discount.quote?.total_satang ?? total;
   return (
     <div className="w-full">
+      {checkoutReady && (
+        <div className="mb-4">
+          {discount.applied ? (
+            <div className="flex items-center justify-between gap-3 rounded-full bg-clover px-4 py-2 text-body-sm text-green-ink">
+              <span className="min-w-0 truncate">
+                <TagIcon
+                  size={16}
+                  weight="bold"
+                  className="mr-1.5 inline"
+                  aria-hidden="true"
+                />
+                <strong>{discount.applied}</strong>
+                {discount.checking && " · กำลังตรวจ…"}
+              </span>
+              <button
+                type="button"
+                className="shrink-0 text-small font-semibold underline underline-offset-2"
+                onClick={() => {
+                  discount.remove();
+                  setCodeInput("");
+                }}
+              >
+                เอาออก
+              </button>
+            </div>
+          ) : (
+            <form
+              className="flex gap-2"
+              onSubmit={(event) => {
+                event.preventDefault();
+                discount.apply(codeInput);
+              }}
+            >
+              <input
+                value={codeInput}
+                onChange={(event) => setCodeInput(event.target.value)}
+                maxLength={32}
+                autoComplete="off"
+                autoCapitalize="characters"
+                spellCheck={false}
+                placeholder="โค้ดส่วนลด"
+                aria-label="โค้ดส่วนลด"
+                className="h-11 min-w-0 flex-1 rounded-full border border-line-strong bg-paper px-4 text-body-sm uppercase placeholder:normal-case placeholder:text-ink-faint focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
+              />
+              <button
+                type="submit"
+                className="press h-11 shrink-0 rounded-full bg-cream px-5 text-body-sm font-bold text-navy [--depth:3px]"
+              >
+                ใช้โค้ด
+              </button>
+            </form>
+          )}
+          {discount.error && (
+            <p role="alert" className="mt-2 text-small text-danger-ink">
+              {discount.error}
+            </p>
+          )}
+        </div>
+      )}
       <dl className="mb-[18px]">
         <div className="flex justify-between gap-4 py-1.5 text-body-sm">
           <dt className="text-ink-muted">ยอดสินค้า</dt>
           <dd className="text-right tabular-nums">{formatPrice(total)}</dd>
         </div>
+        {discount.quote && discount.quote.discount_satang > 0 && (
+          <div className="flex justify-between gap-4 py-1.5 text-body-sm text-green-ink">
+            <dt>ส่วนลด ({discount.quote.code})</dt>
+            <dd
+              data-testid="checkout-discount"
+              className="text-right tabular-nums"
+            >
+              −{formatPrice(discount.quote.discount_satang)}
+            </dd>
+          </div>
+        )}
         <div
           data-testid="checkout-total"
           className="mt-2 flex justify-between gap-4 border-t border-line py-1.5 pt-3.5 text-lead"
         >
           <dt className="font-semibold text-ink">รวม</dt>
           <dd className="text-right font-bold tabular-nums">
-            {formatPrice(total)}
+            {formatPrice(payable)}
           </dd>
         </div>
       </dl>

@@ -253,6 +253,14 @@ export function OrderDetailView({ order }: { order: OrderDetail }) {
             ))}
           </ul>
           <dl className="mt-4">
+            {order.discount_satang > 0 && (
+              <div className="mb-2 flex items-baseline justify-between text-body-sm text-green-ink">
+                <dt>ส่วนลด ({order.discount_code})</dt>
+                <dd className="tabular-nums">
+                  −{formatPrice(order.discount_satang)}
+                </dd>
+              </div>
+            )}
             <div className="flex items-baseline justify-between text-body-lg font-bold">
               <dt>ยอดชำระ</dt>
               <dd className="text-title tabular-nums">

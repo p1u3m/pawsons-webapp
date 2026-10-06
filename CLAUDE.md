@@ -8,7 +8,7 @@ See README.md for the stack, routes, and folder layout. Rules below are what kee
 
 - Read `node_modules/next/dist/docs/` before using an API you are unsure of; this version differs from older training data.
 - `params` / `searchParams` are Promises: `await` them.
-- Mutations are Server Actions (`"use server"`: `admin/shop/actions.ts`, `lib/supabase/contents.ts`, `lib/supabase/profile.ts`) that check `isAdmin()` / the user first and finish with `revalidatePath`.
+- Mutations are Server Actions (`"use server"`: `admin/shop/actions.ts`, `admin/members/actions.ts`, `lib/supabase/contents.ts`, `lib/supabase/profile.ts`) that check `isAdmin()` / the user first and finish with `revalidatePath`.
 
 ## Styling
 
@@ -23,20 +23,24 @@ The design system is written up in `DESIGN.md` (tokens in `globals.css` win). Ke
 - shadcn primitives live in `src/components/ui/` (style `base-nova`, built on `@base-ui/react`). Add new ones with the shadcn CLI. `cn` comes from the `cn` package via `@/lib/utils`. `/admin` gets the neutral shadcn theme through `.admin-theme` (tokens in `globals.css`).
 - Icons: `@phosphor-icons/react` only.
 - Fonts: LINE Seed EN/TH are local (`public/fonts`); Fredoka comes from `next/font` and Itim from Google Fonts via `layout.tsx`.
-- Motion: simple and clean. Short (about 150–200ms), ease-out state changes only: colour, shadow and a small lift on hover/focus/press, nothing decorative. No bounces, springs, parallax, infinite loops or scroll reveals. Buttons share the `press` utility in `globals.css` (ledge rises on hover/focus, sinks when pressed); new interactive elements reuse it rather than inventing their own. The one choreographed animation is the homepage character swap (`hero-chibis.tsx`, GSAP: select `data-chibi`, clean up on unmount). Always respect `prefers-reduced-motion` (no movement, fades only).
+- Motion: simple and clean. Short (about 150–200ms), ease-out state changes only: colour, shadow and a small lift on hover/focus/press, nothing decorative. No bounces, springs, parallax, infinite loops or scroll reveals. Buttons share the `press` utility in `globals.css` (ledge rises on hover/focus, sinks when pressed), cards and chips use `press-card` (the same with the second ledge band); new interactive elements reuse them rather than inventing their own. The one choreographed animation is the homepage character swap (`hero-chibis.tsx`, GSAP: select `data-chibi`, clean up on unmount). Always respect `prefers-reduced-motion` (no movement, fades only).
 
 ## Components
 
 - `src/components/character-ui.tsx` — shared character/page pieces (see Styling). Not to be confused with `src/components/ui/` (shadcn).
 - Feature folders: `navigation/`, `shop/`. Admin-only components are prefixed `admin-`.
 - Copy shown to users is Thai.
+- Letters (`/letters`) appears in the account menus (desktop dropdown, mobile sheet) for signed-in users only; the bottom nav has no Letters tab.
 
 ## Data and services
 
 - Static content (characters, houses, quiz questions, scoring): `src/lib/data.ts`.
 - Supabase: `@/lib/supabase/client` in client components, `@/lib/supabase/server` in server code (both return `null` when env is missing — handle it). The service-role client `@/lib/shop/server-client` is server-only and used for shop orders/stock and, via `adminRpc()` in `@/lib/supabase/admin-rpc`, the `admin_*` member functions (executable by `service_role` only; they take the verified admin's id as `actor`).
 - Schema changes go through a new file in `supabase/migrations/`; never edit an applied migration. `profiles` and `contents` (plus the `handle_new_user` / `protect_profile_role` triggers and their RLS) predate migrations and are defined in `supabase/setup-profiles-contents.sql` — read it before touching those tables, but it is historical: later migrations changed them (e.g. `profiles` is readable only by its owner and admins), so check the live schema too.
+- Row-level security (RLS) is on for every table in `public`. `profiles` is readable by its owner and admins only (no public read); `contents` and `content_categories` are public-read; shop tables are admin or owner. Admin checks inside policies use `(select private.is_admin())`; the `private` schema is not exposed through the API. New tables need RLS and policies in their migration, and the Supabase security/performance advisors should come back clean afterwards.
+- A migration applied through the Supabase MCP gets its own version number; name the repo file with that version (check with `list_migrations`) so the two stay in sync.
 - Stripe: always go through `getStripeClient()`, which refuses keys that do not match `STRIPE_MODE`. Prices are read server-side from the catalog, never trusted from the client.
+- Discount codes (`discount_codes`, admin page `/admin/discounts`): the discount is computed only in the database (`shop_place_order` / `shop_quote_discount`, never from a client-sent amount). The order stores `subtotal_satang`, `discount_satang`, `discount_code`; checkout hands Stripe a one-off `amount_off` coupon so `session.amount_total` still equals `shop_orders.total_satang`. A use is counted when the order is placed and given back by `shop_cancel_order`. Codes are separate from Coin (a future stored-value balance for room items/skins, not used at shop checkout).
 - `/admin/*` is guarded in `src/proxy.ts` by `profiles.role = 'admin'`; admin pages and actions re-check with `isAdmin()`.
 
 ## Checks before finishing

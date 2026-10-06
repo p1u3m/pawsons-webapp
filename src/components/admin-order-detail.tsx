@@ -96,7 +96,17 @@ export function AdminOrderDetail({
               </li>
             ))}
           </ul>
-          <div className="mt-3 flex justify-between border-t pt-3 text-sm font-semibold">
+          {order.discount_satang > 0 && (
+            <div className="mt-3 flex justify-between border-t pt-3 text-sm text-muted-foreground">
+              <span>ส่วนลด ({order.discount_code})</span>
+              <span className="tabular-nums">
+                −{formatPrice(order.discount_satang)}
+              </span>
+            </div>
+          )}
+          <div
+            className={`flex justify-between text-sm font-semibold ${order.discount_satang > 0 ? "mt-2" : "mt-3 border-t pt-3"}`}
+          >
             <span>ยอดรวม</span>
             <span className="tabular-nums">
               {formatPrice(order.total_satang)}

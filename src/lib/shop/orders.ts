@@ -34,6 +34,10 @@ export type OrderDetail = {
   phone: string | null;
   shipping_address: ShippingAddress | null;
   total_satang: number;
+  /** Before the discount; null for orders placed before discount codes. */
+  subtotal_satang: number | null;
+  discount_satang: number;
+  discount_code: string | null;
   carrier: Carrier | null;
   tracking_number: string | null;
   created_at: string;
@@ -44,7 +48,7 @@ export type OrderDetail = {
 };
 
 export const orderDetailColumns =
-  "id,status,fulfillment_status,email,customer_name,phone,shipping_address,total_satang,carrier,tracking_number,created_at,paid_at,shipped_at,shop_order_items(product_slug,title,unit_price_satang,quantity),shop_order_events(kind,created_at)";
+  "id,status,fulfillment_status,email,customer_name,phone,shipping_address,total_satang,subtotal_satang,discount_satang,discount_code,carrier,tracking_number,created_at,paid_at,shipped_at,shop_order_items(product_slug,title,unit_price_satang,quantity),shop_order_events(kind,created_at)";
 
 export const orderStatusLabel: Record<OrderStatus, string> = {
   paid: "ชำระแล้ว",

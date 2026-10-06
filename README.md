@@ -29,8 +29,8 @@ Open http://localhost:3000. The site still renders without Supabase configured; 
 - `/contents`, `/contents/[id]` — articles stored in Supabase
 - `/shop`, `/shop/[slug]`, `/shop/order-result` — catalog, cart drawer, Stripe checkout
 - `/shop/orders`, `/shop/orders/[id]` — signed-in customer order history, shipping status and tracking number
-- `/room`, `/letters` — signed-in profile room and coming-soon letters
-- `/admin`, `/admin/contents`, `/admin/shop` — admin only (`profiles.role = 'admin'`, enforced in `src/proxy.ts`)
+- `/room`, `/letters` — signed-in profile room and coming-soon letters (Letters is listed in the account menus for signed-in users only)
+- `/admin`, `/admin/contents`, `/admin/shop`, `/admin/members` (member list and roles), `/admin/discounts` (shop discount codes) — admin only (`profiles.role = 'admin'`, enforced in `src/proxy.ts`)
 - `/api/stripe/shop-checkout`, `/api/stripe/shop-webhook`, `/api/stripe/shop-order-status`, `/auth/callback`
 
 ## Layout
@@ -39,7 +39,7 @@ Open http://localhost:3000. The site still renders without Supabase configured; 
 src/app/            routes, styled with Tailwind utilities; globals.css holds the design tokens
 src/components/     feature components; ui/ holds shadcn primitives
 src/lib/data.ts     static characters, houses, quiz questions and scoring
-src/lib/supabase/   browser/server clients and content/profile queries
+src/lib/supabase/   browser/server clients, content/profile queries, adminRpc (service-role admin member functions)
 src/lib/shop/       catalog, prices, orders (status, carriers, tracking), order confirmation (service-role client)
 src/lib/stripe/     Stripe client guarded by STRIPE_MODE
 supabase/migrations SQL migrations

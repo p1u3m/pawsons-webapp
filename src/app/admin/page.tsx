@@ -36,7 +36,12 @@ import {
 } from "@/components/ui/table";
 import { characters, getCharacter } from "@/lib/data";
 import { getProducts } from "@/lib/shop/catalog";
-import { getRecentOrders, getShopStats } from "@/lib/shop/admin-stats";
+import {
+  getDiscountStats,
+  getRecentOrders,
+  getShopStats,
+} from "@/lib/shop/admin-stats";
+import { discountLabel } from "@/lib/shop/discounts";
 import { orderDate, orderNumber } from "@/lib/shop/orders";
 import { formatPrice } from "@/lib/shop/price";
 import { isAdmin } from "@/lib/supabase/contents";
@@ -93,11 +98,13 @@ export default async function AdminDashboard() {
   ) {
     throw new Error("Unable to load dashboard statistics");
   }
-  const [products, shop, { orders: recentOrders }] = await Promise.all([
-    getProducts(true),
-    getShopStats(supabase),
-    getRecentOrders(supabase, { limit: 6 }),
-  ]);
+  const [products, shop, { orders: recentOrders }, discounts] =
+    await Promise.all([
+      getProducts(true),
+      getShopStats(supabase),
+      getRecentOrders(supabase, { limit: 6 }),
+      getDiscountStats(supabase),
+    ]);
 
   const distribution = characters
     .map((character, index) => ({
@@ -452,6 +459,55 @@ export default async function AdminDashboard() {
           </CardContent>
         </Card>
       </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>โค้ดส่วนลด</CardTitle>
+          <CardDescription>
+            {discounts.failed
+              ? "โหลดข้อมูลไม่สำเร็จ"
+              : `ใช้งานได้ ${number.format(discounts.activeCount)} จาก ${number.format(discounts.totalCount)} โค้ด · 30 วันล่าสุดลดไป ${formatPrice(discounts.given30d)} จาก ${number.format(discounts.orders30d)} ออเดอร์`}
+          </CardDescription>
+          <CardAction>
+            <Link
+              href="/admin/discounts"
+              className={buttonVariants({ variant: "outline", size: "sm" })}
+            >
+              จัดการโค้ด
+            </Link>
+          </CardAction>
+        </CardHeader>
+        <CardContent>
+          {discounts.top.length ? (
+            <ul className="grid gap-2 sm:grid-cols-3">
+              {discounts.top.map((code) => (
+                <li
+                  key={code.id}
+                  className="flex items-center justify-between gap-3 rounded-lg bg-muted/60 p-3"
+                >
+                  <span className="grid min-w-0">
+                    <span className="truncate font-mono text-sm font-medium">
+                      {code.code}
+                    </span>
+                    <span className="text-xs text-muted-foreground">
+                      {discountLabel(code)}
+                    </span>
+                  </span>
+                  <span className="shrink-0 text-xs text-muted-foreground tabular-nums">
+                    ใช้แล้ว {number.format(code.used_count)}
+                    {code.max_uses !== null &&
+                      ` / ${number.format(code.max_uses)}`}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="py-4 text-center text-sm text-muted-foreground">
+              ยังไม่มีโค้ดที่ใช้งานได้
+            </p>
+          )}
+        </CardContent>
+      </Card>
 
       <Card>
         <CardHeader>

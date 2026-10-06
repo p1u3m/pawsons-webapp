@@ -1,5 +1,10 @@
 import type { createClient } from "@/lib/supabase/server";
 import {
+  discountColumns,
+  discountState,
+  type DiscountCode,
+} from "@/lib/shop/discounts";
+import {
   orderDetailColumns,
   type FulfillmentStatus,
   type OrderDetail,
@@ -83,6 +88,39 @@ export async function getShopStats(supabase: Supabase) {
     ),
     paid30d: recentPaid.data?.length ?? 0,
     daily,
+  };
+}
+
+/** Discount code numbers for the dashboard card. */
+export async function getDiscountStats(supabase: Supabase) {
+  const since = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
+  const [codes, paid] = await Promise.all([
+    supabase
+      .from("discount_codes")
+      .select(discountColumns)
+      .order("used_count", { ascending: false })
+      .limit(200),
+    // Sandbox volume is small; the cap keeps this bounded if that changes.
+    supabase
+      .from("shop_orders")
+      .select("discount_satang")
+      .eq("status", "paid")
+      .gt("discount_satang", 0)
+      .gte("paid_at", since)
+      .limit(1000),
+  ]);
+  const all = (codes.data ?? []) as DiscountCode[];
+  const usable = all.filter((code) => discountState(code) === "active");
+  return {
+    failed: Boolean(codes.error || paid.error),
+    activeCount: usable.length,
+    totalCount: all.length,
+    top: usable.slice(0, 3),
+    orders30d: paid.data?.length ?? 0,
+    given30d: (paid.data ?? []).reduce(
+      (sum, row) => sum + row.discount_satang,
+      0,
+    ),
   };
 }
 

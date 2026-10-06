@@ -3,6 +3,7 @@ import {
   PackageIcon,
   ReceiptIcon,
   SquaresFourIcon,
+  TagIcon,
   UsersIcon,
   type Icon,
 } from "@phosphor-icons/react";
@@ -31,6 +32,7 @@ export const adminNav: { label: string; items: AdminNavItem[] }[] = [
         icon: ReceiptIcon,
         tab: "orders",
       },
+      { href: "/admin/discounts", label: "โค้ดส่วนลด", icon: TagIcon },
       { href: "/admin/members", label: "สมาชิก", icon: UsersIcon },
     ],
   },
