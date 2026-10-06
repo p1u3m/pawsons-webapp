@@ -28,7 +28,7 @@ export default function BottomNav({
 }: BottomNavProps) {
   const pathname = usePathname();
   const { user, displayName, avatarUrl, loading } = useAuth();
-  const accountRoute = ["/room", "/letters", "/shop/orders"].some((href) =>
+  const accountRoute = ["/room", "/coins", "/letters", "/shop/orders"].some((href) =>
     isNavActive(pathname, href),
   );
   const accountActive = accountOpen || accountRoute;

@@ -6,8 +6,9 @@ import { usePathname } from "next/navigation";
 import { IconDisc, pillButton } from "@/components/pill-button";
 
 export default function SiteFooter() {
-  // Admin has its own layout.
-  if (usePathname().startsWith("/admin")) return null;
+  const pathname = usePathname();
+  // Admin has its own layout; My Room is a quiet page without a footer.
+  if (pathname.startsWith("/admin") || pathname === "/room") return null;
 
   return (
     // On mobile the bottom padding leaves room for the bottom navigation.
