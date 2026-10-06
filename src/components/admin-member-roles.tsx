@@ -99,9 +99,7 @@ export function EditRoleDialog({
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>แก้ไขสิทธิ์</DialogTitle>
-          <DialogDescription>
-            เลือกสิทธิ์ของ {member.name} การเปลี่ยนแปลงจะถูกบันทึกในประวัติ
-          </DialogDescription>
+          <DialogDescription>เลือกสิทธิ์ของ {member.name}</DialogDescription>
         </DialogHeader>
 
         <div role="radiogroup" aria-label="สิทธิ์" className="grid gap-2">

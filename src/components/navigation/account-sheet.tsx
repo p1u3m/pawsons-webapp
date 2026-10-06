@@ -309,7 +309,6 @@ export default function AccountSheet({
               </button>
             </div>
           )}
-          {!user && lettersEntry}
         </div>
       </div>
     </div>

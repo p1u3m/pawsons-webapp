@@ -18,13 +18,7 @@ import { AdminPageHeader } from "@/components/admin-page-header";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button, buttonVariants } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   Empty,
   EmptyDescription,
@@ -84,15 +78,6 @@ type Member = {
   created_at: string;
 };
 
-type RoleEvent = {
-  id: number;
-  profile_id: string;
-  old_role: MemberRole;
-  new_role: MemberRole;
-  actor: string | null;
-  created_at: string;
-};
-
 export default async function AdminMembersPage({
   searchParams,
 }: {
@@ -137,7 +122,6 @@ export default async function AdminMembersPage({
     { data, count, error },
     { count: adminCount },
     { count: userCount },
-    { data: eventRows },
     {
       data: { user },
     },
@@ -145,15 +129,9 @@ export default async function AdminMembersPage({
     query,
     roleCount("admin"),
     roleCount("user"),
-    supabase
-      .from("profile_role_events")
-      .select("id,profile_id,old_role,new_role,actor,created_at")
-      .order("created_at", { ascending: false })
-      .limit(8),
     supabase.auth.getUser(),
   ]);
   const members = (data ?? []) as Member[];
-  const events = (eventRows ?? []) as RoleEvent[];
   const total = count ?? 0;
   const pageCount = Math.max(1, Math.ceil(total / pageSize));
   const roleTotals = {
@@ -161,39 +139,23 @@ export default async function AdminMembersPage({
     user: userCount ?? 0,
   };
 
-  // Emails (auth.users) for the listed members and everyone in the history.
-  const eventIds = events.flatMap((e) =>
-    e.actor ? [e.profile_id, e.actor] : [e.profile_id],
-  );
-  const ids = [...new Set([...members.map((m) => m.id), ...eventIds])];
-  const [{ data: emailRows }, { data: eventProfiles }] = await Promise.all([
-    ids.length
-      ? adminRpc<{ id: string; email: string | null }[]>(
-          "admin_member_emails",
-          { ids },
-        )
-      : Promise.resolve({ data: [] }),
-    eventIds.length
-      ? supabase.from("profiles").select("id,display_name").in("id", eventIds)
-      : Promise.resolve({ data: [] }),
-  ]);
+  // Emails (auth.users) for the listed members.
+  const ids = members.map((m) => m.id);
+  const { data: emailRows } = ids.length
+    ? await adminRpc<{ id: string; email: string | null }[]>(
+        "admin_member_emails",
+        { ids },
+      )
+    : { data: [] };
   const emails = new Map(
     ((emailRows ?? []) as { id: string; email: string | null }[]).map((row) => [
       row.id,
       row.email,
     ]),
   );
-  const names = new Map(
-    (
-      (eventProfiles ?? []) as { id: string; display_name: string | null }[]
-    ).map((row) => [row.id, row.display_name]),
-  );
   const openId =
     params.member && uuidPattern.test(params.member) ? params.member : null;
   const detail = openId ? await getMemberDetail(supabase, openId) : null;
-
-  const who = (id: string | null) =>
-    id ? names.get(id) || emails.get(id) || "ไม่ระบุชื่อ" : "บัญชีที่ถูกลบ";
 
   const href = (next: {
     type?: string | null;
@@ -460,48 +422,6 @@ export default async function AdminMembersPage({
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>ประวัติการเปลี่ยนสิทธิ์</CardTitle>
-          <CardDescription>
-            8 รายการล่าสุด · บันทึกทุกครั้งที่มีการตั้งหรือถอดแอดมิน
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          {events.length ? (
-            <ol className="grid gap-3">
-              {events.map((event) => (
-                <li key={event.id} className="flex items-start gap-3 text-sm">
-                  <span className="mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-full bg-muted text-muted-foreground">
-                    <ShieldCheckIcon className="size-4" />
-                  </span>
-                  <span className="grid min-w-0">
-                    <span>
-                      <span className="font-medium">{who(event.actor)}</span>{" "}
-                      {event.new_role === "admin"
-                        ? "ตั้ง"
-                        : "ถอดสิทธิ์แอดมินของ"}{" "}
-                      <span className="font-medium">
-                        {who(event.profile_id)}
-                      </span>
-                      {event.new_role === "admin" && " เป็นแอดมิน"}
-                    </span>
-                    <span className="text-xs text-muted-foreground">
-                      {eventDate.format(new Date(event.created_at))} ·{" "}
-                      {roleLabel[event.old_role]} → {roleLabel[event.new_role]}
-                    </span>
-                  </span>
-                </li>
-              ))}
-            </ol>
-          ) : (
-            <p className="text-sm text-muted-foreground">
-              ยังไม่มีการเปลี่ยนสิทธิ์
-            </p>
-          )}
-        </CardContent>
-      </Card>
-
       {openId && (
         <AdminSheet
           title={
@@ -542,62 +462,35 @@ type MemberOrder = {
 
 /** Everything the detail sheet shows about one member. */
 async function getMemberDetail(supabase: Supabase, id: string) {
-  const [
-    { data: profile },
-    { data: auth },
-    { data: orders },
-    { data: events },
-  ] = await Promise.all([
-    supabase
-      .from("profiles")
-      .select(
-        "id,display_name,avatar_url,assigned_character,house,vibe,role,created_at",
-      )
-      .eq("id", id)
-      .maybeSingle(),
-    adminRpc<{ email: string | null; last_sign_in_at: string | null }[]>(
-      "admin_member_emails",
-      { ids: [id] },
-    ),
-    supabase
-      .from("shop_orders")
-      .select("id,status,fulfillment_status,total_satang,created_at")
-      .eq("user_id", id)
-      .order("created_at", { ascending: false })
-      .limit(50),
-    supabase
-      .from("profile_role_events")
-      .select("id,profile_id,old_role,new_role,actor,created_at")
-      .eq("profile_id", id)
-      .order("created_at", { ascending: false })
-      .limit(10),
-  ]);
+  const [{ data: profile }, { data: auth }, { data: orders }] =
+    await Promise.all([
+      supabase
+        .from("profiles")
+        .select(
+          "id,display_name,avatar_url,assigned_character,house,vibe,role,created_at",
+        )
+        .eq("id", id)
+        .maybeSingle(),
+      adminRpc<{ email: string | null; last_sign_in_at: string | null }[]>(
+        "admin_member_emails",
+        { ids: [id] },
+      ),
+      supabase
+        .from("shop_orders")
+        .select("id,status,fulfillment_status,total_satang,created_at")
+        .eq("user_id", id)
+        .order("created_at", { ascending: false })
+        .limit(50),
+    ]);
   if (!profile) return null;
   const account = (
     (auth ?? []) as { email: string | null; last_sign_in_at: string | null }[]
   )[0];
-  const roleEvents = (events ?? []) as RoleEvent[];
-  // Names of the admins who changed this member's role.
-  const actorIds = [
-    ...new Set(roleEvents.flatMap((e) => (e.actor ? [e.actor] : []))),
-  ];
-  const { data: actors } = actorIds.length
-    ? await supabase
-        .from("profiles")
-        .select("id,display_name")
-        .in("id", actorIds)
-    : { data: [] };
   return {
     profile: profile as Member & { vibe: string | null },
     email: account?.email ?? null,
     lastSignIn: account?.last_sign_in_at ?? null,
     orders: (orders ?? []) as MemberOrder[],
-    events: roleEvents,
-    actorNames: new Map(
-      ((actors ?? []) as { id: string; display_name: string | null }[]).map(
-        (row) => [row.id, row.display_name],
-      ),
-    ),
   };
 }
 
@@ -608,7 +501,7 @@ function MemberDetail({
   detail: NonNullable<Awaited<ReturnType<typeof getMemberDetail>>>;
   lockedReason?: string;
 }) {
-  const { profile, orders, events } = detail;
+  const { profile, orders } = detail;
   const name = profile.display_name || "ไม่ระบุชื่อ";
   const character = profile.assigned_character
     ? getCharacter(profile.assigned_character)
@@ -693,30 +586,6 @@ function MemberDetail({
           </ul>
         ) : (
           <p className="text-sm text-muted-foreground">ยังไม่มีออเดอร์</p>
-        )}
-      </section>
-
-      <section className="grid gap-2">
-        <h3 className="text-sm font-medium">ประวัติสิทธิ์</h3>
-        {events.length ? (
-          <ol className="grid gap-2">
-            {events.map((event) => (
-              <li key={event.id} className="text-sm">
-                {roleLabel[event.old_role]} → {roleLabel[event.new_role]}
-                <span className="block text-xs text-muted-foreground">
-                  โดย{" "}
-                  {event.actor
-                    ? detail.actorNames.get(event.actor) || "ไม่ระบุชื่อ"
-                    : "บัญชีที่ถูกลบ"}{" "}
-                  · {eventDate.format(new Date(event.created_at))}
-                </span>
-              </li>
-            ))}
-          </ol>
-        ) : (
-          <p className="text-sm text-muted-foreground">
-            เป็น{roleLabel[profile.role]}ตั้งแต่สมัคร ยังไม่เคยเปลี่ยนสิทธิ์
-          </p>
         )}
       </section>
     </div>
