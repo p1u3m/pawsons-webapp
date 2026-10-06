@@ -16,9 +16,10 @@ interface BottomNavProps {
 }
 
 const target =
-  "group relative flex min-h-[52px] min-w-11 flex-1 items-center justify-center rounded-full px-0.5 py-1 h-auto border-0 hover:bg-transparent focus-visible:ring-0 focus-visible:outline-none";
+  "group relative flex min-h-[60px] min-w-11 flex-1 flex-col items-center justify-center gap-0.5 rounded-full px-0.5 py-1 h-auto border-0 hover:bg-transparent focus-visible:ring-0 focus-visible:outline-none";
 const surface =
-  "relative flex size-11 items-center justify-center rounded-full group-focus-visible:outline-2 group-focus-visible:outline-offset-2 group-focus-visible:outline-green";
+  "relative flex h-8 w-14 items-center justify-center rounded-full group-focus-visible:outline-2 group-focus-visible:outline-offset-2 group-focus-visible:outline-green";
+const labelClass = "text-micro leading-[1.2] font-semibold";
 
 export default function BottomNav({
   lettersBadge,
@@ -69,6 +70,7 @@ export default function BottomNav({
                     aria-hidden="true"
                   />
                 </span>
+                <span className={labelClass}>{label}</span>
               </Link>
             );
           },
@@ -136,6 +138,7 @@ export default function BottomNav({
               </span>
             )}
           </span>
+          <span className={labelClass}>Account</span>
         </Button>
       </div>
     </nav>

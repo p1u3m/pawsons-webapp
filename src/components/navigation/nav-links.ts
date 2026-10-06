@@ -14,7 +14,7 @@ export interface NavItem {
 }
 
 export const NAV_LINKS: NavItem[] = [
-  { href: "/characters", label: "Characters", icon: PawPrintIcon },
+  { href: "/characters", label: "Paws", icon: PawPrintIcon },
   { href: "/houses", label: "Houses", icon: HouseLineIcon },
   { href: "/contents", label: "Contents", icon: BookOpenTextIcon },
   { href: "/shop", label: "Shop", icon: StorefrontIcon },
