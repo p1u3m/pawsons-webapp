@@ -34,8 +34,8 @@ The design system is written up in `DESIGN.md` (tokens in `globals.css` win). Ke
 ## Data and services
 
 - Static content (characters, houses, quiz questions, scoring): `src/lib/data.ts`.
-- Supabase: `@/lib/supabase/client` in client components, `@/lib/supabase/server` in server code (both return `null` when env is missing — handle it). The service-role client `@/lib/shop/server-client` is server-only and used just for shop orders/stock.
-- Schema changes go through a new file in `supabase/migrations/`; never edit an applied migration. `profiles` and `contents` (plus the `handle_new_user` / `protect_profile_role` triggers and their RLS) predate migrations and are defined in `supabase/setup-profiles-contents.sql` — read it before touching those tables.
+- Supabase: `@/lib/supabase/client` in client components, `@/lib/supabase/server` in server code (both return `null` when env is missing — handle it). The service-role client `@/lib/shop/server-client` is server-only and used for shop orders/stock and, via `adminRpc()` in `@/lib/supabase/admin-rpc`, the `admin_*` member functions (executable by `service_role` only; they take the verified admin's id as `actor`).
+- Schema changes go through a new file in `supabase/migrations/`; never edit an applied migration. `profiles` and `contents` (plus the `handle_new_user` / `protect_profile_role` triggers and their RLS) predate migrations and are defined in `supabase/setup-profiles-contents.sql` — read it before touching those tables, but it is historical: later migrations changed them (e.g. `profiles` is readable only by its owner and admins), so check the live schema too.
 - Stripe: always go through `getStripeClient()`, which refuses keys that do not match `STRIPE_MODE`. Prices are read server-side from the catalog, never trusted from the client.
 - `/admin/*` is guarded in `src/proxy.ts` by `profiles.role = 'admin'`; admin pages and actions re-check with `isAdmin()`.
 

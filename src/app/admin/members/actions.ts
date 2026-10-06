@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { isAdmin } from "@/lib/supabase/contents";
 import { isMemberRole, type MemberRole } from "@/lib/member-roles";
-import { createClient } from "@/lib/supabase/server";
+import { adminRpc } from "@/lib/supabase/admin-rpc";
 
 export type MemberMatch = {
   id: string;
@@ -30,10 +30,7 @@ export async function setMemberRole(
   if (!uuidPattern.test(id) || !isMemberRole(role)) {
     return { success: false, error: "ข้อมูลไม่ถูกต้อง" };
   }
-  const supabase = await createClient();
-  if (!supabase) return { success: false, error: "เชื่อมต่อฐานข้อมูลไม่ได้" };
-
-  const { error } = await supabase.rpc("admin_set_member_role", {
+  const { error } = await adminRpc("admin_set_member_role", {
     target: id,
     new_role: role,
   });
@@ -58,12 +55,10 @@ export async function searchMembers(
   if (!(await isAdmin())) return { members: [], error: "ไม่มีสิทธิ์" };
   const query = term.trim().slice(0, 80);
   if (query.length < 2) return { members: [] };
-  const supabase = await createClient();
-  if (!supabase) return { members: [], error: "เชื่อมต่อฐานข้อมูลไม่ได้" };
-
-  const { data, error } = await supabase.rpc("admin_search_members", {
-    term: query,
-  });
+  const { data, error } = await adminRpc<MemberMatch[]>(
+    "admin_search_members",
+    { term: query },
+  );
   if (error) return { members: [], error: "ค้นหาไม่สำเร็จ" };
-  return { members: (data ?? []) as MemberMatch[] };
+  return { members: data ?? [] };
 }

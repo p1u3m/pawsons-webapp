@@ -50,6 +50,7 @@ import { roleLabel, type MemberRole } from "@/lib/member-roles";
 import type { FulfillmentStatus, OrderStatus } from "@/lib/shop/orders";
 import { orderDate, orderNumber } from "@/lib/shop/orders";
 import { formatPrice } from "@/lib/shop/price";
+import { adminRpc } from "@/lib/supabase/admin-rpc";
 import { isAdmin } from "@/lib/supabase/contents";
 import { createClient } from "@/lib/supabase/server";
 import { cn } from "@/lib/utils";
@@ -167,7 +168,10 @@ export default async function AdminMembersPage({
   const ids = [...new Set([...members.map((m) => m.id), ...eventIds])];
   const [{ data: emailRows }, { data: eventProfiles }] = await Promise.all([
     ids.length
-      ? supabase.rpc("admin_member_emails", { ids })
+      ? adminRpc<{ id: string; email: string | null }[]>(
+          "admin_member_emails",
+          { ids },
+        )
       : Promise.resolve({ data: [] }),
     eventIds.length
       ? supabase.from("profiles").select("id,display_name").in("id", eventIds)
@@ -551,7 +555,10 @@ async function getMemberDetail(supabase: Supabase, id: string) {
       )
       .eq("id", id)
       .maybeSingle(),
-    supabase.rpc("admin_member_emails", { ids: [id] }),
+    adminRpc<{ email: string | null; last_sign_in_at: string | null }[]>(
+      "admin_member_emails",
+      { ids: [id] },
+    ),
     supabase
       .from("shop_orders")
       .select("id,status,fulfillment_status,total_satang,created_at")

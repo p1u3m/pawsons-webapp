@@ -1,4 +1,13 @@
 -- =========================================================
+-- HISTORICAL: do not run this on the live database. It is the original setup of
+-- profiles/contents and no longer matches production (later migrations changed
+-- contents' id/category/columns, the role guard trigger, and the RLS policies:
+-- profiles are now readable by their owner and admins only). Production schema =
+-- this file + everything in supabase/migrations/. Use the migrations as the
+-- source of truth.
+-- =========================================================
+
+-- =========================================================
 -- Pawsons Phase 2: Profiles Table Setup
 -- Run this in Supabase Dashboard → SQL Editor → New query
 -- =========================================================
