@@ -119,7 +119,7 @@ export default function AuthButton() {
             </span>
             {coins !== null && (
               <Link
-                href="/room"
+                href="/coins"
                 onClick={close}
                 className="mt-1.5 inline-flex w-fit items-center gap-1.5 rounded-full bg-sun px-2.5 py-1 text-caption font-semibold text-sun-ink"
               >

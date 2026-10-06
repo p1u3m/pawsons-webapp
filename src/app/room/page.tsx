@@ -1,35 +1,36 @@
-import { CoinCard } from "@/components/coin-card";
 import { getMyCoins } from "@/lib/supabase/coins";
+import { getMyRooms } from "@/lib/supabase/rooms";
 import { getProfile } from "@/lib/supabase/profile";
 import { getCharacter } from "@/lib/data";
 import { redirect } from "next/navigation";
-import RoomScene from "@/components/room-scene";
+import RoomScene from "@/components/room/room-scene";
 
 export const metadata = { title: "My Room" };
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 export default async function Page() {
-  const [profile, coins] = await Promise.all([getProfile(), getMyCoins()]);
+  const [profile, coins, unlocked] = await Promise.all([
+    getProfile(),
+    getMyCoins(0),
+    getMyRooms(),
+  ]);
 
   // Not logged in → redirect to home
   if (!profile) redirect("/");
 
-  // No character assigned yet → prompt to take quiz
+  // No character assigned yet → the room shows a prompt to take the quiz
   const character = profile.assigned_character
     ? getCharacter(profile.assigned_character)
     : null;
 
   return (
-    <div className="wrap max-w-[600px] pt-6 pb-[110px]">
-      <RoomScene profile={profile} character={character ?? null} />
-      {coins && (
-        <CoinCard
-          className="mt-5"
-          balance={coins.balance}
-          history={coins.history}
-        />
-      )}
+    <div className="wrap max-w-[860px] page-top pb-[110px]">
+      <RoomScene
+        character={character ?? null}
+        unlocked={unlocked}
+        balance={coins?.balance ?? 0}
+      />
     </div>
   );
 }

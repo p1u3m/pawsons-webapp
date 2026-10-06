@@ -19,7 +19,7 @@ disagree, `globals.css` wins.
 
 - `wrap` (utility in `globals.css`) is the page column: `min(1040px, 100% - 40px)`,
   `100% - 20px` at ≤360px. The navbar matches it. Narrower pages cap it with
-  `max-w-*` (results 720px, room 600px). Do not set page widths any other way.
+  `max-w-*` (results 720px, coins 720px, room 860px). Do not set page widths any other way.
 - Detail pages open the same way: `page-top` (40px, 24px on phones) under the
   navbar, then the icon-only `BackButton` (46px round, bold arrow) at the left
   edge of `wrap`, with any page-level action on the right of the same row. Never
