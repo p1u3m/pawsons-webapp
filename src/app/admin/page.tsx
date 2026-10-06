@@ -42,6 +42,8 @@ import {
   getShopStats,
 } from "@/lib/shop/admin-stats";
 import { discountLabel } from "@/lib/shop/discounts";
+import { coinKindLabel, formatCoinChange, formatCoins } from "@/lib/coins";
+import { getCoinStats } from "@/lib/supabase/coins";
 import { orderDate, orderNumber } from "@/lib/shop/orders";
 import { formatPrice } from "@/lib/shop/price";
 import { isAdmin } from "@/lib/supabase/contents";
@@ -98,12 +100,13 @@ export default async function AdminDashboard() {
   ) {
     throw new Error("Unable to load dashboard statistics");
   }
-  const [products, shop, { orders: recentOrders }, discounts] =
+  const [products, shop, { orders: recentOrders }, discounts, coins] =
     await Promise.all([
       getProducts(true),
       getShopStats(supabase),
       getRecentOrders(supabase, { limit: 6 }),
       getDiscountStats(supabase),
+      getCoinStats(supabase),
     ]);
 
   const distribution = characters
@@ -504,6 +507,57 @@ export default async function AdminDashboard() {
           ) : (
             <p className="py-4 text-center text-sm text-muted-foreground">
               ยังไม่มีโค้ดที่ใช้งานได้
+            </p>
+          )}
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Coin</CardTitle>
+          <CardDescription>
+            {coins.failed
+              ? "โหลดข้อมูลไม่สำเร็จ"
+              : `ในระบบรวม ${formatCoins(coins.circulation)} Coin (≈ ${formatPrice(coins.circulation * 100)}) · ${number.format(coins.holders)} คนมี Coin · 30 วันล่าสุด แจก ${formatCoins(coins.granted30d)} / หัก ${formatCoins(coins.removed30d)}`}
+          </CardDescription>
+          <CardAction>
+            <Link
+              href="/admin/members"
+              className={buttonVariants({ variant: "outline", size: "sm" })}
+            >
+              จัดการสมาชิก
+            </Link>
+          </CardAction>
+        </CardHeader>
+        <CardContent>
+          {coins.latest.length ? (
+            <ul className="grid gap-2">
+              {coins.latest.map((tx) => (
+                <li
+                  key={tx.id}
+                  className="flex items-center justify-between gap-3 rounded-lg bg-muted/60 p-3 text-sm"
+                >
+                  <span className="grid min-w-0">
+                    <span className="truncate font-medium">{tx.name}</span>
+                    <span className="truncate text-xs text-muted-foreground">
+                      {tx.reason || coinKindLabel[tx.kind]} ·{" "}
+                      {orderDate.format(new Date(tx.created_at))}
+                    </span>
+                  </span>
+                  <span
+                    className={cn(
+                      "shrink-0 font-semibold tabular-nums",
+                      tx.amount < 0 && "text-destructive",
+                    )}
+                  >
+                    {formatCoinChange(tx.amount)}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="py-4 text-center text-sm text-muted-foreground">
+              ยังไม่มีรายการ Coin
             </p>
           )}
         </CardContent>

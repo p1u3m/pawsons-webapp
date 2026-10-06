@@ -1,3 +1,5 @@
+import { CoinCard } from "@/components/coin-card";
+import { getMyCoins } from "@/lib/supabase/coins";
 import { getProfile } from "@/lib/supabase/profile";
 import { getCharacter } from "@/lib/data";
 import { redirect } from "next/navigation";
@@ -8,7 +10,7 @@ export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 export default async function Page() {
-  const profile = await getProfile();
+  const [profile, coins] = await Promise.all([getProfile(), getMyCoins()]);
 
   // Not logged in → redirect to home
   if (!profile) redirect("/");
@@ -19,8 +21,15 @@ export default async function Page() {
     : null;
 
   return (
-    <div className="wrap max-w-[600px] pt-6 pb-[60px]">
+    <div className="wrap max-w-[600px] pt-6 pb-[110px]">
       <RoomScene profile={profile} character={character ?? null} />
+      {coins && (
+        <CoinCard
+          className="mt-5"
+          balance={coins.balance}
+          history={coins.history}
+        />
+      )}
     </div>
   );
 }

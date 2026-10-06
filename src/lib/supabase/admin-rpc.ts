@@ -9,13 +9,20 @@ import { createClient } from "@/lib/supabase/server";
  * their id as `actor`, which the function checks again.
  */
 export async function adminRpc<T = unknown>(
-  fn: "admin_set_member_role" | "admin_member_emails" | "admin_search_members",
+  fn:
+    | "admin_set_member_role"
+    | "admin_member_emails"
+    | "admin_search_members"
+    | "admin_coin_adjust",
   args: Record<string, unknown>,
 ): Promise<{
   data: T | null;
   error: { message: string; code?: string } | null;
 }> {
-  const denied = { data: null, error: { message: "Not authorized", code: "42501" } };
+  const denied = {
+    data: null,
+    error: { message: "Not authorized", code: "42501" },
+  };
   if (!(await isAdmin())) return denied;
   const session = await createClient();
   const {

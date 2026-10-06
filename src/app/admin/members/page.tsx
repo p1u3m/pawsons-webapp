@@ -44,6 +44,14 @@ import { roleLabel, type MemberRole } from "@/lib/member-roles";
 import type { FulfillmentStatus, OrderStatus } from "@/lib/shop/orders";
 import { orderDate, orderNumber } from "@/lib/shop/orders";
 import { formatPrice } from "@/lib/shop/price";
+import { AdminCoinAdjust } from "@/components/admin-coin-adjust";
+import {
+  coinKindLabel,
+  coinTransactionColumns,
+  formatCoinChange,
+  formatCoins,
+  type CoinTransaction,
+} from "@/lib/coins";
 import { adminRpc } from "@/lib/supabase/admin-rpc";
 import { isAdmin } from "@/lib/supabase/contents";
 import { createClient } from "@/lib/supabase/server";
@@ -462,26 +470,42 @@ type MemberOrder = {
 
 /** Everything the detail sheet shows about one member. */
 async function getMemberDetail(supabase: Supabase, id: string) {
-  const [{ data: profile }, { data: auth }, { data: orders }] =
-    await Promise.all([
-      supabase
-        .from("profiles")
-        .select(
-          "id,display_name,avatar_url,assigned_character,house,vibe,role,created_at",
-        )
-        .eq("id", id)
-        .maybeSingle(),
-      adminRpc<{ email: string | null; last_sign_in_at: string | null }[]>(
-        "admin_member_emails",
-        { ids: [id] },
-      ),
-      supabase
-        .from("shop_orders")
-        .select("id,status,fulfillment_status,total_satang,created_at")
-        .eq("user_id", id)
-        .order("created_at", { ascending: false })
-        .limit(50),
-    ]);
+  const [
+    { data: profile },
+    { data: auth },
+    { data: orders },
+    { data: wallet },
+    { data: coinRows },
+  ] = await Promise.all([
+    supabase
+      .from("profiles")
+      .select(
+        "id,display_name,avatar_url,assigned_character,house,vibe,role,created_at",
+      )
+      .eq("id", id)
+      .maybeSingle(),
+    adminRpc<{ email: string | null; last_sign_in_at: string | null }[]>(
+      "admin_member_emails",
+      { ids: [id] },
+    ),
+    supabase
+      .from("shop_orders")
+      .select("id,status,fulfillment_status,total_satang,created_at")
+      .eq("user_id", id)
+      .order("created_at", { ascending: false })
+      .limit(50),
+    supabase
+      .from("coin_wallets")
+      .select("balance")
+      .eq("user_id", id)
+      .maybeSingle(),
+    supabase
+      .from("coin_transactions")
+      .select(coinTransactionColumns)
+      .eq("user_id", id)
+      .order("id", { ascending: false })
+      .limit(8),
+  ]);
   if (!profile) return null;
   const account = (
     (auth ?? []) as { email: string | null; last_sign_in_at: string | null }[]
@@ -491,6 +515,10 @@ async function getMemberDetail(supabase: Supabase, id: string) {
     email: account?.email ?? null,
     lastSignIn: account?.last_sign_in_at ?? null,
     orders: (orders ?? []) as MemberOrder[],
+    coins: {
+      balance: wallet?.balance ?? 0,
+      history: (coinRows ?? []) as CoinTransaction[],
+    },
   };
 }
 
@@ -586,6 +614,50 @@ function MemberDetail({
           </ul>
         ) : (
           <p className="text-sm text-muted-foreground">ยังไม่มีออเดอร์</p>
+        )}
+      </section>
+
+      <section className="grid gap-2">
+        <div className="flex items-center justify-between gap-2">
+          <h3 className="text-sm font-medium">
+            Coin{" "}
+            <span className="font-semibold tabular-nums">
+              {formatCoins(detail.coins.balance)}
+            </span>
+          </h3>
+          <AdminCoinAdjust
+            member={{ id: profile.id, name, balance: detail.coins.balance }}
+          />
+        </div>
+        {detail.coins.history.length ? (
+          <ul className="divide-y rounded-lg border">
+            {detail.coins.history.map((tx) => (
+              <li
+                key={tx.id}
+                className="flex items-center justify-between gap-3 p-3 text-sm"
+              >
+                <span className="grid min-w-0">
+                  <span className="truncate">
+                    {tx.reason || coinKindLabel[tx.kind]}
+                  </span>
+                  <span className="text-xs text-muted-foreground">
+                    {orderDate.format(new Date(tx.created_at))} ·{" "}
+                    {coinKindLabel[tx.kind]}
+                  </span>
+                </span>
+                <span
+                  className={cn(
+                    "shrink-0 font-medium tabular-nums",
+                    tx.amount < 0 && "text-destructive",
+                  )}
+                >
+                  {formatCoinChange(tx.amount)}
+                </span>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="text-sm text-muted-foreground">ยังไม่มีรายการ Coin</p>
         )}
       </section>
     </div>

@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import {
   CaretRightIcon,
+  CoinsIcon,
   EnvelopeSimpleIcon,
   HouseIcon,
   PawPrintIcon,
@@ -16,7 +17,9 @@ import {
 } from "@phosphor-icons/react";
 import { GoogleIcon } from "@/components/auth-button";
 import { pillButton } from "@/components/pill-button";
+import { formatCoins } from "@/lib/coins";
 import { useAuth } from "@/lib/use-auth";
+import { useCoinBalance } from "@/lib/use-coins";
 import { cn } from "@/lib/utils";
 
 interface AccountSheetProps {
@@ -32,6 +35,7 @@ export default function AccountSheet({
 }: AccountSheetProps) {
   const { user, isAdmin, displayName, avatarUrl, signInWithGoogle, signOut } =
     useAuth();
+  const coins = useCoinBalance();
   const [dragOffset, setDragOffset] = useState(0);
   const dragOffsetRef = useRef(0);
   const dragFrame = useRef<number | null>(null);
@@ -247,6 +251,19 @@ export default function AccountSheet({
                   <span className="truncate text-small text-ink-muted">
                     {user.email}
                   </span>
+                  {coins !== null && (
+                    <Link
+                      href="/room"
+                      onClick={onClose}
+                      className="mt-1.5 inline-flex w-fit items-center gap-1.5 rounded-full bg-sun px-2.5 py-1 text-caption font-semibold text-sun-ink"
+                    >
+                      <CoinsIcon size={14} weight="fill" aria-hidden="true" />
+                      <span data-testid="sheet-coins">
+                        {formatCoins(coins)}
+                      </span>{" "}
+                      Coin
+                    </Link>
+                  )}
                 </div>
               </div>
 
@@ -281,9 +298,7 @@ export default function AccountSheet({
                     signOut();
                   }}
                 >
-                  <span
-                    className={cn(sheetIcon, "bg-danger/10 text-danger")}
-                  >
+                  <span className={cn(sheetIcon, "bg-danger/10 text-danger")}>
                     <SignOutIcon size={20} aria-hidden="true" />
                   </span>
                   <span className="flex-1">Sign out</span>

@@ -3,13 +3,16 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import {
+  CoinsIcon,
   EnvelopeSimpleIcon,
   HouseIcon,
   ReceiptIcon,
   SignOutIcon,
   SquaresFourIcon,
 } from "@phosphor-icons/react";
+import { formatCoins } from "@/lib/coins";
 import { useAuth } from "@/lib/use-auth";
+import { useCoinBalance } from "@/lib/use-coins";
 import { cn } from "@/lib/utils";
 
 /** Google sign-in button for the desktop header; avatar menu once signed in. */
@@ -24,6 +27,7 @@ export default function AuthButton() {
     signInWithGoogle,
     signOut,
   } = useAuth();
+  const coins = useCoinBalance();
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -113,6 +117,16 @@ export default function AuthButton() {
             <span className="truncate text-caption text-ink-muted">
               {user.email}
             </span>
+            {coins !== null && (
+              <Link
+                href="/room"
+                onClick={close}
+                className="mt-1.5 inline-flex w-fit items-center gap-1.5 rounded-full bg-sun px-2.5 py-1 text-caption font-semibold text-sun-ink"
+              >
+                <CoinsIcon size={14} weight="fill" aria-hidden="true" />
+                <span data-testid="menu-coins">{formatCoins(coins)}</span> Coin
+              </Link>
+            )}
           </div>
           <hr className="my-1 border-line" />
           <Link
