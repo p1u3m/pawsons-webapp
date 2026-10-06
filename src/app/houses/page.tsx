@@ -22,17 +22,17 @@ export default function Page() {
           บ้านไหนที่เป็นคุณ
         </h1>
         <nav aria-label="เลือกบ้าน" className="mt-6 md:mt-8">
-          <ul className="grid grid-cols-4 gap-2 md:gap-6">
+          <ul className="mx-auto grid max-w-[320px] grid-cols-2 gap-x-4 gap-y-3 md:max-w-none md:grid-cols-4 md:gap-6">
             {houses.map((house) => (
               <li key={house.id} style={houseVars(house)}>
                 <a
                   href={`#${house.id}`}
-                  className="group flex min-h-[120px] flex-col items-center gap-3 rounded-tile py-1 text-(--house-ink)"
+                  className="group flex min-h-[120px] flex-col items-center gap-2 rounded-tile py-1 text-(--house-ink)"
                   aria-label={`ไปยังบ้าน ${house.name}`}
                 >
                   <span
                     className={cn(
-                      "press-card relative grid aspect-square w-full max-w-20 place-items-center rounded-[48%_48%_12px_12px] bg-cream [--depth:3px] md:max-w-[130px]",
+                      "press-card relative grid aspect-square w-full max-w-[120px] place-items-center rounded-[48%_48%_12px_12px] bg-cream [--depth:3px] md:max-w-[130px]",
                     )}
                   >
                     <Image
@@ -45,7 +45,7 @@ export default function Page() {
                     />
                   </span>
                   <span
-                    className="min-h-9 text-caption leading-[1.5] font-semibold [overflow-wrap:anywhere] md:min-h-6 md:text-body"
+                    className="text-small leading-[1.5] font-semibold [overflow-wrap:anywhere] md:min-h-6 md:text-body"
                     lang="en"
                   >
                     {house.name}
